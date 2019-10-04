@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="list-group">
-                        <li class="list-group-item">Siła : {{ @SESSION.login }}</li>
+                        <li class="list-group-item">Siła : <?= ($SESSION['login']) ?></li>
                         <li class="list-group-item">Zręczność : 10</li>
                         <li class="list-group-item">Inteligencja : 10</li>
                         <li class="list-group-item">Przywileje : 10</li>
