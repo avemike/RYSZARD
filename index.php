@@ -13,7 +13,7 @@ $db=new DB\SQL(
 
 $f3->route('GET @home: /',
 	function($f3) {
-		if (empty($_SESSION["nickname"])){
+		if (empty($_SESSION["login"]) || empty($_SESSION["nickname"])){
 			$f3->reroute('@login');
 	 	}
 		echo \Template::instance()->render('profile.html');
@@ -26,17 +26,17 @@ $f3->route('GET @login: /login',
 		global $db;
 		if(!empty($_SESSION["login"])){
 			if(empty($_SESSION["nickname"])){
-				$f3->set('logintemplate', 'servers.html');
-				$f3->set('result',$db->exec('SELECT servers.server_id, char_id, level FROM servers left join characters on servers.server_id = characters.server_id where user_id=? or user_id IS NULL', $_SESSION["user_id"]));
+				$f3->set('result',$db->exec('SELECT servers.server_id, char_id, level, nickname FROM servers left join characters on servers.server_id = characters.server_id where user_id=? or user_id IS NULL', $_SESSION["user_id"]));
+				echo \Template::instance()->render('servers.html');
 			}
 			else{
 				$f3->reroute('@home');
 			}
 		}
 		else{
-			$f3->set('logintemplate', 'login.html');
+			echo \Template::instance()->render('login.html');
 		}
-		echo \Template::instance()->render($f3->get('logintemplate'));
+		
 	}
 );
 
@@ -45,7 +45,7 @@ $f3->route('POST /login',
 		if (!empty($_SESSION["login"])){
 			$f3->reroute('@login');
 		}
-
+		
 		$f3->set('logintemplate', 'login.html');
 		global $db;
 		$user=new DB\SQL\Mapper($db,'accounts');
@@ -64,7 +64,7 @@ $f3->route('POST /login',
 
 					$f3->set('servers', 'servers.html');
 					$f3->set('logintemplate', 'servers.html');
-					$f3->set('result',$db->exec('SELECT servers.server_id, char_id, level FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE user_id=? OR user_id IS NULL', $_SESSION["user_id"]));
+					$f3->set('result',$db->exec('SELECT servers.server_id, char_id, level, nickname FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE user_id=? OR user_id IS NULL', $_SESSION["user_id"]));
 				}
 				else{
 					$loginErr="login or password incorrect";

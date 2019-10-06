@@ -20,11 +20,11 @@
         <form action="logintoserver" method="POST">
             <check if="{{ @server.char_id }}">
                 <true>
-                    <span class="servers green">SERWER {{ @server.server_id }} - {{ @server.level }}lv</span>
+                    <span class="servers green">SERWER {{ @server.server_id }} - {{ @server.nickname }} {{ @server.level }}lv</span>
                     <input type="hidden" name="serverno" value="{{ @server.server_id }}">
                 </true>
                 <false>
-                    <span class="servers error">SERWER {{ @server.server_id }} - 0lv</span>
+                    <span class="servers error">SERWER {{ @server.server_id }} - {{ @server.nickname }} 0lv</span>
                     <input type="hidden" name="serverno" value="{{ @server.server_id }}">
                 </false>
             </check>
