@@ -9,6 +9,9 @@
         .error{ 
             color: red;
         }
+        .green{
+            color: green;
+        }
     </style>
 </head>
 <body>
