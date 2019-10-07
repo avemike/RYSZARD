@@ -16,7 +16,7 @@
 </head>
 <body>
     <form action="" method="POST">
-    <input name="login" placeholder="login" maxlength="<?= ($max_login_len) ?>"><br>
+    <input name="login" placeholder="login" maxlength="<?= ($max_login_len) ?>" autocomplete="off"><br>
     <input type="password" name="password" placeholder="password" maxlength="<?= ($max_passw_len) ?>"><br>
     <button type="submit">Zaloguj się</button>
     <h1 class="error"><?= ($loginErr) ?></h1>

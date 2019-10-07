@@ -70,7 +70,6 @@ $f3->route('POST /login',
 					$loginErr="login or password incorrect";
 				}
 			}
-			
 		}
 		$f3->set('loginErr', $loginErr);
 		echo \Template::instance()->render($f3->get('logintemplate'));
@@ -99,8 +98,6 @@ $f3->route('POST @logintoserver: /logintoserver',
 				// $f3->reroute('@createchar');
 				$f3->reroute('@login');
 			}
-
-
 		}
 		else{
 			$f3->reroute('@login');
