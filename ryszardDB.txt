@@ -8,7 +8,7 @@ create table accounts (
     user_id int not null auto_increment,
     login varchar(255),
     password varchar(255),
-    creation_date timestamp,
+    creation_date timestamp DEFAULT current_timestamp,
     last_logged timestamp,
 
     PRIMARY KEY (user_id)
