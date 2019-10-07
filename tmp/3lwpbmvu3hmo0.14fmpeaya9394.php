@@ -19,11 +19,16 @@
     </form>
     <a href="login">Powrót do logowania</a>
     <div class="error">
-        {{ @error1 }}
-        {{ @error2 }}
-        {{ @error3 }}
-        {{ @error4 }}
-        {{ @error5 }}
+        <?= ($error1)."
+" ?>
+        <?= ($error2)."
+" ?>
+        <?= ($error3)."
+" ?>
+        <?= ($error4)."
+" ?>
+        <?= ($error5)."
+" ?>
     </div>
 </body>
 </html>

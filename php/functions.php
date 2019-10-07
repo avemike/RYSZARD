@@ -9,10 +9,10 @@
     }
     class login{
         function getlogin($f3){
-            global $db;
             if(!empty($_SESSION["login"])){
                 if(empty($_SESSION["nickname"])){
-                    $f3->set('result',$db->exec('SELECT servers.server_id, char_id, level, nickname FROM servers left join characters on servers.server_id = characters.server_id where user_id=? or user_id IS NULL', $_SESSION["user_id"]));
+                    $this->getservers($f3);
+                    // $f3->set('result',$db->exec('SELECT servers.server_id, char_id, level, nickname FROM servers left join characters on servers.server_id = characters.server_id where user_id=? or user_id IS NULL', $_SESSION["user_id"]));
                     echo \Template::instance()->render('servers.html');
                 }
                 else{
@@ -46,7 +46,7 @@
     
                         $f3->set('servers', 'servers.html');
                         $f3->set('logintemplate', 'servers.html');
-                        $f3->set('result',$db->exec('SELECT servers.server_id, char_id, level, nickname FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE user_id=? OR user_id IS NULL', $_SESSION["user_id"]));
+                        $this->getservers($f3);
                     }
                     else{
                         $loginErr="login or password incorrect";
@@ -55,6 +55,31 @@
             }
             $f3->set('loginErr', $loginErr);
             echo \Template::instance()->render($f3->get('logintemplate'));
+        }
+        function getservers($f3){
+            global $db;
+            $sql="SELECT server_id, char_id, level, nickname 
+            FROM (
+                SELECT servers.server_id, char_id, level, nickname
+                FROM servers
+                JOIN characters ON servers.server_id = characters.server_id
+                WHERE user_id=:id
+        
+                UNION
+        
+                SELECT
+                    servers.server_id,
+                    NULL AS char_id,
+                    NULL AS LEVEL,
+                    NULL AS nickname
+                FROM
+                    servers
+                    LEFT JOIN characters
+                    ON servers.server_id = characters.server_id
+                WHERE user_id!=:id or user_id IS NULL
+            ) t
+            GROUP BY server_id";
+            $f3->set('result',$db->exec($sql, array(':id'=>$_SESSION["user_id"])));
         }
         function logintoserver($f3){
             global $db;
