@@ -125,7 +125,7 @@
             } else {
                 $f3->set('error4',"Proszę wypełnić wszystkie pola!");
             };  
-            echo \Template::instance()->render('main.html');
+            echo \Template::instance()->render('register.html');
         }
     }
     

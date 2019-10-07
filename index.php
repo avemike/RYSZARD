@@ -23,7 +23,7 @@ $f3->route('POST /logout','login->logout');
 
 $f3->route('GET /register',
 	function($f3) {
-		echo \Template::instance()->render('main.html');
+		echo \Template::instance()->render('register.html');
 	}
 );
 
