@@ -13,11 +13,16 @@
         <input type="submit" value="Zarejestruj!">
     </form>
     <div>
-        {{ @error1 }}
-        {{ @error2 }}
-        {{ @error3 }}
-        {{ @error4 }}
-        {{ @error5 }}
+        <?= ($error1)."
+" ?>
+        <?= ($error2)."
+" ?>
+        <?= ($error3)."
+" ?>
+        <?= ($error4)."
+" ?>
+        <?= ($error5)."
+" ?>
     </div>
 </body>
 </html>

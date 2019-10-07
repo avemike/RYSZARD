@@ -113,10 +113,15 @@
                         $f3->set('error2',"Hasło jest zbyt długie!");
                     }   else {
                             //insert password and username into database
-                            $f3->get('object_mapper')->login=$f3->get('POST.username');
-                            $f3->get('object_mapper')->password=md5($f3->get('POST.password')); 
-                            $f3->get('object_mapper')->save();  
-                            $f3->reroute('@login');
+                            if (!($f3->get('object_mapper')->load(array('login=?',$f3->get('POST.username'))))==$f3->get('POST.username')) {
+                                $f3->get('object_mapper')->login=$f3->get('POST.username');
+                                $f3->get('object_mapper')->password=md5($f3->get('POST.password')); 
+                                $f3->get('object_mapper')->save(); 
+                                $f3->reroute('@login'); 
+                            }
+                            else{
+                                $f3->set('error5',"Użytkownik już istnieje!");
+                            }
                         }
                 }   else {
                         $f3->set('error3',"Nazwa użytkownika jest zbyt długa!"); 
