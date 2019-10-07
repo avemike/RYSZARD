@@ -9,14 +9,14 @@
 <body>
     <form method="POST" action="registration" >
         Login<input type="text" name="username" ></br>
-        Mail<input type="text" name="email" ></br>
-        Hasło<input type="text" name="password"></br>
+        Hasło<input type="password" name="password"></br>
         <input type="submit" value="Zarejestruj!">
     </form>
     <div>
-        <?= ($error1)."
-" ?>
-        <?= ($error)."
+        <?= ($error1) ?></br>
+        <?= ($error2) ?></br>
+        <?= ($error3) ?></br>
+        <?= ($error4)."
 " ?>
     </div>
 </body>
