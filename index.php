@@ -5,10 +5,9 @@ $f3->config('config.ini');
 include('php/functions.php');
 session_start();
 
-
-
+$dbserv="localhost";
 $db=new DB\SQL(
-	'mysql:host=localhost;port=3306;dbname=ryszardDB',
+	'mysql:host='.$dbserv.';port=3306;dbname=ryszardDB',
 	'root',
 	''
 );

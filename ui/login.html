@@ -18,7 +18,8 @@
     <form action="" method="POST">
     <input name="login" placeholder="login" maxlength="{{ @max_login_len }}" autocomplete="off"><br>
     <input type="password" name="password" placeholder="password" maxlength="{{ @max_passw_len }}"><br>
-    <button type="submit">Zaloguj się</button>
+    <button type="submit">Zaloguj się</button><br>
+    <a href="register">Zarejestruj się</a>
     <h1 class="error">{{ @loginErr }}</h1>
     </form>
 </body>
