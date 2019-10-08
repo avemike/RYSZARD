@@ -11,7 +11,7 @@
     <div class="container">
         <div class="col-lg-3 border">
             <ul class="list-group">
-                <li class="list-group-item">Przygody</li>
+                <li class="list-group-item"><a href="missions">Przygody</a></li>
                 <li class="list-group-item">Profil</li>
                 <li class="list-group-item">
                     <form action="logout" method="POST">

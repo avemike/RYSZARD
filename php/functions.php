@@ -1,10 +1,57 @@
 <?php 
     class home{
         function gethome($f3){
-            if (empty($_SESSION["login"]) || empty($_SESSION["nickname"])){
+            if(empty($_SESSION["login"]) || empty($_SESSION["nickname"])){
                 $f3->reroute('@login');
              }
             echo \Template::instance()->render('profile.html');
+        }
+        function missions($f3){  
+            global $db;      
+            if(empty($_SESSION["nickname"])){
+                $f3->reroute('@login');
+            }
+            if($result=$db->exec('SELECT mission_id, TIMESTAMPDIFF(SECOND,start_date,current_timestamp()) AS started_ago, duration_time, currency_reward, exp_reward FROM missions WHERE char_id=? AND mission_active=1', $_SESSION["char_id"])){
+                $f3->set('missions', false);
+                if($result[0]["started_ago"]>$result[0]["duration_time"]){
+                    $f3->set('missionready', $result[0]);
+
+                    $char=new DB\SQL\Mapper($db,'characters');
+                    $char->load(array('char_id=?',$_SESSION["char_id"]));
+                    $char->currency+=$result[0]["currency_reward"];
+                    $char->exp+=$result[0]["exp_reward"];
+                    $char->save();
+
+                    $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
+                }
+                else{
+                    $f3->set('missionready', false);
+                    $f3->set('missionbox',$result[0]["duration_time"]-$result[0]["started_ago"]);
+                }
+            }
+            else{
+                $f3->set('missions', true);
+
+                if($result=$db->exec('SELECT * FROM missions WHERE char_id=?',$_SESSION["char_id"])){
+                    $f3->set('missionbox',$result);
+                }
+                else{
+                    $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
+                    values ("1", "100", "200", "10", CURRENT_TIMESTAMP(), "0")');
+                    $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
+                    values ("1", "200", "300", "5", CURRENT_TIMESTAMP(), "0")');
+                    $f3->set('missionbox',$db->exec('SELECT * FROM missions WHERE char_id=?',$_SESSION["char_id"]));
+                }
+            }
+            echo \Template::instance()->render('missions.html');
+        }
+        function choosemission($f3){
+            if(!empty($_SESSION["nickname"])){
+                global $db;
+                $db->exec('UPDATE missions SET mission_active="1", start_date=current_timestamp() WHERE mission_id=?',$_POST["activemission"]);
+                $f3->reroute('@missions');
+            }
+            $f3->reroute('@login');
         }
     }
     class login{
@@ -12,7 +59,6 @@
             if(!empty($_SESSION["login"])){
                 if(empty($_SESSION["nickname"])){
                     $this->getservers($f3);
-                    // $f3->set('result',$db->exec('SELECT servers.server_id, char_id, level, nickname FROM servers left join characters on servers.server_id = characters.server_id where user_id=? or user_id IS NULL', $_SESSION["user_id"]));
                     echo \Template::instance()->render('servers.html');
                 }
                 else{
@@ -67,15 +113,9 @@
         
                 UNION
         
-                SELECT
-                    servers.server_id,
-                    NULL AS char_id,
-                    NULL AS LEVEL,
-                    NULL AS nickname
-                FROM
-                    servers
-                    LEFT JOIN characters
-                    ON servers.server_id = characters.server_id
+                SELECT servers.server_id, NULL AS char_id, NULL AS LEVEL, NULL AS nickname
+                FROM servers
+                LEFT JOIN characters ON servers.server_id = characters.server_id
                 WHERE user_id!=:id or user_id IS NULL
             ) t
             GROUP BY server_id";
@@ -85,17 +125,12 @@
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
                 if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
-                    
-                    $values = array();
-                    foreach($result[0] as $value){
-                        array_push($values, $value);
-                    }
-                    $_SESSION["char_id"]=$values[0];
-                    $_SESSION["nickname"]=$values[1];
-                    $_SESSION["server"]=$values[2];
-                    $_SESSION["level"]=$values[3];
-                    $f3->reroute('@home');
+                    $_SESSION["char_id"]=$result[0]["char_id"];
+                    $_SESSION["nickname"]=$result[0]["nickname"];
+                    $_SESSION["server"]=$result[0]["server_id"];
+                    $_SESSION["level"]=$result[0]["level"];
 
+                    $f3->reroute('@home');
                 }
                 else{
                     //do zrobienia tworzenie postaci
