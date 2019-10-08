@@ -11,8 +11,10 @@
             if(empty($_SESSION["nickname"])){
                 $f3->reroute('@login');
             }
+            //if character have active mission
             if($result=$db->exec('SELECT mission_id, TIMESTAMPDIFF(SECOND,start_date,current_timestamp()) AS started_ago, duration_time, currency_reward, exp_reward FROM missions WHERE char_id=? AND mission_active=1', $_SESSION["char_id"])){
                 $f3->set('missions', false);
+                //if active mission has ended
                 if($result[0]["started_ago"]>$result[0]["duration_time"]){
                     $f3->set('missionready', $result[0]);
 
@@ -26,22 +28,32 @@
 
                     $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
                 }
+                //if mission is not ended yet
                 else{
                     $f3->set('missionready', false);
                     $f3->set('missionbox',$result[0]["duration_time"]-$result[0]["started_ago"]);
                 }
             }
+            //no active missions
             else{
                 $f3->set('missions', true);
 
+                //if missions are already generated
                 if($result=$db->exec('SELECT * FROM missions WHERE char_id=?',$_SESSION["char_id"])){
                     $f3->set('missionbox',$result);
                 }
+                //else generate new missions
                 else{
-                    $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
-                    values ("1", "100", "200", "10", CURRENT_TIMESTAMP(), "0")');
-                    $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
-                    values ("1", "200", "300", "5", CURRENT_TIMESTAMP(), "0")');
+                
+                    for($i=0;$i<3;$i++){
+                        $duration_time=rand(1,20)*30;
+                        $currency_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
+                        $exp_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
+
+                        $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
+                        values (?, ?, ?, ?, CURRENT_TIMESTAMP(), "0")', array($_SESSION["char_id"], $currency_reward, $exp_reward, $duration_time));
+                    }
+
                     $f3->set('missionbox',$db->exec('SELECT * FROM missions WHERE char_id=?',$_SESSION["char_id"]));
                 }
             }
@@ -211,7 +223,4 @@
                 echo "Mail niepoprawny";
             }   
     } */
-
-
-
 ?>
