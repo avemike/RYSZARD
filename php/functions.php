@@ -167,14 +167,14 @@
         function postcreatechar($f3) {
             
             $f3->set('object_mapper_char',$user=new DB\SQL\Mapper($f3->get('conn'),'characters'));
-            $f3->set('object_mapper_acco',$user=new DB\SQL\Mapper($f3->get('conn'),'accounts'));
+            //$f3->set('object_mapper_acco',$user=new DB\SQL\Mapper($f3->get('conn'),'accounts'));
 
             if (!empty($_SESSION["login"])) {
                 if (!empty($f3->get('POST.occupation'))&&(!empty($f3->get('POST.nickname')))) {
                     if($this->checkalphabet($f3->get('POST.nickname'))) {
                         $f3->get('object_mapper_char')->char_class=$f3->get('POST.occupation');
                         $f3->get('object_mapper_char')->nickname=$f3->get('POST.nickname');
-                        $f3->get('object_mapper_char')->user_id=($f3->get('object_mapper_acco')->select('user_id',['login = ?', $_SESSION["login"]]));
+                        //$f3->get('object_mapper_char')->user_id=($f3->get('object_mapper_acco')->select('user_id',['login = ?', $_SESSION["login"]]));
                         $f3->get('object_mapper_char')->save(); 
                     }
                     else {
