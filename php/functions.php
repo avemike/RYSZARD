@@ -1,8 +1,3 @@
-<<<<<<< HEAD
-<?php
-
-    class registration {
-=======
 <?php 
     class home{
         function gethome($f3){
@@ -103,9 +98,7 @@
 
                 }
                 else{
-                    //do zrobienia tworzenie postaci
-                    // $f3->reroute('@createchar');
-                    $f3->reroute('@login');
+                    $f3->reroute('@createchar');
                 }
             }
             else{
@@ -120,33 +113,32 @@
     }
 
     class register {
->>>>>>> c724852908ec009ef2f585e43b20e6eadec4011b
+        function checkalphabet($string) {
+            $alphabet=array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","v","s","t","u","w","x","y","z","1","2","3","4","5","6","7","8","9","0");
+            for ($i=0; $i<strlen($string); $i++) {
+                if(!in_array($string[$i],$alphabet)) {
+                    return false;    
+                }
+            };
+            return true;
+        }
         function inserting_data($f3) {
             //create mapper
             $f3->set('object_mapper',$user=new DB\SQL\Mapper($f3->get('conn'),'accounts')); 
+            $login=$_POST['username'];
+            $email=$_POST['email'];
             $utf = \UTF::instance();
-<<<<<<< HEAD
-
-            $login=$_POST['username'];
-            $email=$_POST['email'];
-            $alphabet=array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","v","s","t","u","w","x","y","z","1","2","3","4","5","6","7","8","9","0");
-
-=======
-            $login=$_POST['username'];
-            $email=$_POST['email'];
-            $alphabet=array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","v","s","t","u","w","x","y","z","1","2","3","4","5","6","7","8","9","0");
->>>>>>> c724852908ec009ef2f585e43b20e6eadec4011b
             //checking if username and password is no empty
             if ((!$f3->get('POST.username')=="")&&(!$f3->get('POST.password')=="")) {
                 //checking if username has permitted characters
-                for ($i=0; $i<($utf->strlen($f3->get('POST.username'))); $i++) {
-                    if(!in_array($login[$i],$alphabet)) {
-                        $error1_temp="Proszę podać poprawną nazwę użytkownika!";    
-                    }
-                };
-                $f3->set('error1',$error1_temp); 
+                if($this->checkalphabet($f3->get('POST.username'))) {
+                    $f3->set('error1',""); 
+                }
+                else {
+                    $f3->set('error1',"Proszę podać poprawną nazwę użytkownika!"); 
+                } 
                 //checking if username is not too long
-                if ((($utf->strlen($f3->get('POST.username')))<($f3->get('max_login_len')))&&($errors[0]==null)) {
+                if ((($utf->strlen($f3->get('POST.username')))<($f3->get('max_login_len')))&&($f3->get('error1')=="")) {
                     //checking if password is not too long
                     if ((($utf->strlen($f3->get('POST.password'))))>($f3->get('max_password_len'))) {
                         $f3->set('error2',"Hasło jest zbyt długie!");
@@ -155,15 +147,11 @@
                             if (!($f3->get('object_mapper')->load(array('login=?',$f3->get('POST.username'))))==$f3->get('POST.username')) {
                                 $f3->get('object_mapper')->login=$f3->get('POST.username');
                                 $f3->get('object_mapper')->password=md5($f3->get('POST.password')); 
-<<<<<<< HEAD
-                                $f3->get('object_mapper')->save();  
-=======
                                 $f3->get('object_mapper')->save(); 
                                 $f3->reroute('@login'); 
                             }
                             else{
                                 $f3->set('error5',"Użytkownik już istnieje!");
->>>>>>> c724852908ec009ef2f585e43b20e6eadec4011b
                             }
                         }
                 }   else {
@@ -173,11 +161,35 @@
             } else {
                 $f3->set('error4',"Proszę wypełnić wszystkie pola!");
             };  
-<<<<<<< HEAD
-            echo \Template::instance()->render('main.html');
-=======
             echo \Template::instance()->render('register.html');
->>>>>>> c724852908ec009ef2f585e43b20e6eadec4011b
+            
+        }
+        function postcreatechar($f3) {
+            
+            $f3->set('object_mapper_char',$user=new DB\SQL\Mapper($f3->get('conn'),'characters'));
+            $f3->set('object_mapper_acco',$user=new DB\SQL\Mapper($f3->get('conn'),'accounts'));
+
+            if (!empty($_SESSION["login"])) {
+                if (!empty($f3->get('POST.occupation'))&&(!empty($f3->get('POST.nickname')))) {
+                    if($this->checkalphabet($f3->get('POST.nickname'))) {
+                        $f3->get('object_mapper_char')->char_class=$f3->get('POST.occupation');
+                        $f3->get('object_mapper_char')->nickname=$f3->get('POST.nickname');
+                        $f3->get('object_mapper_char')->user_id=($f3->get('object_mapper_acco')->select('user_id',['login = ?', $_SESSION["login"]]));
+                        $f3->get('object_mapper_char')->save(); 
+                    }
+                    else {
+                        $f3->set('creating_error1', "Proszę wpisać poprawną nazwę postaci!");
+                    }
+                } else {
+                    $f3->set('creating_error2', "Proszę uzupełnić wszystkie pola!");
+                }
+                echo \Template::instance()->render('characters.html');
+            }
+        }
+        function createchar($f3) {
+            if (!empty($_SESSION["login"])) {
+            echo \Template::instance()->render('characters.html');
+            }
         }
     }
     
@@ -193,9 +205,6 @@
             }   
     } */
 
-<<<<<<< HEAD
-=======
 
 
->>>>>>> c724852908ec009ef2f585e43b20e6eadec4011b
 ?>
