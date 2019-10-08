@@ -31,7 +31,8 @@
                         <li class="list-group-item">Server : <?= ($SESSION['server']) ?></li>
                         <li class="list-group-item">Login : <?= ($SESSION['login']) ?></li>
                         <li class="list-group-item">Lv : <?= ($SESSION['level']) ?></li>
-                        <li class="list-group-item">Życie : 10</li>
+                        <li class="list-group-item">Gold : <?= ($SESSION['currency']) ?></li>
+                        <li class="list-group-item">Exp : <?= ($SESSION['exp']) ?></li>
                     </div>
                 </div>
             </div>

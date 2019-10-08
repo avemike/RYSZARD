@@ -21,6 +21,8 @@
                     $char->currency+=$result[0]["currency_reward"];
                     $char->exp+=$result[0]["exp_reward"];
                     $char->save();
+                    $_SESSION["currency"]=$char->currency;
+                    $_SESSION["exp"]=$char->exp;
 
                     $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
                 }
@@ -124,11 +126,13 @@
         function logintoserver($f3){
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
-                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
+                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
                     $_SESSION["char_id"]=$result[0]["char_id"];
                     $_SESSION["nickname"]=$result[0]["nickname"];
                     $_SESSION["server"]=$result[0]["server_id"];
                     $_SESSION["level"]=$result[0]["level"];
+                    $_SESSION["currency"]=$result[0]["currency"];
+                    $_SESSION["exp"]=$result[0]["exp"];
 
                     $f3->reroute('@home');
                 }
@@ -167,22 +171,24 @@
                 };
                 $f3->set('error1',$error1_temp); 
                 //checking if username is not too long
-                if ((($utf->strlen($f3->get('POST.username')))<($f3->get('max_login_len')))&&($errors[0]==null)) {
-                    //checking if password is not too long
-                    if ((($utf->strlen($f3->get('POST.password'))))>($f3->get('max_password_len'))) {
-                        $f3->set('error2',"Hasło jest zbyt długie!");
-                    }   else {
-                            //insert password and username into database
-                            if (!($f3->get('object_mapper')->load(array('login=?',$f3->get('POST.username'))))==$f3->get('POST.username')) {
-                                $f3->get('object_mapper')->login=$f3->get('POST.username');
-                                $f3->get('object_mapper')->password=md5($f3->get('POST.password')); 
-                                $f3->get('object_mapper')->save(); 
-                                $f3->reroute('@login'); 
+                if ((($utf->strlen($f3->get('POST.username')))<=($f3->get('max_login_len')))) {
+                    if(($f3->get('error1')==null)){
+                        //checking if password is not too long
+                        if ((($utf->strlen($f3->get('POST.password'))))>($f3->get('max_password_len'))) {
+                            $f3->set('error2',"Hasło jest zbyt długie!");
+                        }   else {
+                                //insert password and username into database
+                                if (($f3->get('object_mapper')->load(array('login=?',$f3->get('POST.username'))))!=$f3->get('POST.username')) {
+                                    $f3->get('object_mapper')->login=$f3->get('POST.username');
+                                    $f3->get('object_mapper')->password=md5($f3->get('POST.password')); 
+                                    $f3->get('object_mapper')->save(); 
+                                    $f3->reroute('@login'); 
+                                }
+                                else{
+                                    $f3->set('error5',"Użytkownik już istnieje!");
+                                }
                             }
-                            else{
-                                $f3->set('error5',"Użytkownik już istnieje!");
-                            }
-                        }
+                    }
                 }   else {
                         $f3->set('error3',"Nazwa użytkownika jest zbyt długa!"); 
                     };        
