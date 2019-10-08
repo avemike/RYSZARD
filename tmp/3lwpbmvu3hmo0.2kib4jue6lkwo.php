@@ -27,10 +27,10 @@
                 </div>
                 <div class="col-lg-12">
                     <div class="list-group">
-                        <li class="list-group-item">Nick : {{ @SESSION.nickname }}</li>
-                        <li class="list-group-item">Server : {{ @SESSION.server }}</li>
-                        <li class="list-group-item">Login : {{ @SESSION.login }}</li>
-                        <li class="list-group-item">Lv : {{ @SESSION.level }}</li>
+                        <li class="list-group-item">Nick : <?= ($SESSION['nickname']) ?></li>
+                        <li class="list-group-item">Server : <?= ($SESSION['server']) ?></li>
+                        <li class="list-group-item">Login : <?= ($SESSION['login']) ?></li>
+                        <li class="list-group-item">Lv : <?= ($SESSION['level']) ?></li>
                         <li class="list-group-item">Życie : 10</li>
                     </div>
                 </div>
