@@ -22,7 +22,7 @@
             <h1 class="centered">Tutaj bedziesz miał misje</h1>
             <?php foreach (($missionbox?:[]) as $mission): ?>
                 <form action="choosemission" method="POST">
-                    <p class="click">Misja taka i taka czas trwania: <span class="mission_time"><?= ($mission['duration_time']) ?></span>min, nagrody: <?= ($mission['currency_reward']) ?>golda i <?= ($mission['exp_reward']) ?>expa</p>
+                    <p class="click"><?= ($mission['mission_name']) ?>: <span class="mission_time"><?= ($mission['duration_time']) ?></span>min, nagrody: <?= ($mission['currency_reward']) ?>golda i <?= ($mission['exp_reward']) ?>expa</p>
                     <input type="hidden" name="activemission" value="<?= ($mission['mission_id']) ?>">
                 </form>
             <?php endforeach; ?>
@@ -39,7 +39,7 @@
         <?php else: ?>
             <?php if ($missionready): ?>
                 
-                    <h2 class="centered">Brawo!!! Skończyłeś swoją misję!!!</h2>
+                    <h2 class="centered"><?= ($mission_description) ?></h2>
                     <h2 class="centered">Twoje nagrody to <?= ($missionready['currency_reward']) ?> golda i <?= ($missionready['exp_reward']) ?>expa</h2>
                     <a href="missions">Zacznij nową misję</a>
                     <br>

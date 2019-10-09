@@ -4,7 +4,7 @@ $f3=require('lib/base.php');
 $f3->config('config.ini');
 
 // Database connection 
-$f3->set('conn',$db=new DB\SQL('mysql:host=localhost;port=3306;dbname=ryszardDB','root',''));
+$f3->set('conn',$db=new DB\SQL('mysql:host=localhost;port=3306;dbname=ryszardDB','root','',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>'SET NAMES utf8;')));
 
 session_start();
 

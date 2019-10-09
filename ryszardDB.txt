@@ -71,6 +71,7 @@ create table items (
 
 create table mission_template (
     mission_template_id int not null auto_increment,
+    mission_name varchar(255),
     mission_description varchar(255),
 
     PRIMARY KEY (mission_template_id)
@@ -115,6 +116,14 @@ INSERT INTO characters (user_id, server_id, nickname, level) values ("1", "2", "
 INSERT INTO characters (user_id, server_id, nickname, level) values ("2", "1", "fwfsfew", 12);
 INSERT INTO characters (user_id, server_id, nickname, level) values ("2", "3", "asdasd", 16);
 INSERT INTO characters (user_id, server_id, nickname, level) values ("3", "2", "fwfsfew", 125);
+
+INSERT INTO mission_template (mission_description, mission_name) values ("Po długiej walce z gaborem na gołe pięści i dzwonki szkolne udało Ci się zwyciężyć", "Wyprawa do Gabora");
+INSERT INTO mission_template (mission_description, mission_name) values ("Pan kondesator wręczył Ci swój złoty śrubokręt na znak szacunku", "Wyprawa do Kondensatora");
+INSERT INTO mission_template (mission_description, mission_name) values ("Dostałeś obietnicę, że dostaniesz nowy identyfikator, przyjdź go odebrać za dwa lata", "Sekretariat");
+INSERT INTO mission_template (mission_description, mission_name) values ("Udało Ci się jakoś z tamtąd uciec recytując fragmenty \"Pana Tadeusza\" z pamięci", "Sala 102/Legowisko diabła");
+INSERT INTO mission_template (mission_description, mission_name) values ("Po krótkiej rozgrzewce i dwóch godzinach grania w siatkówkę, wychodzisz z tego prawie cało", "Wizyta u WFistów");
+INSERT INTO mission_template (mission_description, mission_name) values ("Pan Kierownik nakrzyczał na nas za używanie makaronów", "Wizyta kierownika");
+
 
 
 SELECT servers.server_id, char_id FROM servers left join characters on servers.server_id = characters.server_id where user_id="1" or user_id IS NULL

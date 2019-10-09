@@ -12,11 +12,12 @@
                 $f3->reroute('@login');
             }
             //if character have active mission
-            if($result=$db->exec('SELECT mission_id, TIMESTAMPDIFF(SECOND,start_date,current_timestamp()) AS started_ago, duration_time, currency_reward, exp_reward FROM missions WHERE char_id=? AND mission_active=1', $_SESSION["char_id"])){
+            if($result=$db->exec('SELECT mission_id, TIMESTAMPDIFF(SECOND,start_date,current_timestamp()) AS started_ago, duration_time, currency_reward, exp_reward, mission_description FROM missions LEFT JOIN mission_template on missions.mission_template_id = mission_template.mission_template_id WHERE char_id=? AND mission_active=1', $_SESSION["char_id"])){
                 $f3->set('missions', false);
                 //if active mission has ended
                 if($result[0]["started_ago"]>$result[0]["duration_time"]){
                     $f3->set('missionready', $result[0]);
+                    $f3->set('mission_description', $result[0]["mission_description"]);
 
                     $char=new DB\SQL\Mapper($db,'characters');
                     $char->load(array('char_id=?',$_SESSION["char_id"]));
@@ -39,22 +40,24 @@
                 $f3->set('missions', true);
 
                 //if missions are already generated
-                if($result=$db->exec('SELECT * FROM missions WHERE char_id=?',$_SESSION["char_id"])){
+                if($result=$db->exec('SELECT char_id, currency_reward, exp_reward, duration_time, mission_name, mission_id FROM missions LEFT JOIN mission_template on missions.mission_template_id = mission_template.mission_template_id WHERE char_id=?',$_SESSION["char_id"])){
                     $f3->set('missionbox',$result);
                 }
                 //else generate new missions
                 else{
-                
+                    $mission_templates = $db->exec('SELECT mission_template_id FROM mission_template ORDER BY rand() LIMIT 3');
+
+
                     for($i=0;$i<3;$i++){
                         $duration_time=rand(1,20)*30;
                         $currency_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
                         $exp_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
 
-                        $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
-                        values (?, ?, ?, ?, CURRENT_TIMESTAMP(), "0")', array($_SESSION["char_id"], $currency_reward, $exp_reward, $duration_time));
+                        $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, mission_template_id, start_date, mission_active)
+                        values (?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), "0")', array($_SESSION["char_id"], $currency_reward, $exp_reward, $duration_time, $mission_templates[$i]["mission_template_id"]));
                     }
 
-                    $f3->set('missionbox',$db->exec('SELECT * FROM missions WHERE char_id=?',$_SESSION["char_id"]));
+                    $f3->set('missionbox',$db->exec('SELECT char_id, currency_reward, exp_reward, duration_time, mission_name, mission_id FROM missions LEFT JOIN mission_template on missions.mission_template_id = mission_template.mission_template_id WHERE char_id=?',$_SESSION["char_id"]));
                 }
             }
             echo \Template::instance()->render('missions.html');
