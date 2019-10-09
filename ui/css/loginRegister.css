@@ -1,0 +1,24 @@
+body {
+    background-color: rgba(0,0,0,.05);
+}
+.box {
+    height: 100vh;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.form-group {
+    margin: 3em 0;
+}
+.error {
+    color: red;
+}
+.inner-box {
+    padding: 2em 3em;
+    margin-bottom: 5em;
+    background-color: white;
+    box-shadow: 2px 2px 6px rgba(0,0,0,.1);
+}
