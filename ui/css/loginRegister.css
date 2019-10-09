@@ -16,6 +16,9 @@ body {
 .error {
     color: red;
 }
+.box {
+    margin: 0; 
+}
 .inner-box {
     padding: 2em 3em;
     margin-bottom: 5em;
