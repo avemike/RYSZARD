@@ -17,16 +17,16 @@
 <body>
     <div class="container">
 
-        <include href="./leftMenu.html"/>
-        <check if="{{ @missions }}">
-            <true>
+        <?php echo $this->render('./leftMenu.html',NULL,get_defined_vars(),0); ?>
+        <?php if ($missions): ?>
+            
                 <h1 class="centered">Tutaj będziesz miał misje</h1>
-                <repeat group="{{ @missionbox }}" value="{{ @mission }}">
+                <?php foreach (($missionbox?:[]) as $mission): ?>
                     <form action="choosemission" method="POST">
-                        <p class="click">{{ @mission.mission_name }}: <span class="mission_time">{{ @mission.duration_time}}</span>min, nagrody: {{ @mission.currency_reward }}golda i {{ @mission.exp_reward }}expa</p>
-                        <input type="hidden" name="activemission" value="{{ @mission.mission_id }}">
+                        <p class="click"><?= ($mission['mission_name']) ?>: <span class="mission_time"><?= ($mission['duration_time']) ?></span>min, nagrody: <?= ($mission['currency_reward']) ?>golda i <?= ($mission['exp_reward']) ?>expa</p>
+                        <input type="hidden" name="activemission" value="<?= ($mission['mission_id']) ?>">
                     </form>
-                </repeat>
+                <?php endforeach; ?>
                 <script>
                     function makeminutes(){
                         timespans = document.querySelectorAll(".mission_time");
@@ -36,18 +36,18 @@
                     }
                     makeminutes();
                 </script>
-            </true>
-            <false>
-                <check if="{{ @missionready }}">
-                    <true>
-                        <h2 class="centered">{{ @mission_description }}</h2>
-                        <h2 class="centered">Twoje nagrody to {{ @missionready.currency_reward }} golda i {{ @missionready.exp_reward }}expa</h2>
+            
+            <?php else: ?>
+                <?php if ($missionready): ?>
+                    
+                        <h2 class="centered"><?= ($mission_description) ?></h2>
+                        <h2 class="centered">Twoje nagrody to <?= ($missionready['currency_reward']) ?> golda i <?= ($missionready['exp_reward']) ?>expa</h2>
                         <a href="missions">Zacznij nową misję</a>
                         <br>
-                    </true>
-                    <false>
+                    
+                    <?php else: ?>
                         <h2 class="centered">Jesteś teraz w trakcie misji i zostało ci tyle czasu do końca:</h2>
-                        <h2 id="timer" class="centered">{{ @missionbox }}</h2>
+                        <h2 id="timer" class="centered"><?= ($missionbox) ?></h2>
                         <script>
                             minutes = 0;
                             seconds = Number(document.getElementById("timer").innerHTML);
@@ -75,10 +75,10 @@
                             }
                             setTimeout(odejmczas, 1000);
                         </script>
-                    </false>
-                </check>
-            </false>
-        </check>
+                    
+                <?php endif; ?>
+            
+        <?php endif; ?>
     </div>
     <script>
         const buttons = document.querySelectorAll(".click")
