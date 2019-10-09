@@ -15,8 +15,8 @@
     </style>
 </head>
 <body>
+    <?php echo $this->render('./upperPanel.html',NULL,get_defined_vars(),0); ?>
     <div class="container">
-
         <?php echo $this->render('./leftMenu.html',NULL,get_defined_vars(),0); ?>
         <?php if ($missions): ?>
             
