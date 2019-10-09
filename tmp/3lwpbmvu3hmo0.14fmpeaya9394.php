@@ -13,8 +13,8 @@
 </head>
 <body>
     <form method="POST" action="register" >
-        Login<input type="text" name="username" ></br>
-        Hasło<input type="password" name="password"></br>
+        Login<input type="text" name="username" maxlength="<?= ($max_login_len) ?>"></br>
+        Hasło<input type="password" name="password" maxlength="<?= ($max_password_len) ?>"></br>
         <input type="submit" value="Zarejestruj!">
     </form>
     <a href="login">Powrót do logowania</a>

@@ -11,7 +11,7 @@
     <div class="container">
         <div class="col-lg-3 border">
             <ul class="list-group">
-                <li class="list-group-item">Przygody</li>
+                <li class="list-group-item"><a href="missions">Przygody</a></li>
                 <li class="list-group-item">Profil</li>
                 <li class="list-group-item">
                     <form action="logout" method="POST">
@@ -31,7 +31,8 @@
                         <li class="list-group-item">Server : <?= ($SESSION['server']) ?></li>
                         <li class="list-group-item">Login : <?= ($SESSION['login']) ?></li>
                         <li class="list-group-item">Lv : <?= ($SESSION['level']) ?></li>
-                        <li class="list-group-item">Życie : 10</li>
+                        <li class="list-group-item">Gold : <?= ($SESSION['currency']) ?></li>
+                        <li class="list-group-item">Exp : <?= ($SESSION['exp']) ?></li>
                     </div>
                 </div>
             </div>

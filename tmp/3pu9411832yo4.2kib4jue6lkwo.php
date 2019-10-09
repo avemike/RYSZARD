@@ -9,24 +9,20 @@
 </head>
 <body>
     <div class="container">
-        <div class="col-lg-3 border">
-            <ul class="list-group">
-                <li class="list-group-item">Przygody</li>
-                <li class="list-group-item">Profil</li>
-            </ul>
-        </div>
+        <?php echo $this->render('./leftMenu.html',NULL,get_defined_vars(),0); ?>
         <div class="col-lg-9 border">
-            <div class="col-lg-6 border">
+            <div class="col-md-6 border">
                 <div class="col-lg-12">
                     <img class="profile-photo" src="ui/images/profile.jpg" alt="">
                 </div>
                 <div class="col-lg-12">
                     <div class="list-group">
-                        <li class="list-group-item">Siła : 10</li>
-                        <li class="list-group-item">Zręczność : 10</li>
-                        <li class="list-group-item">Inteligencja : 10</li>
-                        <li class="list-group-item">Przywileje : 10</li>
-                        <li class="list-group-item">Życie : 10</li>
+                        <li class="list-group-item">Nick : <?= ($SESSION['nickname']) ?></li>
+                        <li class="list-group-item">Server : <?= ($SESSION['server']) ?></li>
+                        <li class="list-group-item">Login : <?= ($SESSION['login']) ?></li>
+                        <li class="list-group-item">Lv : <?= ($SESSION['level']) ?></li>
+                        <li class="list-group-item">Gold : <?= ($SESSION['currency']) ?></li>
+                        <li class="list-group-item">Exp : <?= ($SESSION['exp']) ?></li>
                     </div>
                 </div>
             </div>
