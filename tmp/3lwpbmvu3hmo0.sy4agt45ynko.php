@@ -9,7 +9,8 @@
 <body>
     <div>
         <form method="POST" action="createchar">
-            Informatyk<input type="radio" name="occupation" value="informatyk"></br>
+            <input type="hidden" name="server" value="<?= ($server) ?>">
+            Informatyk<input type="radio" name="occupation" value="informatyk" checked></br>
             Mechatronik<input type="radio" name="occupation" value="mechatronik"></br>
             Elektronik<input type="radio" name="occupation" value="elektronik"></br>
             Wpisz nazwę postaci<input type="text" name="nickname"></br>
@@ -18,6 +19,8 @@
         <?= ($creating_error1)."
 " ?>
         <?= ($creating_error2)."
+" ?>
+        <?= ($creating_error3)."
 " ?>
     </div>
 
