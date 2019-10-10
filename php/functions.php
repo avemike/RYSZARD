@@ -18,14 +18,8 @@
                 if($result[0]["started_ago"]>$result[0]["duration_time"]){
                     $f3->set('missionready', $result[0]);
                     $f3->set('mission_description', $result[0]["mission_description"]);
-
-                    $char=new DB\SQL\Mapper($db,'characters');
-                    $char->load(array('char_id=?',$_SESSION["char_id"]));
-                    $char->currency+=$result[0]["currency_reward"];
-                    $char->exp+=$result[0]["exp_reward"];
-                    $char->save();
-                    $_SESSION["currency"]=$char->currency;
-                    $_SESSION["exp"]=$char->exp;
+ 
+                    $this->addexperience($result[0]["currency_reward"], $result[0]["exp_reward"]);
 
                     $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
                 }
@@ -63,12 +57,24 @@
             echo \Template::instance()->render('missions.html');
         }
         function choosemission($f3){
+            global $db;
             if(!empty($_SESSION["nickname"])){
-                global $db;
-                $db->exec('UPDATE missions SET mission_active="1", start_date=current_timestamp() WHERE mission_id=?',$_POST["activemission"]);
+                if($db->exec('SELECT * FROM missions WHERE mission_id=? AND char_id=?', array($_POST["activemission"], $_SESSION["char_id"]))){
+                    $db->exec('UPDATE missions SET mission_active="1", start_date=current_timestamp() WHERE mission_id=?',$_POST["activemission"]);
+                }
                 $f3->reroute('@missions');
             }
             $f3->reroute('@login');
+        }
+        function addexperience($currency, $exp){
+            global $db;
+            $char=new DB\SQL\Mapper($db,'characters');
+            $char->load(array('char_id=?',$_SESSION["char_id"]));
+            $char->currency+=$currency;
+            $char->exp+=$exp;
+            $char->save();
+            $_SESSION["currency"]=$char->currency;
+            $_SESSION["exp"]=$char->exp;
         }
     }
     class login{

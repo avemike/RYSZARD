@@ -8,37 +8,28 @@
     <title>Document</title>
 </head>
 <body>
+    <?php echo $this->render('./upperPanel.html',NULL,get_defined_vars(),0); ?>
     <div class="container">
-        <div class="col-lg-3 border">
-            <ul class="list-group">
-                <li class="list-group-item"><a href="missions">Przygody</a></li>
-                <li class="list-group-item">Profil</li>
-                <li class="list-group-item">
-                    <form action="logout" method="POST">
-                        <button type="submit">logout</button>
-                    </form>    
-                </li>
-            </ul>
-        </div>
-        <div class="col-lg-9 border">
-            <div class="col-lg-6 border">
-                <div class="col-lg-12">
-                    <img class="profile-photo" src="ui/images/profile.jpg" alt="">
-                </div>
-                <div class="col-lg-12">
-                    <div class="list-group">
-                        <li class="list-group-item">Nick : <?= ($SESSION['nickname']) ?></li>
-                        <li class="list-group-item">Server : <?= ($SESSION['server']) ?></li>
-                        <li class="list-group-item">Login : <?= ($SESSION['login']) ?></li>
-                        <li class="list-group-item">Lv : <?= ($SESSION['level']) ?></li>
-                        <li class="list-group-item">Gold : <?= ($SESSION['currency']) ?></li>
-                        <li class="list-group-item">Exp : <?= ($SESSION['exp']) ?></li>
+        <div class="row">
+            <?php echo $this->render('./leftMenu.html',NULL,get_defined_vars(),0); ?>
+            <div class="col-lg-9 border">
+                <div class="col-md-6 border">
+                    <div class="col-lg-12">
+                        <img class="profile-photo" src="ui/images/profile.jpg" alt="">
+                    </div>
+                    <div class="col-lg-12">
+                        <div class="list-group">
+                            <li class="list-group-item">Nick : <?= ($SESSION['nickname']) ?></li>
+                            <li class="list-group-item">Lv : <?= ($SESSION['level']) ?></li>
+                            <li class="list-group-item">Exp : <?= ($SESSION['exp']) ?></li>
+                        </div>
                     </div>
                 </div>
+                <div class="col-lg-6 border"></div>
             </div>
-            <div class="col-lg-6 border"></div>
         </div>
     </div>
+
 </body>
 <style>
     /* .border {
