@@ -15,70 +15,74 @@
     </style>
 </head>
 <body>
+    <include href="./upperPanel.html" />
     <div class="container">
-
-        <include href="./leftMenu.html"/>
-        <check if="{{ @missions }}">
-            <true>
-                <h1 class="centered">Tutaj będziesz miał misje</h1>
-                <repeat group="{{ @missionbox }}" value="{{ @mission }}">
-                    <form action="choosemission" method="POST">
-                        <p class="click">{{ @mission.mission_name }}: <span class="mission_time">{{ @mission.duration_time}}</span>min, nagrody: {{ @mission.currency_reward }}golda i {{ @mission.exp_reward }}expa</p>
-                        <input type="hidden" name="activemission" value="{{ @mission.mission_id }}">
-                    </form>
-                </repeat>
-                <script>
-                    function makeminutes(){
-                        timespans = document.querySelectorAll(".mission_time");
-                        for(const time of timespans){
-                            time.innerHTML=Number(time.textContent)/60;
-                        }
-                    }
-                    makeminutes();
-                </script>
-            </true>
-            <false>
-                <check if="{{ @missionready }}">
+        <div class="row">
+            <include href="./leftMenu.html"/>
+            <div class="col-md-9">
+                <check if="{{ @missions }}">
                     <true>
-                        <h2 class="centered">{{ @mission_description }}</h2>
-                        <h2 class="centered">Twoje nagrody to {{ @missionready.currency_reward }} golda i {{ @missionready.exp_reward }}expa</h2>
-                        <a href="missions">Zacznij nową misję</a>
-                        <br>
+                        <h1 class="centered">Misje</h1>
+                        <repeat group="{{ @missionbox }}" value="{{ @mission }}">
+                            <form action="choosemission" method="POST">
+                                <p class="click">{{ @mission.mission_name }}: <span class="mission_time">{{ @mission.duration_time}}</span>min, nagrody: {{ @mission.currency_reward }}golda i {{ @mission.exp_reward }}expa</p>
+                                <input type="hidden" name="activemission" value="{{ @mission.mission_id }}">
+                            </form>
+                        </repeat>
+                        <script>
+                            function makeminutes(){
+                                timespans = document.querySelectorAll(".mission_time");
+                                for(const time of timespans){
+                                    time.innerHTML=Number(time.textContent)/60;
+                                }
+                            }
+                            makeminutes();
+                        </script>
                     </true>
                     <false>
-                        <h2 class="centered">Jesteś teraz w trakcie misji i zostało ci tyle czasu do końca:</h2>
-                        <h2 id="timer" class="centered">{{ @missionbox }}</h2>
-                        <script>
-                            minutes = 0;
-                            seconds = Number(document.getElementById("timer").innerHTML);
-                            while(seconds>59){
-                                minutes++;
-                                seconds-=60;
-                            }
-                            document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
-    
-                            function odejmczas(){
-                                if(seconds<1 && minutes==0){
-                                    window.location.href="";
-                                }
-                                else{
-                                    if(seconds==0){
-                                        minutes--;
-                                        seconds=59
-                                    }
-                                    else{
-                                        seconds--;
+                        <check if="{{ @missionready }}">
+                            <true>
+                                <h2 class="centered">{{ @mission_description }}</h2>
+                                <h2 class="centered">Twoje nagrody to {{ @missionready.currency_reward }} golda i {{ @missionready.exp_reward }}expa</h2>
+                                <a href="missions">Zacznij nową misję</a>
+                                <br>
+                            </true>
+                            <false>
+                                <h2 class="centered">Jesteś teraz w trakcie misji i zostało ci tyle czasu do końca:</h2>
+                                <h2 id="timer" class="centered">{{ @missionbox }}</h2>
+                                <script>
+                                    minutes = 0;
+                                    seconds = Number(document.getElementById("timer").innerHTML);
+                                    while(seconds>59){
+                                        minutes++;
+                                        seconds-=60;
                                     }
                                     document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
+            
+                                    function odejmczas(){
+                                        if(seconds<1 && minutes==0){
+                                            window.location.href="";
+                                        }
+                                        else{
+                                            if(seconds==0){
+                                                minutes--;
+                                                seconds=59
+                                            }
+                                            else{
+                                                seconds--;
+                                            }
+                                            document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
+                                            setTimeout(odejmczas, 1000);
+                                        }
+                                    }
                                     setTimeout(odejmczas, 1000);
-                                }
-                            }
-                            setTimeout(odejmczas, 1000);
-                        </script>
+                                </script>
+                            </false>
+                        </check>
                     </false>
                 </check>
-            </false>
-        </check>
+            </div>
+        </div>
     </div>
     <script>
         const buttons = document.querySelectorAll(".click")
