@@ -32,17 +32,22 @@
                         <div class="item">
                             <img src="ui/images/items/{{@item.item_icon}}.png" alt="">
                             <div class="item-info">
-                                <p>Nazwa: {{ @item.item_name }}</p>
-                                <p>Wartosc: {{ @item.value }}</p>                
-                                <check if="{{ @item.item_description }}">
-                                    <p>Opis: {{ @item.item_description }}</p>                
-                                </check>
-                                <p>Siła: {{ @item.strength }}</p>            
-                                <p>Życie: {{ @item.hp }}</p>                
-                                <p>Zręczność: {{ @item.dex }}</p>                
-                                <p>Intelekt: {{ @item.intelligence }}</p>                
-                                <p>Każdy atrybut: {{ @item.every_attrib }}</p>                
-
+                                <form action="itemShop/buyItem" method="POST">
+                                    <input name="item_id" value="{{ @item.item_id }}" style="display: none;"/>
+                                    <p>Nazwa: {{ @item.item_name }}</p>
+                                    <p>Wartosc: {{ @item.value }}</p>                
+                                    <check if="{{ @item.item_description }}">
+                                        <p>Opis: {{ @item.item_description }}</p>                
+                                    </check>
+                                    <div class="base-properties">
+                                        <p>Siła: {{ @item.strength }}</p>            
+                                        <p>Życie: {{ @item.hp }}</p>                
+                                        <p>Zręczność: {{ @item.dex }}</p>                
+                                        <p>Intelekt: {{ @item.intelligence }}</p>    
+                                    </div>
+                                    <p>Każdy atrybut: {{ @item.every_attrib }}</p>                
+                                    <button type="submit">Kup</button>
+                                </form>
                             </div>
                         </div>
                     </div>
