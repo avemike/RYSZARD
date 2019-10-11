@@ -6,6 +6,9 @@
              }
             echo \Template::instance()->render('profile.html');
         }
+        function mail($f3){
+            echo \Template::instance()->render('mail.html');
+        }
     }
     class login{
         function getlogin($f3){
