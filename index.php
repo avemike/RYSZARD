@@ -11,7 +11,6 @@ session_start();
 include('php/functions.php');
 
 
-
 $f3->route('GET @home: /','home->gethome');
 
 $f3->route('GET @missions: /missions','home->missions');
@@ -26,9 +25,11 @@ $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
 
 $f3->route('POST /logout','login->logout');
 
+$f3->route('GET @itemShop: /itemShop', 'items->item_shop');
+
 $f3->route('GET /register',
-	function($f3) {
-		echo \Template::instance()->render('register.html');
+function($f3) {
+	echo \Template::instance()->render('register.html');
 	}
 );
 
