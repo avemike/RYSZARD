@@ -9,6 +9,7 @@ $f3->set('conn',$db=new DB\SQL('mysql:host=localhost;port=3306;dbname=ryszardDB'
 session_start();
 
 include('php/functions.php');
+include('php/Items.php');
 
 
 $f3->route('GET @home: /','home->gethome');

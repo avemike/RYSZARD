@@ -1,7 +1,51 @@
 <body>
-    <repeat group="{{ @items_to_buy }}" value="{{ @item }}">
-        <form action="" method="">
-            <p class="click">{{ @item.item_name }}
-        </form>
-    </repeat>
+    
 </body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="ui/css/bootstrap.min.css">
+    <title>Document</title>
+    <style>
+        .error{ 
+            color: red;
+        }
+        .green{
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div id="foo" data-json="{{ @items_to_buy }}" style="display: none;"></div>
+    <include href="./upperPanel.html"/>
+    <div class="container">
+        <div class="row">
+            <include href="./leftMenu.html"/>
+            <div class="col-md-9">
+                <repeat group="{{ @items_to_buy }}" value="{{ @item }}">
+                    <div class="col-md-4">
+                        <div class="item">
+                            <img src="ui/images/items/{{@item.item_icon}}.png" alt="">
+                            <p>Nazwa: {{ @item.item_name }}</p>
+                            <p>Wartosc: {{ @item.value }}</p>                
+                            <check if="{{ @item.item_description }}">
+                                <p>Opis: {{ @item.item_description }}</p>                
+                            </check>
+                        </div>
+                    </div>
+        
+                </repeat>
+            </div>
+        </div>
+    </div>
+    <script>
+        // var data=JSON.parse('{{ @data | raw }}');
+        var data=document.getElementById('foo').dataset.json;
+
+        console.log(data)
+    </script>
+</body>
+</html>
