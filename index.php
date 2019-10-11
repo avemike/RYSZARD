@@ -22,16 +22,17 @@ $f3->route('GET @createchar: /createchar','register->createchar');
 
 $f3->route('POST /createchar','register->postcreatechar');
 
-$f3->route('GET @login: /login','login->getlogin');
-
-$f3->route('POST /login','login->postlogin');
-
 $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
+
 
 $f3->route('POST /logout','login->logout');
 
 $f3->route('GET /register', 'register->displayregister');
 
 $f3->route('POST /register','register->inserting_data');
+
+$f3->route('GET @login: /login','login->getlogin');
+
+$f3->route('POST /login','login->postlogin');
 
 $f3->run();

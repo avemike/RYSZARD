@@ -158,7 +158,7 @@
                     $f3->reroute('@home');
                 }
                 else{
-                    $f3->set('server',$_POST['serverno']);
+                    $_SESSION["server"]=$_POST["serverno"];
                     echo \Template::instance()->render('characters.html');
                 }
             }
@@ -230,45 +230,43 @@
         }
         function postcreatechar($f3) {
             
+            $character_classes=array("informatyk", "mechatronik", "elektronik");
+            $character_races=array("kobieta","karzel","czlowiek","zyd");
+
             $f3->set('object_mapper_char', new DB\SQL\Mapper($f3->get('conn'),'characters'));
 
-            if (!empty($_SESSION["login"])) {
-                if (!empty($f3->get('POST.occupation'))&&(!empty($f3->get('POST.nickname'))&&(!empty($f3->get('POST.race'))))) {
+            if (!empty($_SESSION["login"])&&!empty($_SESSION["server"])) {
+                if (in_array($f3->get('POST.occupation'),$character_classes)&&(!empty($f3->get('POST.nickname'))&&(in_array($f3->get('POST.race'),$character_races)))) {
                     if (($f3->get('object_mapper_char')->load(array('nickname=:nicknamepost AND server_id=:server_idpost',':nicknamepost'=>$f3->get('POST.nickname'),':server_idpost'=>$f3->get('POST.server'))))) {
                         $f3->set('creating_error3', "Postać o takim nicku już istnieje!");
                     } elseif (empty($f3->get('object_mapper_char')->load(array('user_id=:user_idpost AND server_id=:server_idpost',':user_idpost'=>$f3->get('SESSION.user_id'),':server_idpost'=>$f3->get('POST.server'))))) {
-                        if($this->checkalphabet($f3->get('POST.nickname'))) {
-                            if($f3->get('object_mapper_char')->load(array('server_id=?',$server=$f3->get("POST.server")))){
-                                if ($f3->get('POST.occupation')=="informatyk") {
-                                    $f3->get('object_mapper_char')->strength="30";
-                                    $f3->get('object_mapper_char')->hp="100";
-                                    $f3->get('object_mapper_char')->dex="10";
-                                    $f3->get('object_mapper_char')->luck="20";
-                                } elseif ($f3->get('POST.occupation')=="mechatronik") {
-                                    $f3->get('object_mapper_char')->strength="60";
-                                    $f3->get('object_mapper_char')->hp="110";
-                                    $f3->get('object_mapper_char')->dex="5";
-                                    $f3->get('object_mapper_char')->luck="5";
-                                } else {
-                                    $f3->get('object_mapper_char')->strength="25";
-                                    $f3->get('object_mapper_char')->hp="100";
-                                    $f3->get('object_mapper_char')->dex="25";
-                                    $f3->get('object_mapper_char')->luck="0";
-                                };
-                                $f3->get('object_mapper_char')->currency="0";    
-                                $f3->get('object_mapper_char')->level="1";
-                                $f3->get('object_mapper_char')->exp="0";
-                                $f3->get('object_mapper_char')->char_class=$f3->get('POST.occupation');
-                                $f3->get('object_mapper_char')->nickname=$f3->get('POST.nickname');
-                                $f3->get('object_mapper_char')->user_id=$f3->get('SESSION.user_id');
-                                $f3->get('object_mapper_char')->server_id=$server;
-                                $f3->get('object_mapper_char')->race=$f3->get('POST.race');
-                                $f3->get('object_mapper_char')->save();
-                                $f3->reroute('@login'); 
-                            }
-                            else{
-                                $f3->set("creating_error5", "nie kombinuj mi to z serwerami pls");
-                            }
+                        if($this->checkalphabet($f3->get('POST.nickname'))&&strlen($f3->get('POST.nickname'))<16) {
+                            if ($f3->get('POST.occupation')=="informatyk") {
+                                $f3->get('object_mapper_char')->strength="30";
+                                $f3->get('object_mapper_char')->hp="100";
+                                $f3->get('object_mapper_char')->dex="10";
+                                $f3->get('object_mapper_char')->luck="20";
+                            } elseif ($f3->get('POST.occupation')=="mechatronik") {
+                                $f3->get('object_mapper_char')->strength="60";
+                                $f3->get('object_mapper_char')->hp="110";
+                                $f3->get('object_mapper_char')->dex="5";
+                                $f3->get('object_mapper_char')->luck="5";
+                            } else {
+                                $f3->get('object_mapper_char')->strength="25";
+                                $f3->get('object_mapper_char')->hp="100";
+                                $f3->get('object_mapper_char')->dex="25";
+                                $f3->get('object_mapper_char')->luck="0";
+                            };
+                            $f3->get('object_mapper_char')->currency="0";    
+                            $f3->get('object_mapper_char')->level="1";
+                            $f3->get('object_mapper_char')->exp="0";
+                            $f3->get('object_mapper_char')->char_class=$f3->get('POST.occupation');
+                            $f3->get('object_mapper_char')->nickname=$f3->get('POST.nickname');
+                            $f3->get('object_mapper_char')->user_id=$f3->get('SESSION.user_id');
+                            $f3->get('object_mapper_char')->server_id=$_SESSION["server"];
+                            $f3->get('object_mapper_char')->race=$f3->get('POST.race');
+                            $f3->get('object_mapper_char')->save();
+                            $f3->reroute('@login');
                         }
                         else {
                             $f3->set('creating_error1', "Proszę wpisać poprawną nazwę postaci!");
@@ -280,6 +278,9 @@
                     $f3->set('creating_error2', "Proszę uzupełnić wszystkie pola!");
                     }
                 echo \Template::instance()->render('characters.html');
+            }
+            else{
+                $f3->reroute("@login");
             }
         }
         function createchar($f3) {

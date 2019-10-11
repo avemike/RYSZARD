@@ -24,10 +24,14 @@
             <button type="submit">Stwórz postać</button><br>
             <a href="login">Wybór serwerów</a>
         </form>
-        {{ @creating_error1 }}
-        {{ @creating_error2 }}
-        {{ @creating_error3 }}
-        {{ @creating_error4 }}
+        <?= ($creating_error1)."
+" ?>
+        <?= ($creating_error2)."
+" ?>
+        <?= ($creating_error3)."
+" ?>
+        <?= ($creating_error4)."
+" ?>
     </div>
 
 </body>
