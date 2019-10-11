@@ -34,6 +34,7 @@ create table characters (
     hp int,
     dex int,
     luck int,
+    race varchar(255),
 
     PRIMARY KEY (char_id),
     FOREIGN KEY (user_id) REFERENCES accounts(user_id),

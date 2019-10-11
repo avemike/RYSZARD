@@ -25,11 +25,7 @@ $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
 
 $f3->route('POST /logout','login->logout');
 
-$f3->route('GET /register',
-	function($f3) {
-		echo \Template::instance()->render('register.html');
-	}
-);
+$f3->route('GET /register', 'register->displayregister');
 
 $f3->route('POST /register','register->inserting_data');
 

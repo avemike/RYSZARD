@@ -9,11 +9,19 @@
 <body>
     <div>
         <form method="POST" action="createchar">
-            <input type="hidden" name="server" value="<?= ($server) ?>">
-            Informatyk<input type="radio" name="occupation" value="informatyk" checked></br>
-            Mechatronik<input type="radio" name="occupation" value="mechatronik"></br>
-            Elektronik<input type="radio" name="occupation" value="elektronik"></br>
-            Wpisz nazwę postaci<input type="text" name="nickname"></br>
+            <div style="float: left; margin-right: 500px">
+                <input type="hidden" name="server" value="<?= ($server) ?>">
+                Informatyk<input type="radio" name="occupation" value="informatyk" checked></br>
+                Mechatronik<input type="radio" name="occupation" value="mechatronik"></br>
+                Elektronik<input type="radio" name="occupation" value="elektronik"></br>
+                Wpisz nazwę postaci<input type="text" name="nickname"></br>
+            </div>
+            <div>
+                Człowiek<input type="radio" name="race" value="czlowiek" checked></br>
+                Kobieta<input type="radio" name="race" value="kobieta"></br>
+                Żyd<input type="radio" name="race" value="zyd"></br>
+                Karzeł<input type="radio" name="race" value="karzel"></br>
+            </div>
             <button type="submit">Stwórz postać</button><br>
         </form>
         <?= ($creating_error1)."
@@ -21,6 +29,8 @@
         <?= ($creating_error2)."
 " ?>
         <?= ($creating_error3)."
+" ?>
+        <?= ($creating_error4)."
 " ?>
     </div>
 
