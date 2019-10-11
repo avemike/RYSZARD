@@ -10,7 +10,7 @@ class items {
             if($result=$db->exec('
             SELECT char_id, item_name, item_description,
             item_icon, value, strength, hp, dex,
-            luck, every_attrib
+            luck, intelligence, every_attrib
             FROM items LEFT JOIN item_template 
             on items.item_template_id = item_template.item_template_id 
             WHERE item_status = 1 AND char_id=?',$_SESSION["char_id"])){

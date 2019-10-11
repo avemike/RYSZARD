@@ -8,6 +8,7 @@
     <ul class="list-group">
         <li class="list-group-item"><a href="missions">Portiernia</a></li>
         <li class="list-group-item"><a href=".">Twój ezn'iak</a></li>
+        <li class="list-group-item"><a href="itemShop">Sklep</a></li>        
         <li class="list-group-item">Lochy</li>
         <li class="list-group-item">Arena</li>
         <li class="list-group-item">Poczta</li>

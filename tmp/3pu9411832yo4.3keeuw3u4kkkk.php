@@ -8,6 +8,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="ui/css/bootstrap.min.css">
+    <link rel="stylesheet" href="ui/css/itemShop.css">
+
     <title>Document</title>
     <style>
         .error{ 
@@ -29,23 +31,42 @@
                     <div class="col-md-4">
                         <div class="item">
                             <img src="ui/images/items/<?= ($item['item_icon']) ?>.png" alt="">
-                            <p>Nazwa: <?= ($item['item_name']) ?></p>
-                            <p>Wartosc: <?= ($item['value']) ?></p>                
-                            <?php if ($item['item_description']): ?>
-                                <p>Opis: <?= ($item['item_description']) ?></p>                
-                            <?php endif; ?>
+                            <div class="item-info">
+                                <p>Nazwa: <?= ($item['item_name']) ?></p>
+                                <p>Wartosc: <?= ($item['value']) ?></p>                
+                                <?php if ($item['item_description']): ?>
+                                    <p>Opis: <?= ($item['item_description']) ?></p>                
+                                <?php endif; ?>
+                                <p>Siła: <?= ($item['strength']) ?></p>            
+                                <p>Życie: <?= ($item['hp']) ?></p>                
+                                <p>Zręczność: <?= ($item['dex']) ?></p>                
+                                <p>Intelekt: <?= ($item['intelligence']) ?></p>                
+                                <p>Każdy atrybut: <?= ($item['every_attrib']) ?></p>                
+
+                            </div>
                         </div>
                     </div>
-        
                 <?php endforeach; ?>
             </div>
         </div>
     </div>
     <script>
-        // var data=JSON.parse('<?= ($this->raw($data)) ?>');
-        var data=document.getElementById('foo').dataset.json;
-
-        console.log(data)
+        // mouse over img of item makes item-info visible
+        // const allItems = document.querySelectorAll('.item');
+        // [...allItems].map( item => {
+        //     const itemInfo = item.querySelector('.item-info'); 
+            
+        //     item.addEventListener('mouseover', e => {
+        //         itemInfo.style.left = e.clientX;
+        //         itemInfo.style.top = e.clientY;
+ 
+        //         itemInfo.classList.add('item-info--active');
+        //     })
+        //     item.addEventListener('mouseleave', e => {
+        //         itemInfo.classList.remove('item-info--active');
+        //     })
+        // })
+        // document.querySelectorAll('.item').addEventListener('mouseover', (e) => { 
     </script>
 </body>
 </html>
