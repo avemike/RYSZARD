@@ -27,6 +27,7 @@
         <div class="row">
             <?php echo $this->render('./leftMenu.html',NULL,get_defined_vars(),0); ?>
             <div class="col-md-9">
+                <h2>Sklep</h2>
                 <?php foreach (($items_to_buy?:[]) as $item): ?>
                     <div class="col-md-4">
                         <div class="item">
