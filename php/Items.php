@@ -14,26 +14,25 @@ class items {
             FROM items LEFT JOIN item_template 
             on items.item_template_id = item_template.item_template_id 
             WHERE item_status = 1 AND char_id=?',$_SESSION["char_id"])){
-                $f3->set('items_to_buy', $result);
+                // if there is 6 > items
+                for($i = count($result); $i < 6; $i++) {
+                    $this->generate_item();
+                }
+                $final_result=$db->exec('
+                    SELECT char_id, item_name, item_id, item_description,
+                    item_icon, value, strength, hp, dex,
+                    luck, intelligence, every_attrib
+                    FROM items LEFT JOIN item_template 
+                    on items.item_template_id = item_template.item_template_id 
+                    WHERE item_status = 1 AND char_id=?',$_SESSION["char_id"]);
+                
+                $f3->set('items_to_buy', $final_result);
             }
             //generate new items
             else {
-                $item_templates = $db->exec('SELECT item_template_id FROM item_template ORDER BY rand() LIMIT 6');
                 
                 for($i=0; $i<6; $i++) {
-                    $hp = ($_SESSION["level"] - rand(1, $_SESSION["level"])) * rand(5,10);  //temp algorithm
-                    $str = rand(0, $_SESSION["level"]);  //everything here is temporary
-                    $dex = rand(0, $_SESSION["level"]);
-                    $int = rand(0, $_SESSION["level"]);
-                    $luck = rand(0, $_SESSION["level"]);
-                    $every_attrib = rand(0, $_SESSION["level"]/3);
-                    $value = rand(1, ($hp + $str + $dex + $int + $luck + $every_attrib)) * rand(5, 15) * rand(1, $_SESSION["level"]);
-
-                    $db->exec(" INSERT INTO items (char_id, value, strength, 
-                        hp, dex, intelligence, luck, every_attrib,	
-                        item_status, item_template_id)
-                     values (?, ?, ?, ?, ?, ?, ?, ?, 1, ?)", array($_SESSION["char_id"], $value,
-                        $str, $hp, $dex, $int, $luck, $every_attrib, $item_templates[$i]["item_template_id"]));
+                    $this->generate_item();           
                 }
                 $items = $db->exec("SELECT char_id, item_id, value,
                     item_name, item_description, item_icon, 
@@ -94,5 +93,24 @@ class items {
             // WHERE item_status = 1 AND char_id=?',$_SESSION["char_id"])){
             //     $f3->set('items_to_buy', $result);
             // }
+        }
+        function generate_item() {
+            global $db;
+
+            $item_templates = $db->exec('SELECT item_template_id FROM item_template ORDER BY rand() LIMIT 1');
+            
+            $hp = ($_SESSION["level"] - rand(1, $_SESSION["level"])) * rand(5,10);  //temp algorithm
+            $str = rand(0, $_SESSION["level"]);  //everything here is temporary
+            $dex = rand(0, $_SESSION["level"]);
+            $int = rand(0, $_SESSION["level"]);
+            $luck = rand(0, $_SESSION["level"]);
+            $every_attrib = rand(0, $_SESSION["level"]/3);
+            $value = rand(1, ($hp + $str + $dex + $int + $luck + $every_attrib)) * rand(1, 5);
+
+            $db->exec(" INSERT INTO items (char_id, value, strength, 
+                hp, dex, intelligence, luck, every_attrib,	
+                item_status, item_template_id)
+                values (?, ?, ?, ?, ?, ?, ?, ?, 1, ?)", array($_SESSION["char_id"], $value,
+                $str, $hp, $dex, $int, $luck, $every_attrib, $item_templates[0]["item_template_id"]));
         }
     }
