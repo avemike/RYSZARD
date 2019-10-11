@@ -13,6 +13,8 @@ $f3->set('conn',$db=new DB\SQL('mysql:host=localhost;port=3306;dbname=ryszardDB'
 
 $f3->route('GET @home: /','home->gethome');
 
+$f3->route('GET @mail: /mail','home->mail');
+
 $f3->route('GET @login: /login','login->getlogin');
 
 $f3->route('POST /login','login->postlogin');
