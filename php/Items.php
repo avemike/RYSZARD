@@ -77,7 +77,7 @@ class items {
                     $db->exec('UPDATE items SET item_status = 0 WHERE item_id=?', $item_id);
 
                     // render profile
-                    echo \Template::instance()->render('home.html');
+                    $f3->reroute('@home');
 
                 }
 
