@@ -7,43 +7,45 @@ class items {
                 $f3->reroute('@login');
             }
             //if items are already generated
-            if($result=$db->exec('
-            SELECT char_id, item_name, item_id, item_description,
-            item_icon, value, strength, hp, dex,
-            luck, intelligence, every_attrib
+            // if($result=
+
+
+            $result = $db->exec('SELECT *
             FROM items LEFT JOIN item_template 
             on items.item_template_id = item_template.item_template_id 
-            WHERE item_status = 1 AND char_id=?',$_SESSION["char_id"])){
-                // if there is 6 > items
-                for($i = count($result); $i < 6; $i++) {
-                    $this->generate_item();
-                }
-                $final_result=$db->exec('
-                    SELECT char_id, item_name, item_id, item_description,
-                    item_icon, value, strength, hp, dex,
-                    luck, intelligence, every_attrib
-                    FROM items LEFT JOIN item_template 
-                    on items.item_template_id = item_template.item_template_id 
-                    WHERE item_status = 1 AND char_id=?',$_SESSION["char_id"]);
-                
-                $f3->set('items_to_buy', $final_result);
+            WHERE item_status = 1 AND char_id=?',$_SESSION["char_id"]);
+
+            // if there is 6 > items
+            for($i = count($result); $i < 6; $i++) {
+                $this->generate_item($i);
             }
-            //generate new items
-            else {
-                
-                for($i=0; $i<6; $i++) {
-                    $this->generate_item();           
-                }
-                $items = $db->exec("SELECT char_id, item_id, value,
-                    item_name, item_description, item_icon, 
-                    hp, dex, strength, intelligence, luck, every_attrib
-                    FROM items LEFT JOIN mission_template 
-                    on items.item_template_id = item_template.item_template_id 
-                    WHERE char_id=?",$_SESSION["char_id"]);
+
+            $final_result=$db->exec('SELECT *
+            FROM items LEFT JOIN item_template 
+            on items.item_template_id = item_template.item_template_id 
+            WHERE item_status = 1 AND char_id=? ORDER BY item_place',$_SESSION["char_id"]);
+            
+            $f3->set('items_to_buy', $final_result);
 
 
-                $f3->set('items_to_buy', $items);
-            }
+            // }
+            // //generate new items
+            // else {
+                
+            //     for($i=0; $i<6; $i++) {
+            //         $this->generate_item();           
+            //     }
+            //     $items = $db->exec("SELECT char_id, item_id, value,
+            //         item_name, item_description, item_icon, 
+            //         hp, dex, strength, intelligence, luck, every_attrib
+            //         FROM items LEFT JOIN mission_template 
+            //         on items.item_template_id = item_template.item_template_id 
+            //         WHERE char_id=?",$_SESSION["char_id"]);
+
+
+            //     $f3->set('items_to_buy', $items);
+            // }
+
             echo \Template::instance()->render('itemShop.html');
         }
         function item_buy($f3) {
@@ -53,7 +55,7 @@ class items {
                 $f3->reroute('@login');
             }
             $item_id = $f3->get('POST.item_id');
-            if($itemValue = $db->exec("SELECT value FROM items 
+            if($itemValue = $db->exec("SELECT value, item_place FROM items 
                     WHERE item_id =? AND char_id =?", array($item_id, $_SESSION['char_id']))) {
                 
                 // check if session is wrote  enough gold
@@ -75,11 +77,13 @@ class items {
                     // change state of item
                     $db->exec('UPDATE items SET item_status = 0 WHERE item_id=?', $item_id);
 
-                    // render profile
-                    $f3->reroute('@home');
+                    //generate new item
+                    $this->generate_item($itemValue[0]["item_place"]);
+
+                    // render shop
+                    $f3->reroute('@itemShop');
 
                 }
-
             }
             // echo $itemValue;
 
@@ -94,7 +98,7 @@ class items {
             //     $f3->set('items_to_buy', $result);
             // }
         }
-        function generate_item() {
+        function generate_item($place) {
             global $db;
 
             $item_templates = $db->exec('SELECT item_template_id FROM item_template ORDER BY rand() LIMIT 1');
@@ -109,8 +113,8 @@ class items {
 
             $db->exec(" INSERT INTO items (char_id, value, strength, 
                 hp, dex, intelligence, luck, every_attrib,	
-                item_status, item_template_id)
-                values (?, ?, ?, ?, ?, ?, ?, ?, 1, ?)", array($_SESSION["char_id"], $value,
-                $str, $hp, $dex, $int, $luck, $every_attrib, $item_templates[0]["item_template_id"]));
+                item_status, item_template_id, item_place)
+                values (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)", array($_SESSION["char_id"], $value,
+                $str, $hp, $dex, $int, $luck, $every_attrib, $item_templates[0]["item_template_id"], $place));
         }
     }
