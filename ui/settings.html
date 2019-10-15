@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="ui/css/bootstrap.min.css">
+    <title>Ustawienia</title>
+</head>
+<body>
+    <include href="./upperPanel.html" />
+    <div class="container">
+        <div class="row">
+            <div class="col-md-12">
+                <include href="./leftMenu.html"/>
+                <div class="col-md-9">
+                    <form action="" class="row">
+                        <div class="form-group">
+                            <label for="new_password">Zmiana hasła</label>
+                            <div class="col-md-12">
+                                <div class="col-md-9">
+                                    <div class="col-md-6">
+                                        <input type="email" class="form-control" aria-describedby="new_password" placeholder="Wpisz nowe hasło">
+                                        <small class="form-text text-muted">NOWE, będziesz go używać</small>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <input type="email" class="form-control" aria-describedby="old_password" placeholder="Wpisz stare hasło">
+                                        <small class="form-text text-muted">STARE, przestaniesz go używać</small>
+                                    </div>
+                                </div>
+                                <div class="col-md-3">
+                                    <button type="submit" class="btn btn-warning">Zmień hasło</button>
+                                </div>
+                            </div>
+                        </div>   
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

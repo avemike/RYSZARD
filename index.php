@@ -10,6 +10,7 @@ session_start();
 
 include('php/functions.php');
 include('php/Items.php');
+include('php/Settings.php');
 
 
 $f3->route('GET @home: /','home->gethome');
@@ -44,5 +45,7 @@ $f3->route('POST /register','register->inserting_data');
 $f3->route('GET @login: /login','login->getlogin');
 
 $f3->route('POST /login','login->postlogin');
+
+$f3->route('GET /settings','settings->page');
 
 $f3->run();
