@@ -27,8 +27,9 @@ $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
 
 $f3->route('POST /logout','login->logout');
 
-
 $f3->route('GET @itemShop: /itemShop', 'items->item_shop');
+
+$f3->route('POST /itemShop/sellItem', 'items->item_sell');
 
 $f3->route('POST @buyItem: /itemShop/buyItem', 'items->item_buy');
 
