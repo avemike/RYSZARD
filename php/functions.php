@@ -3,7 +3,12 @@
         function gethome($f3){
             if(empty($_SESSION["login"]) || empty($_SESSION["nickname"])){
                 $f3->reroute('@login');
-             }
+            }
+            global $db;
+            $user=new DB\SQL\Mapper($db,'characters');
+            $user->load(array('char_id=?',$_SESSION["char_id"]));
+            $_SESSION["currency"]=$user->currency;
+            
             echo \Template::instance()->render('profile.html');
         }
         function missions($f3){  
