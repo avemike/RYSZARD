@@ -1,6 +1,6 @@
 mysql -u root
 
-create database ryszardDB;
+create database ryszardDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
 
 use ryszardDB
 
@@ -9,7 +9,7 @@ create table accounts (
     login varchar(255),
     password varchar(255),
     creation_date timestamp DEFAULT current_timestamp,
-    last_logged timestamp,
+    last_logged timestamp DEFAULT current_timestamp,
 
     PRIMARY KEY (user_id)
 
@@ -34,6 +34,7 @@ create table characters (
     hp int,
     dex int,
     luck int,
+    race varchar(255),
 
     PRIMARY KEY (char_id),
     FOREIGN KEY (user_id) REFERENCES accounts(user_id),
@@ -71,6 +72,7 @@ create table items (
 
 create table mission_template (
     mission_template_id int not null auto_increment,
+    mission_name varchar(255),
     mission_description varchar(255),
 
     PRIMARY KEY (mission_template_id)
@@ -83,7 +85,7 @@ create table missions (
     currency_reward int,
     exp_reward int,
     duration_time int,
-    start_date timestamp,
+    start_date timestamp DEFAULT current_timestamp,
     item_id int,
     mission_active boolean DEFAULT false,
 
@@ -116,12 +118,20 @@ create table mail (
 );
 
 INSERT INTO accounts (login, password) values ("andrzejek", "76d80224611fc919a5d54f0ff9fba446");
-INSERT INTO accounts (login, password) values ("zbyszek", "76d80224611fc919a5d54f0ff9fba446");
 
 INSERT INTO servers (server_id) values ("1");
 INSERT INTO servers (server_id) values ("2");
+INSERT INTO servers (server_id) values ("3");
+
 INSERT INTO characters (user_id, server_id, nickname, level) values ("1", "1", "andrzejekchar", 24);
-INSERT INTO characters (user_id, server_id, nickname, level) values ("1", "2", "andrzejekchar2", 125);
+
+INSERT INTO mission_template (mission_description, mission_name) values ("Po długiej walce z gaborem na gołe pięści i dzwonki szkolne udało Ci się zwyciężyć", "Wyprawa do Gabora");
+INSERT INTO mission_template (mission_description, mission_name) values ("Pan kondesator wręczył Ci swój złoty śrubokręt na znak szacunku", "Wyprawa do Kondensatora");
+INSERT INTO mission_template (mission_description, mission_name) values ("Dostałeś obietnicę, że dostaniesz nowy identyfikator, przyjdź go odebrać za dwa lata", "Sekretariat");
+INSERT INTO mission_template (mission_description, mission_name) values ("Udało Ci się jakoś stamtąd uciec recytując fragmenty \"Pana Tadeusza\" z pamięci", "Sala 102/Legowisko diabła");
+INSERT INTO mission_template (mission_description, mission_name) values ("Po krótkiej rozgrzewce i dwóch godzinach grania w siatkówkę, wychodzisz z tego prawie cało", "Wizyta u WFistów");
+INSERT INTO mission_template (mission_description, mission_name) values ("Pan Kierownik nakrzyczał na nas za używanie makaronów", "Wizyta kierownika");
+
 
 
 SELECT servers.server_id, char_id FROM servers left join characters on servers.server_id = characters.server_id where user_id="1" or user_id IS NULL
@@ -150,3 +160,7 @@ SELECT servers.server_id, char_id FROM servers left join characters on servers.s
         WHERE user_id!=2 or user_id IS NULL
     ) t
     GROUP BY server_id
+
+
+    INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
+values ("1", "100", "200", "10", CURRENT_TIMESTAMP(), "1")
