@@ -11,6 +11,6 @@
         <input name="content" placeholder="treść" autocomplete="off"><br>
         <button type="submit">wyślij</button><br>
     </form>
-    <h1>{{ @mailerror }}</h1>
+    <h1><?= ($mailerror) ?></h1>
 </body>
 </html>

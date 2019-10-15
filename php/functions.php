@@ -5,8 +5,20 @@
                 $f3->reroute('@login');
              }
             echo \Template::instance()->render('profile.html');
+        }    
+    }
+    class mail{
+        function getmail($f3){
+            echo \Template::instance()->render('mail.html');    
         }
-        function mail($f3){
+        function postmail($f3){
+            global $db;
+            if($result = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=?', array($_POST["address"], $_SESSION["server"]))){
+                $db->exec('INSERT INTO mail (mail_receiver, mail_content) values (?, ?)', array($result[0]["char_id"], htmlspecialchars($_POST["content"]))); 
+            }
+            else{
+                $f3->set('mailerror', 'Podany użytkownik nie istnieje');
+            }
             echo \Template::instance()->render('mail.html');
         }
     }
@@ -15,7 +27,7 @@
             if(!empty($_SESSION["login"])){
                 if(empty($_SESSION["nickname"])){
                     $this->getservers($f3);
-                    // $f3->set('result',$db->exec('SELECT servers.server_id, char_id, level, nickname FROM servers left join characters on servers.server_id = characters.server_id where user_id=? or user_id IS NULL', $_SESSION["user_id"]));
+                    // $f3->set('result',$db->exec('SELECT/ $f3->set('result',$db->exec('SELECT servers.server_id, char_id, level, nickname FROM servers left join characters on servers.server_id = characters.server_id where user_id=? or user_id IS NULL', $_SESSION["user_id"]));
                     echo \Template::instance()->render('servers.html');
                 }
                 else{

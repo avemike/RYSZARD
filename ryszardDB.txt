@@ -103,16 +103,16 @@ create table enemy_template (
 );
 
 create table mail (
-    mail_id not null auto_increment,
-    mail_date(255),
+    mail_id int not null auto_increment,
+    mail_date varchar(255),
     mail_title varchar(255),
-    mail_sender varchar(255),
-    mail_receiver varchar(255),
+    mail_sender int,
+    mail_receiver int,
     mail_content varchar(65535),
 
     PRIMARY KEY (mail_id),
     FOREIGN KEY (mail_sender) REFERENCES characters(char_id),
-    FOREIGN KEY (mail_receiver) REFERENCES characters(char_id),
+    FOREIGN KEY (mail_receiver) REFERENCES characters(char_id)
 );
 
 INSERT INTO accounts (login, password) values ("andrzejek", "76d80224611fc919a5d54f0ff9fba446");
