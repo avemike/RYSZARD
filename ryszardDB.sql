@@ -45,6 +45,7 @@ create table characters (
 
 create table item_template (
     item_template_id int not null auto_increment,
+    item_name varchar(255),
     item_icon varchar(255),
     item_description varchar(255),
     item_class varchar(255),
@@ -62,8 +63,10 @@ create table items (
     hp int,
     dex int,
     luck int,
+    intelligence int,
     every_attrib int,
-    item_active boolean DEFAULT false,
+    item_status int,
+    item_place int,
 
     PRIMARY KEY (item_id),
     FOREIGN KEY (item_template_id) REFERENCES item_template(item_template_id),
@@ -118,6 +121,23 @@ INSERT INTO mission_template (mission_description, mission_name) values ("Dosta�
 INSERT INTO mission_template (mission_description, mission_name) values ("Udało Ci się jakoś stamtąd uciec recytując fragmenty \"Pana Tadeusza\" z pamięci", "Sala 102/Legowisko diabła");
 INSERT INTO mission_template (mission_description, mission_name) values ("Po krótkiej rozgrzewce i dwóch godzinach grania w siatkówkę, wychodzisz z tego prawie cało", "Wizyta u WFistów");
 INSERT INTO mission_template (mission_description, mission_name) values ("Pan Kierownik nakrzyczał na nas za używanie makaronów", "Wizyta kierownika");
+
+INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
+values ("1", "", "1", "1", "Szczotka sprzątaczki");
+INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
+values ("2", "", "1", "6", "Krzesło kierownika");
+INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
+values ("3", "", "1", "5", "Kreda spod 102");
+INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
+values ("4", "", "1", "4", "Rozkładane egzaminowe krzesło");
+INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
+values ("5", "", "1", "2", "Zepsuta drukarka");
+INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
+values ("6", "", "1", "3", "Płyta główna z 205");
+
+
+
+
 
 
 

@@ -1,0 +1,30 @@
+.item {
+    border: 1px solid black;
+}
+.item img {
+    width: 100%;
+    box-sizing: border-box;
+    padding: 10%;
+}
+.item-info {
+    opacity: 0;
+    margin: 12px 20px;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 200;
+}
+.base-properties {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+.item-info:hover {
+    opacity: 1;
+    background: rgba(255,255,255,0.55);
+}
+.item-info--active {
+    display: block;
+}
