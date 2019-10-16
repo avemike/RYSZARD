@@ -25,13 +25,10 @@
             on items.item_template_id = item_template.item_template_id 
             WHERE item_status = 1 AND char_id=? ORDER BY item_place',$_SESSION["char_id"]);
             
-            $itemsInventory=$db->exec('SELECT * 
-            FROM items LEFT JOIN item_template 
-            on items.item_template_id = item_template.item_template_id 
-            WHERE item_status = 0 AND char_id=?',$_SESSION["char_id"]);
+        
+            $this->show_inventory();
 
             $f3->set('items_to_buy', $itemsToBuy);
-            $f3->set('items_inventory', $itemsInventory);
 
             echo \Template::instance()->render('itemShop.html');
         }
@@ -54,8 +51,8 @@
                     $user->currency-=$itemValue[0]['value'];
                     $user->save();
 
-                    // change state of item
-                    $db->exec('UPDATE items SET item_status=0, item_place=null WHERE item_id=?', $item_id);
+                    // change state of item (item_id, to item status, from item status)
+                    $this->change_item_status($item_id, 0);
 
                     $_SESSION['currency']=$user->currency;
 
@@ -105,6 +102,44 @@
                 values (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)", array($_SESSION["char_id"], $value,
                 $str, $hp, $dex, $int, $luck, $every_attrib, $item_templates[0]["item_template_id"], $place));
         }
-    }
+        function change_item_status($item_id, $item_status){
+            global $db;
+            if($item_state==0){
+                
+                $place=0;
+                if($items=$db->exec('SELECT item_place FROM items WHERE char_id=? AND item_status=0 ORDER BY item_place', $_SESSION["char_id"])){
+                    for($i=0;$i<8;$i++){
+                        if($items[$i]["item_place"]!=$place){
+                            break;
+                        }
+                        $place++;
+                    }
+                }
+                
 
+                $db->exec('UPDATE items SET item_status=0, item_place=? WHERE item_id=?', array($place, $item_id));
+            }
+        }
+        function show_inventory(){
+            global $db;
+            global $f3;
+            $matrix = \Matrix::instance();
+
+            $itemsInventory=$db->exec('SELECT * 
+            FROM items LEFT JOIN item_template 
+            on items.item_template_id = item_template.item_template_id 
+            WHERE item_status = 0 AND char_id=? ORDER BY item_place',$_SESSION["char_id"]);
+
+            $max_items=range(0,7);
+            foreach($itemsInventory as $item){
+                $max_items = \array_diff($max_items, [$item["item_place"]]);
+            }
+            foreach($max_items as $place){
+                $itemsInventory[]=array('item_name'=>'puste', 'value'=>null, 'item_place'=>$place);
+            }
+            $matrix->sort($itemsInventory,'item_place');
+            
+            $f3->set('items_inventory', $itemsInventory);
+        }
+    }
 ?>

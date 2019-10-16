@@ -113,7 +113,7 @@ INSERT INTO servers (server_id) values ("1");
 INSERT INTO servers (server_id) values ("2");
 INSERT INTO servers (server_id) values ("3");
 
-INSERT INTO characters (user_id, server_id, nickname, level) values ("1", "1", "andrzejekchar", 24);
+INSERT INTO characters (user_id, server_id, nickname, level, exp, currency) values ("1", "1", "andrzejekchar", 24, 1000, 10000);
 
 INSERT INTO mission_template (mission_description, mission_name) values ("Po długiej walce z gaborem na gołe pięści i dzwonki szkolne udało Ci się zwyciężyć", "Wyprawa do Gabora");
 INSERT INTO mission_template (mission_description, mission_name) values ("Pan kondesator wręczył Ci swój złoty śrubokręt na znak szacunku", "Wyprawa do Kondensatora");

@@ -28,7 +28,7 @@
             <include href="./leftMenu.html"/>
             <div class="col-md-9">
                 <repeat group="{{ @items_inventory }}" value="{{ @item}}">
-                    <form action="itemShop/sellItem" method="POST">{{ @item.item_name }}: Sell za {{ round(@item.value*8/10) }} <button type="submit">sell</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></form>
+                    <form action="itemShop/sellItem" method="POST">{{ @item.item_name }}<check if="@item.value"><true>: Sell za {{ round(@item.value*8/10) }} <button type="submit">sell</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></true></check></form>
                 </repeat>
                 <h2>Sklep</h2>
                 <repeat group="{{ @items_to_buy }}" value="{{ @item }}">
