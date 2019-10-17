@@ -14,7 +14,7 @@
         function postmail($f3){
             global $db;
             if($result = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=?', array($_POST["address"], $_SESSION["server"]))){
-                $db->exec('INSERT INTO mail (mail_receiver, mail_content) values (?, ?)', array($result[0]["char_id"], htmlspecialchars($_POST["content"]))); 
+                $db->exec('INSERT INTO mail (mail_receiver, mail_content, mail_title, mail_sender) values (?, ?, ?, ?)', array($result[0]["char_id"], htmlspecialchars($_POST["content"]), $_POST["title"], $_SESSION["char_id"])); 
             }
             else{
                 $f3->set('mailerror', 'Podany użytkownik nie istnieje');
