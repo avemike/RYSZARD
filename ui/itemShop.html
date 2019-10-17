@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="ui/css/bootstrap.min.css">
-    <link rel="stylesheet" href="ui/css/itemShop.css">
+    <link rel="stylesheet" href="../ui/css/bootstrap.min.css">
+    <link rel="stylesheet" href="../ui/css/itemShop.css">
 
     <title>Document</title>
     <style>
@@ -34,7 +34,7 @@
                 <repeat group="{{ @items_to_buy }}" value="{{ @item }}">
                     <div class="col-md-4">
                         <div class="item">
-                            <img src="ui/images/items/{{@item.item_icon}}.png" alt="">
+                            <img src="../ui/images/items/{{ @item_class[@item.item_class] }}/{{@item.item_icon}}.png" alt="">
                             <div class="item-info">
                                 <form action="itemShop/buyItem" method="POST">
                                     <input name="item_id" value="{{ @item.item_id }}" style="display: none;"/>

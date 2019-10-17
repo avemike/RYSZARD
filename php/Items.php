@@ -3,7 +3,21 @@
         //item_status
         //0 - in inventory
         //1 - in shop
-        //
+
+        //item_class
+        //0 everyone
+        //1 informatyk
+        //2 mechatronik
+        //3 elektronik
+
+        //item_type
+        //0 bron
+        //1 armor
+        //2 tarcza
+        //3 helm
+        //4 buty
+        //5 rekawice
+        //6 amulet
         function item_shop($f3) {
             global $db;      
             if(empty($_SESSION["nickname"])){
@@ -29,6 +43,7 @@
             $this->show_inventory();
 
             $f3->set('items_to_buy', $itemsToBuy);
+            $f3->set('item_class', array('everyone','informatyk','mechatronik','elektronik'));
 
             echo \Template::instance()->render('itemShop.html');
         }
