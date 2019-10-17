@@ -7,8 +7,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="../ui/css/bootstrap.min.css">
-    <link rel="stylesheet" href="../ui/css/itemShop.css">
+    <link rel="stylesheet" href="ui/css/bootstrap.min.css">
+    <link rel="stylesheet" href="ui/css/itemShop.css">
 
     <title>Document</title>
     <style>
@@ -25,18 +25,19 @@
     <include href="./upperPanel.html"/>
     <div class="container">
         <div class="row">
-            <include href="./leftMenu.html"/>
+            <include href="leftMenu.html"/>
             <div class="col-md-9">
                 <repeat group="{{ @items_inventory }}" value="{{ @item}}">
-                    <form action="itemShop/sellItem" method="POST">{{ @item.item_name }}<check if="@item.value"><true>: Sell za {{ round(@item.value*8/10) }} <button type="submit">sell</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></true></check></form>
+                    <form action="itemShop/sellItem/{{ @shop_type }}" method="POST">{{ @item.item_name }}<check if="@item.value!=null"><true>: Sell za {{ round(@item.value*8/10) }} <button type="submit">sell</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></true></check></form>
                 </repeat>
                 <h2>Sklep</h2>
+                <form class="centered" action="itemShop/reroll/{{ @shop_type }}" method="POST"><button type="submit">Reroll</button></form>
                 <repeat group="{{ @items_to_buy }}" value="{{ @item }}">
                     <div class="col-md-4">
                         <div class="item">
-                            <img src="../ui/images/items/{{ @item_class[@item.item_class] }}/{{@item.item_icon}}.png" alt="">
+                            <img src="ui/images/items/{{ @item_class[@item.item_class] }}/{{@item.item_icon}}.png" alt="">
                             <div class="item-info">
-                                <form action="itemShop/buyItem" method="POST">
+                                <form action="itemShop/buyItem/{{ @shop_type }}" method="POST">
                                     <input name="item_id" value="{{ @item.item_id }}" style="display: none;"/>
                                     <p>Nazwa: {{ @item.item_name }}</p>
                                     <p>Wartosc: {{ @item.value }}</p>                
