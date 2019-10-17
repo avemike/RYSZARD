@@ -28,6 +28,18 @@
                 <div class="col-lg-6 border"></div>
             </div>
         </div>
+        <div id="prize"></div>
+        <check if="{{ @random_number }}">
+            <true>
+                <script type="text/javascript">
+                    if (window.confirm("Kliknij OK, aby wylosować nagrodę za codzienne logowanie!!!")) {
+                        var prize="Gratulacje! Twoja nagroda to: {{ @icon }}, {{ @desc }}, {{ @class }}, {{ @type }}";
+                    } else var prize="Kliknij OK";
+                    document.getElementById("prize").innerHTML=prize;
+                </script>
+            </true>
+            <false></false>
+        </check>
     </div>
 </body>
 <style>

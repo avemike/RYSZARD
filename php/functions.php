@@ -8,7 +8,22 @@
             $user=new DB\SQL\Mapper($db,'characters');
             $user->load(array('char_id=?',$_SESSION["char_id"]));
             $_SESSION["currency"]=$user->currency;
-            
+
+            $f3->set('object_mapper2', new DB\SQL\Mapper($f3->get('conn'),'item_template'));
+            date_default_timezone_set("Poland/Warsaw");
+            $time=date("Y-m-d h:i:s");
+
+            if ($changetime=date("Y-m-d h:i:s",strtotime('-1 day',strtotime($time)))>=$user->collect_date||$user->collect_date==null) {
+                $user->collect_date=$time;
+                $user->update();
+                $f3->set('random_number',rand(1,1));
+                $f3->set('name',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_name);
+                $f3->set('icon',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_icon);
+                $f3->set('desc',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_description);
+                $f3->set('class',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_class);
+                $f3->set('type',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_type);
+            }
+
             echo \Template::instance()->render('profile.html');
         }
         function missions($f3){  

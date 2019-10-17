@@ -35,6 +35,7 @@ create table characters (
     dex int,
     luck int,
     race varchar(255),
+    collect_date timestamp DEFAULT null,
 
     PRIMARY KEY (char_id),
     FOREIGN KEY (user_id) REFERENCES accounts(user_id),
