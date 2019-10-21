@@ -1,16 +1,14 @@
 <?php 
-    class home{
-        function gethome($f3){
-            if(empty($_SESSION["login"]) || empty($_SESSION["nickname"])){
-                $f3->reroute('@login');
-             }
-            echo \Template::instance()->render('profile.html');
-        }    
-    }
     class mail{
+        function getmainmail($f3){
+            global $db;
+            $result = $db->exec('SELECT mail_date, mail_title, mail_sender, mail_receiver, mail_content FROM mail WHERE mail_sender=?', array($_SESSION["char_id"]));
+            echo \Template::instance()->render('mainmail.html');    
+        }
         function getmail($f3){
             echo \Template::instance()->render('mail.html');    
         }
+        
         function postmail($f3){
             global $db;
             if($result = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=?', array($_POST["address"], $_SESSION["server"]))){
@@ -21,6 +19,15 @@
             }
             echo \Template::instance()->render('mail.html');
         }
+    }
+    class home{
+        function gethome($f3){
+            if(empty($_SESSION["login"]) || empty($_SESSION["nickname"])){
+                $f3->reroute('@login');
+             }
+            echo \Template::instance()->render('profile.html');
+        }    
+    
         function missions($f3){  
             global $db;      
             if(empty($_SESSION["nickname"])){

@@ -11,8 +11,9 @@ session_start();
 include('php/functions.php');
 
 
-
 $f3->route('GET @home: /','home->gethome');
+
+$f3->route('GET @mainmail: /mainmail','mail->getmainmail');
 
 $f3->route('GET @mail: /mail','mail->getmail');
 
@@ -29,7 +30,6 @@ $f3->route('GET @createchar: /createchar','register->createchar');
 $f3->route('POST /createchar','register->postcreatechar');
 
 $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
-
 
 $f3->route('POST /logout','login->logout');
 
