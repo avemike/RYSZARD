@@ -156,14 +156,34 @@
         }
         function equip($f3){
             global $db;
+            $item_id=$_POST['item_id'];
+            $item_equiped=false;
 
-            
+            if($inv = $db->exec('SELECT * FROM items LEFT JOIN item_template 
+            ON items.item_template_id = item_template.item_template_id 
+            WHERE item_id=? AND item_status=0 AND char_id=?', array($item_id, $_SESSION["char_id"]))){
 
+                if($equipped = $db->exec('SELECT * FROM items LEFT JOIN item_template 
+                ON items.item_template_id = item_template.item_template_id 
+                WHERE item_type=? AND item_status=2 AND char_id=?', array($inv[0]['item_type'], $_SESSION["char_id"]))){
+                    $item_equiped=true;
+                }
+
+                $this->change_item_status($inv[0]['item_id'], 2);
+                if($item_equiped){
+                    $this->change_item_status($equipped[0]['item_id'], 0);
+                }
+            }
 
             $f3->reroute('@home');
         }
         function unequip($f3){
             global $db;
+            $item_id=$_POST['item_id'];
+            if($db->exec('SELECT * FROM items WHERE char_id=? AND item_id=? AND item_status=2', array($_SESSION["char_id"], $item_id)) && count($db->exec('SELECT * FROM items WHERE char_id=? AND item_status=0', $_SESSION["char_id"]))<8){
+                $this->change_item_status($item_id, 0);
+            }
+
 
             $f3->reroute('@home');
         }
@@ -188,7 +208,7 @@
         }
         function change_item_status($item_id, $item_status){
             global $db;
-            if($item_state==0){
+            if($item_status==0){
                 
                 $place=0;
                 if($items=$db->exec('SELECT item_place FROM items WHERE char_id=? AND item_status=0 ORDER BY item_place', $_SESSION["char_id"])){
@@ -199,9 +219,10 @@
                         $place++;
                     }
                 }
-                
-
                 $db->exec('UPDATE items SET item_status=0, item_place=? WHERE item_id=?', array($place, $item_id));
+            }
+            else if($item_status==2){
+                $db->exec('UPDATE items SET item_status=2, item_place=null WHERE item_id=?', $item_id);
             }
         }
         function show_inventory(){
@@ -235,13 +256,20 @@
             on items.item_template_id = item_template.item_template_id 
             WHERE item_status = 2 AND char_id=? ORDER BY item_type',$_SESSION["char_id"]);
 
-            
-            $item_types=range(0,6);
+            $item_types=array(
+                '0'=>array('type'=>0, 'name'=>'bron'),
+                '1'=>array('type'=>1, 'name'=>'armor'),
+                '2'=>array('type'=>2, 'name'=>'tarcza'),
+                '3'=>array('type'=>3, 'name'=>'helm'),
+                '4'=>array('type'=>4, 'name'=>'buty'),
+                '5'=>array('type'=>5, 'name'=>'rekawice'),
+                '6'=>array('type'=>6, 'name'=>'amulet'),
+            );
             foreach($equipped as $item){
-                $item_types = \array_diff($item_types, [$item["item_type"]]);
+                unset($item_types[$item["item_type"]]);
             }
             foreach($item_types as $type){
-                $equipped[]=array('item_name'=>'puste', 'value'=>null, 'item_type'=>$type);
+                $equipped[]=array('item_name'=>$type['name'], 'value'=>null, 'item_type'=>$type['type']);
             }
             $matrix->sort($equipped,'item_type');
             
