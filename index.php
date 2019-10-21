@@ -44,7 +44,7 @@ $f3->route('POST /login','login->postlogin');
 
 // Settings related
 $f3->route('GET /settings','settings->page');
-$f3->route('POST @changePassword: /settings/changePassword','settings->change_password');
+$f3->route('POST /changePassword','settings->change_password');
 
 
 $f3->run();
