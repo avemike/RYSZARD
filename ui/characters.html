@@ -4,31 +4,44 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="ui/css/bootstrap.min.css">
     <title>Document</title>
 </head>
 <body>
-    <div>
-        <form method="POST" action="createchar">
-            <div style="float: left; margin-right: 500px">
-                Informatyk<input type="radio" name="occupation" value="informatyk" checked></br>
-                Mechatronik<input type="radio" name="occupation" value="mechatronik"></br>
-                Elektronik<input type="radio" name="occupation" value="elektronik"></br>
-                Wpisz nazwę postaci<input type="text" name="nickname"></br>
+    <div class="container">
+        <form class="col-md-10" method="POST" action="createchar">
+            <div class="col-md-6">
+                <img src="ui/images/kobiety/mechatronik.jpg" alt="">
             </div>
-            <div>
-                Człowiek<input type="radio" name="race" value="czlowiek" checked></br>
-                Kobieta<input type="radio" name="race" value="kobieta"></br>
-                Żyd<input type="radio" name="race" value="zyd"></br>
-                Karzeł<input type="radio" name="race" value="karzel"></br>
+            <div class="col-md-6">
+                <div class="row">
+                    Wpisz nazwę postaci<input type="text" name="nickname"></br>
+                </div>
+                <div class="row">
+                    Informatyk<input type="radio" name="occupation" value="informatyk" checked></br>
+                    Mechatronik<input type="radio" name="occupation" value="mechatronik"></br>
+                    Elektronik<input type="radio" name="occupation" value="elektronik"></br>
+                </div>
+                <div class="row">
+                    Człowiek<input type="radio" name="race" value="czlowiek" checked></br>
+                    Kobieta<input type="radio" name="race" value="kobieta"></br>
+                    Żyd<input type="radio" name="race" value="zyd"></br>
+                    Karzeł<input type="radio" name="race" value="karzel"></br>        
+                </div>
+                <div class="row">
+                    <button type="submit">Stwórz postać</button><br>
+                </div>
+                <div class="row">
+                    {{ @creating_error1 }}
+                    {{ @creating_error2 }}
+                    {{ @creating_error3 }}
+                    {{ @creating_error4 }}                
+                </div>
+                <div class="row">
+                    <a href="login">Wybór serwerów</a>
+                </div>
             </div>
-            <button type="submit">Stwórz postać</button><br>
-            <a href="login">Wybór serwerów</a>
         </form>
-        {{ @creating_error1 }}
-        {{ @creating_error2 }}
-        {{ @creating_error3 }}
-        {{ @creating_error4 }}
     </div>
-
 </body>
 </html>
