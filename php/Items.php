@@ -3,6 +3,7 @@
         //item_status
         //0 - in inventory
         //1 - in shop
+        //2 - equipped
 
         //item_class
         //0 everyone
@@ -153,6 +154,19 @@
 
             $f3->reroute($reroute);
         }
+        function equip($f3){
+            global $db;
+
+            
+
+
+            $f3->reroute('@home');
+        }
+        function unequip($f3){
+            global $db;
+
+            $f3->reroute('@home');
+        }
         function generate_item($place, $from, $to) {
             global $db;
 
@@ -210,6 +224,38 @@
             $matrix->sort($itemsInventory,'item_place');
             
             $f3->set('items_inventory', $itemsInventory);
+        }
+        function show_equipped(){
+            global $db;
+            global $f3;
+            $matrix = \Matrix::instance();
+
+            $equipped=$db->exec('SELECT * 
+            FROM items LEFT JOIN item_template 
+            on items.item_template_id = item_template.item_template_id 
+            WHERE item_status = 2 AND char_id=? ORDER BY item_type',$_SESSION["char_id"]);
+
+            
+            $item_types=range(0,6);
+            foreach($equipped as $item){
+                $item_types = \array_diff($item_types, [$item["item_type"]]);
+            }
+            foreach($item_types as $type){
+                $equipped[]=array('item_name'=>'puste', 'value'=>null, 'item_type'=>$type);
+            }
+            $matrix->sort($equipped,'item_type');
+            
+            $classes=array('class','class','class','class','class','class','class');
+            $f3->set('item_classes', $classes);
+            $f3->set('equipped', $equipped);
+
+        //0 bron
+        //1 armor
+        //2 tarcza
+        //3 helm
+        //4 buty
+        //5 rekawice
+        //6 amulet
         }
     }
 ?>

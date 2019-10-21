@@ -37,6 +37,10 @@ $f3->route('POST /itemShop/buyItem/@type', 'items->item_buy');
 
 $f3->route('POST /itemShop/reroll/@type', 'items->reroll');
 
+$f3->route('POST /itemShop/equipitem', 'items->equip');
+
+$f3->route('POST /itemShop/unequipitem', 'items->unequip');
+
 $f3->route('GET /register',
 function($f3) {
 	echo \Template::instance()->render('register.html');
