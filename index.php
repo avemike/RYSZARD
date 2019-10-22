@@ -27,11 +27,19 @@ $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
 
 $f3->route('POST /logout','login->logout');
 
-$f3->route('GET @itemShop: /itemShop', 'items->item_shop');
+$f3->route('GET @armoryShop: /armory', 'items->armoryShop');
 
-$f3->route('POST /itemShop/sellItem', 'items->item_sell');
+$f3->route('GET @accessoryShop: /accessories', 'items->accessoryShop');
 
-$f3->route('POST @buyItem: /itemShop/buyItem', 'items->item_buy');
+$f3->route('POST /itemShop/sellItem/@type', 'items->item_sell');
+
+$f3->route('POST /itemShop/buyItem/@type', 'items->item_buy');
+
+$f3->route('POST /itemShop/reroll/@type', 'items->reroll');
+
+$f3->route('POST /itemShop/equipitem', 'items->equip');
+
+$f3->route('POST /itemShop/unequipitem', 'items->unequip');
 
 $f3->route('GET /register',
 function($f3) {

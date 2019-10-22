@@ -9,6 +9,10 @@
             $user->load(array('char_id=?',$_SESSION["char_id"]));
             $_SESSION["currency"]=$user->currency;
             
+            $inv = new items;
+            $inv->show_inventory();
+            $inv->show_equipped();
+
             echo \Template::instance()->render('profile.html');
         }
         function missions($f3){  
@@ -152,13 +156,14 @@
         function logintoserver($f3){
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
-                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
+                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
                     $_SESSION["char_id"]=$result[0]["char_id"];
                     $_SESSION["nickname"]=$result[0]["nickname"];
                     $_SESSION["server"]=$result[0]["server_id"];
                     $_SESSION["level"]=$result[0]["level"];
                     $_SESSION["currency"]=$result[0]["currency"];
                     $_SESSION["exp"]=$result[0]["exp"];
+                    $_SESSION["char_class"]=$result[0]["char_class"];
 
                     $f3->reroute('@home');
                 }
@@ -251,21 +256,23 @@
                                 $f3->get('object_mapper_char')->hp="100";
                                 $f3->get('object_mapper_char')->dex="10";
                                 $f3->get('object_mapper_char')->luck="20";
+                                $f3->get('object_mapper_char')->char_class=1;
                             } elseif ($f3->get('POST.occupation')=="mechatronik") {
                                 $f3->get('object_mapper_char')->strength="60";
                                 $f3->get('object_mapper_char')->hp="110";
                                 $f3->get('object_mapper_char')->dex="5";
                                 $f3->get('object_mapper_char')->luck="5";
+                                $f3->get('object_mapper_char')->char_class=2;
                             } else {
                                 $f3->get('object_mapper_char')->strength="25";
                                 $f3->get('object_mapper_char')->hp="100";
                                 $f3->get('object_mapper_char')->dex="25";
                                 $f3->get('object_mapper_char')->luck="0";
+                                $f3->get('object_mapper_char')->char_class=3;
                             };
                             $f3->get('object_mapper_char')->currency="0";    
                             $f3->get('object_mapper_char')->level="1";
                             $f3->get('object_mapper_char')->exp="0";
-                            $f3->get('object_mapper_char')->char_class=$f3->get('POST.occupation');
                             $f3->get('object_mapper_char')->nickname=$f3->get('POST.nickname');
                             $f3->get('object_mapper_char')->user_id=$f3->get('SESSION.user_id');
                             $f3->get('object_mapper_char')->server_id=$_SESSION["server"];
