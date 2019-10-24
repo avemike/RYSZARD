@@ -36,12 +36,15 @@
                 $f3->set('missions', false);
                 //if active mission has ended
                 if($result[0]["started_ago"]>$result[0]["duration_time"]){
-                    $f3->set('missionready', $result[0]);
-                    $f3->set('mission_description', $result[0]["mission_description"]);
- 
-                    $this->addexperience($result[0]["currency_reward"], $result[0]["exp_reward"]);
+                    if ($this->fight(100)==true) {
+                        $f3->set('missionready', $result[0]);
+                        $f3->set('mission_description', $result[0]["mission_description"]);
+    
+                        $this->addexperience($result[0]["currency_reward"], $result[0]["exp_reward"]);
 
-                    $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
+                        $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
+                    };
+
                 }
                 //if mission is not ended yet
                 else{

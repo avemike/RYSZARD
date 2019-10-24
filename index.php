@@ -10,11 +10,16 @@ session_start();
 
 include('php/functions.php');
 include('php/Items.php');
+include('php/fight.php');
 
 
 $f3->route('GET @home: /','home->gethome');
 
+$f3->route('GET /fight','fight->fight_kurwa');
+
 $f3->route('GET @missions: /missions','home->missions');
+
+$f3->route('GET @end_mission: /mission_end','home->mission_end');
 
 $f3->route('POST /choosemission','home->choosemission');
 
@@ -37,7 +42,7 @@ $f3->route('GET /register',
 function($f3) {
 	echo \Template::instance()->render('register.html');
 	}
-); 
+);
 
 $f3->route('POST /register','register->inserting_data');
 
