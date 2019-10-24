@@ -11,8 +11,17 @@ session_start();
 include('php/functions.php');
 include('php/Items.php');
 
-
 $f3->route('GET @home: /','home->gethome');
+
+$f3->route('GET @outbox: /outbox','mail->getoutbox');
+
+$f3->route('GET @inbox: /inbox','mail->getinbox');
+
+$f3->route('GET @mail: /mail','mail->getmail');
+
+$f3->route('POST /mail','mail->postmail');
+
+$f3->route('GET @login: /login','login->getlogin');
 
 $f3->route('GET @missions: /missions','home->missions');
 
@@ -23,7 +32,6 @@ $f3->route('GET @createchar: /createchar','register->createchar');
 $f3->route('POST /createchar','register->postcreatechar');
 
 $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
-
 
 $f3->route('POST /logout','login->logout');
 

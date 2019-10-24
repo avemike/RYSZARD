@@ -107,6 +107,19 @@ create table enemy_template (
     PRIMARY KEY (enemy_template_id)
 );
 
+create table mail (
+    mail_id int not null auto_increment,
+    mail_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    mail_title varchar(255),
+    mail_sender int,
+    mail_receiver int,
+    mail_content varchar(65535),
+
+    PRIMARY KEY (mail_id),
+    FOREIGN KEY (mail_sender) REFERENCES characters(char_id),
+    FOREIGN KEY (mail_receiver) REFERENCES characters(char_id)
+);
+
 INSERT INTO accounts (login, password) values ("andrzejek", "76d80224611fc919a5d54f0ff9fba446");
 
 INSERT INTO servers (server_id) values ("1");
