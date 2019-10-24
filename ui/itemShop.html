@@ -25,18 +25,19 @@
     <include href="./upperPanel.html"/>
     <div class="container">
         <div class="row">
-            <include href="./leftMenu.html"/>
+            <include href="leftMenu.html"/>
             <div class="col-md-9">
                 <repeat group="{{ @items_inventory }}" value="{{ @item}}">
-                    <form action="itemShop/sellItem" method="POST">{{ @item.item_name }}<check if="@item.value"><true>: Sell za {{ round(@item.value*8/10) }} <button type="submit">sell</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></true></check></form>
+                    <form action="itemShop/sellItem/{{ @shop_type }}" method="POST">{{ @item.item_name }}<check if="@item.value!=null"><true>: Sell za {{ round(@item.value*8/10) }} <button type="submit">sell</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></true></check></form>
                 </repeat>
                 <h2>Sklep</h2>
+                <form class="centered" action="itemShop/reroll/{{ @shop_type }}" method="POST"><button type="submit">Reroll</button></form>
                 <repeat group="{{ @items_to_buy }}" value="{{ @item }}">
                     <div class="col-md-4">
                         <div class="item">
-                            <img src="ui/images/items/{{@item.item_icon}}.png" alt="">
+                            <img src="ui/images/items/{{ @item_class[@item.item_class] }}/{{@item.item_icon}}.png" alt="">
                             <div class="item-info">
-                                <form action="itemShop/buyItem" method="POST">
+                                <form action="itemShop/buyItem/{{ @shop_type }}" method="POST">
                                     <input name="item_id" value="{{ @item.item_id }}" style="display: none;"/>
                                     <p>Nazwa: {{ @item.item_name }}</p>
                                     <p>Wartosc: {{ @item.value }}</p>                

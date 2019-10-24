@@ -1,4 +1,31 @@
 <?php 
+    class mail{
+        function getoutbox($f3){
+            global $db;
+            $result = $db->exec('SELECT mail_date, mail_title, mail_receiver, mail_content, nickname FROM mail LEFT JOIN characters ON mail.mail_receiver=characters.char_id WHERE mail_sender=?', array($_SESSION["char_id"]));
+            $f3->set('result', $result);
+            echo \Template::instance()->render('outbox.html');
+        }
+        function getinbox($f3){
+            global $db;
+            $result = $db->exec('SELECT mail_date, mail_title, mail_sender, mail_content, nickname FROM mail LEFT JOIN characters ON mail.mail_sender=characters.char_id WHERE mail_sender!=?', array($_SESSION["char_id"]));
+            $f3->set('result', $result);
+            echo \Template::instance()->render('inbox.html');
+        }
+        function getmail($f3){
+            echo \Template::instance()->render('mail.html');    
+        }
+        function postmail($f3){
+            global $db;
+            if($result = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=?', array($_POST["address"], $_SESSION["server"]))){
+                $db->exec('INSERT INTO mail (mail_receiver, mail_content, mail_title, mail_sender) values (?, ?, ?, ?)', array($result[0]["char_id"], htmlspecialchars($_POST["content"]), $_POST["title"], $_SESSION["char_id"])); 
+            }
+            else{
+                $f3->set('mailerror', 'Podany użytkownik nie istnieje');
+            }
+            echo \Template::instance()->render('mail.html');
+        }
+    }
     class home{
         function gethome($f3){
             if(empty($_SESSION["login"]) || empty($_SESSION["nickname"])){
@@ -8,24 +35,14 @@
             $user=new DB\SQL\Mapper($db,'characters');
             $user->load(array('char_id=?',$_SESSION["char_id"]));
             $_SESSION["currency"]=$user->currency;
-
-            $f3->set('object_mapper2', new DB\SQL\Mapper($f3->get('conn'),'item_template'));
-            date_default_timezone_set("Poland/Warsaw");
-            $time=date("Y-m-d h:i:s");
-
-            if ($changetime=date("Y-m-d h:i:s",strtotime('-1 day',strtotime($time)))>=$user->collect_date||$user->collect_date==null) {
-                $user->collect_date=$time;
-                $user->update();
-                $f3->set('random_number',rand(1,1));
-                $f3->set('name',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_name);
-                $f3->set('icon',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_icon);
-                $f3->set('desc',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_description);
-                $f3->set('class',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_class);
-                $f3->set('type',$f3->get('object_mapper2')->load(array('item_template_id=?','1'))->item_type);
-            }
+            
+            $inv = new items;
+            $inv->show_inventory();
+            $inv->show_equipped();
 
             echo \Template::instance()->render('profile.html');
-        }
+        }    
+    
         function missions($f3){  
             global $db;      
             if(empty($_SESSION["nickname"])){
@@ -170,13 +187,14 @@
         function logintoserver($f3){
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
-                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
+                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
                     $_SESSION["char_id"]=$result[0]["char_id"];
                     $_SESSION["nickname"]=$result[0]["nickname"];
                     $_SESSION["server"]=$result[0]["server_id"];
                     $_SESSION["level"]=$result[0]["level"];
                     $_SESSION["currency"]=$result[0]["currency"];
                     $_SESSION["exp"]=$result[0]["exp"];
+                    $_SESSION["char_class"]=$result[0]["char_class"];
 
                     $f3->reroute('@home');
                 }
@@ -269,21 +287,23 @@
                                 $f3->get('object_mapper_char')->hp="100";
                                 $f3->get('object_mapper_char')->dex="10";
                                 $f3->get('object_mapper_char')->luck="20";
+                                $f3->get('object_mapper_char')->char_class=1;
                             } elseif ($f3->get('POST.occupation')=="mechatronik") {
                                 $f3->get('object_mapper_char')->strength="60";
                                 $f3->get('object_mapper_char')->hp="110";
                                 $f3->get('object_mapper_char')->dex="5";
                                 $f3->get('object_mapper_char')->luck="5";
+                                $f3->get('object_mapper_char')->char_class=2;
                             } else {
                                 $f3->get('object_mapper_char')->strength="25";
                                 $f3->get('object_mapper_char')->hp="100";
                                 $f3->get('object_mapper_char')->dex="25";
                                 $f3->get('object_mapper_char')->luck="0";
+                                $f3->get('object_mapper_char')->char_class=3;
                             };
                             $f3->get('object_mapper_char')->currency="0";    
                             $f3->get('object_mapper_char')->level="1";
                             $f3->get('object_mapper_char')->exp="0";
-                            $f3->get('object_mapper_char')->char_class=$f3->get('POST.occupation');
                             $f3->get('object_mapper_char')->nickname=$f3->get('POST.nickname');
                             $f3->get('object_mapper_char')->user_id=$f3->get('SESSION.user_id');
                             $f3->get('object_mapper_char')->server_id=$_SESSION["server"];
