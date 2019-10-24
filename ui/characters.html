@@ -87,17 +87,18 @@
 
         })
 
-        let race = $('input[name=race]:checked').val()
+        let race = document.querySelector('button.race.selected').dataset.name
         let char_class = document.querySelector('button.class.selected').dataset.name
         // initial load
         $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
-        // if button.class pressed then happen to load new image
-        $('button.class').click( function (e) {
+        // if buttons pressed then load new image
+        $('button.class, button.race').click( function (e) {
             e.preventDefault()
             $('button.selected').removeClass('selected')
             $(this).addClass('selected')
-
-            char_class = this.dataset.name
+            if( $(this).hasClass('class')) char_class = this.dataset.name
+            else race = this.dataset.name
+            
             $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
         })
         
