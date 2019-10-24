@@ -10,8 +10,9 @@
 </head>
 <body>
     <div class="container">
-        <form class="col-md-10" method="POST" action="createchar">
+        <form class="col-md-10 box" method="POST" action="createchar">
             <div class="col-md-6">
+                <h2>Wybierz ikonę postaci:</h2>
                 <div class="icons-slider">
                     <button class="left"> < </button>
                         <div class="icons-wrapper">
@@ -53,12 +54,9 @@
                     <button class="race" title="karzel" data-name="karzel">
                         <img src="ui/images/karzel/mechatronik.jpg" alt="">
                     </button>
-                    Człowiek<input type="radio" name="race" value="czlowiek"></br>
-                    Kobieta<input type="radio" name="race" value="kobieta"></br>
-                    Karzeł<input type="radio" name="race" value="karzel" checked></br>        
                 </div>
                 <div class="row">
-                    <button type="submit">Stwórz postać</button><br>
+                    <button class="btn btn-submit btn-primary"type="submit">Stwórz postać</button><br>
                 </div>
                 <div class="row">
                     {{ @creating_error1 }}
@@ -94,11 +92,17 @@
         // if buttons pressed then load new image
         $('button.class, button.race').click( function (e) {
             e.preventDefault()
-            $('button.selected').removeClass('selected')
+                        
+            if( $(this).hasClass('class')) {
+                $('button.class.selected').removeClass('selected')                
+                char_class = this.dataset.name
+            }
+            else {
+                $('button.race.selected').removeClass('selected')
+                race = this.dataset.name
+            }
+
             $(this).addClass('selected')
-            if( $(this).hasClass('class')) char_class = this.dataset.name
-            else race = this.dataset.name
-            
             $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
         })
         
