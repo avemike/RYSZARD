@@ -1,14 +1,20 @@
 <?php 
     class mail{
-        function getmainmail($f3){
+        function getoutbox($f3){
             global $db;
-            $result = $db->exec('SELECT mail_date, mail_title, mail_sender, mail_receiver, mail_content FROM mail WHERE mail_sender=?', array($_SESSION["char_id"]));
-            echo \Template::instance()->render('mainmail.html');    
+            $result = $db->exec('SELECT mail_date, mail_title, mail_receiver, mail_content, nickname FROM mail LEFT JOIN characters ON mail.mail_receiver=characters.char_id WHERE mail_sender=?', array($_SESSION["char_id"]));
+            $f3->set('result', $result);
+            echo \Template::instance()->render('outbox.html');
+        }
+        function getinbox($f3){
+            global $db;
+            $result = $db->exec('SELECT mail_date, mail_title, mail_sender, mail_content, nickname FROM mail LEFT JOIN characters ON mail.mail_sender=characters.char_id WHERE mail_sender!=?', array($_SESSION["char_id"]));
+            $f3->set('result', $result);
+            echo \Template::instance()->render('inbox.html');
         }
         function getmail($f3){
             echo \Template::instance()->render('mail.html');    
         }
-        
         function postmail($f3){
             global $db;
             if($result = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=?', array($_POST["address"], $_SESSION["server"]))){

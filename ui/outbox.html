@@ -12,13 +12,9 @@
         <div class="row">
             <include href="./leftMenu.html"/>
             <div class="col-lg-9 border">
-                <form action="mail" method="POST">
-                    <input name="address" placeholder="adresat"><br>
-                    <input name="title" placeholder="tytuł"><br>
-                    <input name="content" placeholder="treść" autocomplete="off"><br>
-                    <button type="submit">wyślij</button><br>
-                </form>
-                <h1>{{ @mailerror }}</h1>
+                <repeat group="{{ @result }}" value="{{ @msg }}">
+                    nadawca: ty, odbiorca: {{ @msg.nickname }}, data: {{ @msg.mail_date }}, tytuł: {{ @msg.mail_title }}<br>treść: {{ @msg.mail_content }}<br>
+                </repeat>
                 <a href="inbox">cofnij</a>
             </div>
         </div>

@@ -13,7 +13,9 @@ include('php/functions.php');
 
 $f3->route('GET @home: /','home->gethome');
 
-$f3->route('GET @mainmail: /mainmail','mail->getmainmail');
+$f3->route('GET @outbox: /outbox','mail->getoutbox');
+
+$f3->route('GET @inbox: /inbox','mail->getinbox');
 
 $f3->route('GET @mail: /mail','mail->getmail');
 
