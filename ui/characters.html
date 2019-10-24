@@ -5,28 +5,57 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" type="text/css" href="ui/css/bootstrap.min.css">
-    <title>Document</title>
+    <link rel="stylesheet" type="text/css" href="ui/css/characters.css">
+    <title>Tworzenie postaci</title>
 </head>
 <body>
     <div class="container">
         <form class="col-md-10" method="POST" action="createchar">
             <div class="col-md-6">
-                <img src="ui/images/kobiety/mechatronik.jpg" alt="">
+                <div class="icons-slider">
+                    <button class="left"> < </button>
+                        <div class="icons-wrapper">
+                            <div class="icons">
+
+                            </div>
+                        </div>
+                    <button class="right"> > </button>
+                </div>
             </div>
             <div class="col-md-6">
                 <div class="row">
-                    Wpisz nazwę postaci<input type="text" name="nickname"></br>
+                    <h2>Nazwa postaci:</h2>
+                    <input type="text" name="nickname"></br>
                 </div>
                 <div class="row">
-                    Informatyk<input type="radio" name="occupation" value="informatyk" checked></br>
+                    <h2>Wybierz klasę:</h2>
+                    <button class="class selected" title="mechatronik" data-name="mechatronik">
+                        <img src="ui/images/karzel/mechatronik.jpg"  alt="">
+                    </button>
+                    <button class="class" title="elektronik"  data-name="elektronik" >
+                        <img src="ui/images/karzel/elektronik.jpg"alt="">
+                    </button>
+                    <button class="class" title="informatyk" data-name="informatyk">
+                        <img src="ui/images/karzel/informatyk.jpg" alt="">
+                    </button>                    
+                    <!-- Informatyk<input type="radio" name="occupation" value="informatyk" checked></br>
                     Mechatronik<input type="radio" name="occupation" value="mechatronik"></br>
-                    Elektronik<input type="radio" name="occupation" value="elektronik"></br>
+                    Elektronik<input type="radio" name="occupation" value="elektronik"></br> -->
                 </div>
                 <div class="row">
-                    Człowiek<input type="radio" name="race" value="czlowiek" checked></br>
+                    <h2>Wybierz rasę:</h2>
+                    <button class="race selected" title="kobieta" data-name="kobieta">
+                        <img src="ui/images/kobieta/elektronik.jpg"  alt="">
+                    </button>
+                    <button class="race" title="czlowiek"  data-name="czlowiek" >
+                        <img src="ui/images/czlowiek/informatyk.jpg"alt="">
+                    </button>
+                    <button class="race" title="karzel" data-name="karzel">
+                        <img src="ui/images/karzel/mechatronik.jpg" alt="">
+                    </button>
+                    Człowiek<input type="radio" name="race" value="czlowiek"></br>
                     Kobieta<input type="radio" name="race" value="kobieta"></br>
-                    Żyd<input type="radio" name="race" value="zyd"></br>
-                    Karzeł<input type="radio" name="race" value="karzel"></br>        
+                    Karzeł<input type="radio" name="race" value="karzel" checked></br>        
                 </div>
                 <div class="row">
                     <button type="submit">Stwórz postać</button><br>
@@ -43,5 +72,40 @@
             </div>
         </form>
     </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+
+        $('button.left, button.right').click( (e) => {
+            e.preventDefault()
+            // $icons = $('.icons')
+            if($('.icons').hasClass('right')) {
+                $('.icons').removeClass('right')
+            }
+            else {
+                $('.icons').addClass('right')
+            }
+
+        })
+
+        let race = $('input[name=race]:checked').val()
+        let char_class = document.querySelector('button.class.selected').dataset.name
+        // initial load
+        $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
+        // if button.class pressed then happen to load new image
+        $('button.class').click( function (e) {
+            e.preventDefault()
+            $('button.selected').removeClass('selected')
+            $(this).addClass('selected')
+
+            char_class = this.dataset.name
+            $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
+        })
+        
+        $('form').change( () => {
+            race = $('input[name=race]:checked').val()
+
+            $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
+        })
+    </script>
 </body>
 </html>

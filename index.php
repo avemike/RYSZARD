@@ -20,7 +20,7 @@ $f3->route('GET @missions: /missions','home->missions');
 $f3->route('POST /choosemission','home->choosemission');
 
 $f3->route('GET @createchar: /createchar','register->createchar');
-
+$f3->route('GET /getCharacterIcons', 'register->getCharacterIcons');
 $f3->route('POST /createchar','register->postcreatechar');
 
 $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');

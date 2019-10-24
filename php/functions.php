@@ -233,6 +233,18 @@
             echo \Template::instance()->render('register.html');
             
         }
+        function getCharacterIcons($f3) {
+            $class = $_GET['class'];
+            $race = $_GET['race'];
+
+            // echo(json_encode(
+                // '<img src="ui/images/kobiety/informatyk" alt="">'
+            // ));
+            $result = array("ui/images/".$race."/".$class.".jpg", "ui/images/".$race."/".$class."2.jpg");
+            $f3->set('result', $result);
+
+            echo \Template::instance()->render('characterIcons.html');
+        }
         function postcreatechar($f3) {
             
             $character_classes=array("informatyk", "mechatronik", "elektronik");
