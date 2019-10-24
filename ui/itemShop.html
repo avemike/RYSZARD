@@ -1,0 +1,82 @@
+<body>
+    
+</body>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="ui/css/bootstrap.min.css">
+    <link rel="stylesheet" href="ui/css/itemShop.css">
+
+    <title>Document</title>
+    <style>
+        .error{ 
+            color: red;
+        }
+        .green{
+            color: green;
+        }
+    </style>
+</head>
+<body>
+    <div id="foo" data-json="{{ @items_to_buy }}" style="display: none;"></div>
+    <include href="./upperPanel.html"/>
+    <div class="container">
+        <div class="row">
+            <include href="leftMenu.html"/>
+            <div class="col-md-9">
+                <repeat group="{{ @items_inventory }}" value="{{ @item}}">
+                    <form action="itemShop/sellItem/{{ @shop_type }}" method="POST">{{ @item.item_name }}<check if="@item.value!=null"><true>: Sell za {{ round(@item.value*8/10) }} <button type="submit">sell</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></true></check></form>
+                </repeat>
+                <h2>Sklep</h2>
+                <form class="centered" action="itemShop/reroll/{{ @shop_type }}" method="POST"><button type="submit">Reroll</button></form>
+                <repeat group="{{ @items_to_buy }}" value="{{ @item }}">
+                    <div class="col-md-4">
+                        <div class="item">
+                            <img src="ui/images/items/{{ @item_class[@item.item_class] }}/{{@item.item_icon}}.png" alt="">
+                            <div class="item-info">
+                                <form action="itemShop/buyItem/{{ @shop_type }}" method="POST">
+                                    <input name="item_id" value="{{ @item.item_id }}" style="display: none;"/>
+                                    <p>Nazwa: {{ @item.item_name }}</p>
+                                    <p>Wartosc: {{ @item.value }}</p>                
+                                    <check if="{{ @item.item_description }}">
+                                        <p>Opis: {{ @item.item_description }}</p>                
+                                    </check>
+                                    <div class="base-properties">
+                                        <p>Siła: {{ @item.strength }}</p>            
+                                        <p>Życie: {{ @item.hp }}</p>                
+                                        <p>Zręczność: {{ @item.dex }}</p>                
+                                        <p>Intelekt: {{ @item.intelligence }}</p>    
+                                    </div>
+                                    <p>Każdy atrybut: {{ @item.every_attrib }}</p>                
+                                    <button type="submit">Kup</button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </repeat>
+            </div>
+        </div>
+    </div>
+    <script>
+        // mouse over img of item makes item-info visible
+        // const allItems = document.querySelectorAll('.item');
+        // [...allItems].map( item => {
+        //     const itemInfo = item.querySelector('.item-info'); 
+            
+        //     item.addEventListener('mouseover', e => {
+        //         itemInfo.style.left = e.clientX;
+        //         itemInfo.style.top = e.clientY;
+ 
+        //         itemInfo.classList.add('item-info--active');
+        //     })
+        //     item.addEventListener('mouseleave', e => {
+        //         itemInfo.classList.remove('item-info--active');
+        //     })
+        // })
+        // document.querySelectorAll('.item').addEventListener('mouseover', (e) => { 
+    </script>
+</body>
+</html>

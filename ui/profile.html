@@ -26,10 +26,16 @@
                     </div>
                 </div>
                 <div class="col-lg-6 border"></div>
+                <repeat group="{{ @items_inventory }}" value="{{ @item }}">
+                    <form action="itemShop/equipitem" method="POST">{{ @item.item_name }}<check if="@item.value!=null"><true> str:{{ @item.strenght }} hp:{{ @item.hp }} dex:{{ @item.dex }} luck:{{ @item.luck }} int:{{ @item.intelligence }} all:{{ @item.every_attrib }} <button type="submit">załóż</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></true></check></form>
+                </repeat>
             </div>
+
+            <repeat group="{{ @equipped }}" value="{{ @item }}">
+                <div class="{{ @item_classes[@item.item_type] }}"><form method="POST" action="itemShop/unequipitem">{{ @item.item_name }}<check if="@item.value!=null"><true> str:{{ @item.strenght }} hp:{{ @item.hp }} dex:{{ @item.dex }} luck:{{ @item.luck }} int:{{ @item.intelligence }} all:{{ @item.every_attrib }} <input type="hidden" name="item_id" value="{{ @item.item_id }}"><button type="submit">zdejm</button></true></check>  </form></div>
+            </repeat>
         </div>
     </div>
-
 </body>
 <style>
     /* .border {

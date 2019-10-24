@@ -9,7 +9,7 @@ $f3->set('conn',$db=new DB\SQL('mysql:host=localhost;port=3306;dbname=ryszardDB'
 session_start();
 
 include('php/functions.php');
-
+include('php/Items.php');
 
 $f3->route('GET @home: /','home->gethome');
 
@@ -35,7 +35,25 @@ $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
 
 $f3->route('POST /logout','login->logout');
 
-$f3->route('GET /register', 'register->displayregister');
+$f3->route('GET @armoryShop: /armory', 'items->armoryShop');
+
+$f3->route('GET @accessoryShop: /accessories', 'items->accessoryShop');
+
+$f3->route('POST /itemShop/sellItem/@type', 'items->item_sell');
+
+$f3->route('POST /itemShop/buyItem/@type', 'items->item_buy');
+
+$f3->route('POST /itemShop/reroll/@type', 'items->reroll');
+
+$f3->route('POST /itemShop/equipitem', 'items->equip');
+
+$f3->route('POST /itemShop/unequipitem', 'items->unequip');
+
+$f3->route('GET /register',
+function($f3) {
+	echo \Template::instance()->render('register.html');
+	}
+); 
 
 $f3->route('POST /register','register->inserting_data');
 
