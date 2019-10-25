@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="ui/css/bootstrap.min.css">
+    <link rel="stylesheet" href="ui/css/itemShop.css">
+    <style>
+        .centered{
+            align-content: center;
+            text-align: center;
+        }
+        .profile-photo {
+            width: 100%;
+            height: auto;
+        }
+    </style>
+    <title>EZN</title>
+</head>
+<body>
+    <include href="upperPanel.html" />
+    <div class="container">
+        <div class="row">
+            <include href="leftMenu.html"/>
+            <div id="box" class="col-lg-9">
+            </div>
+        </div>
+    </div>
+    <script>
+        load("profile");
+
+        function load(url){
+            var http = new XMLHttpRequest();
+            http.open('GET', url, true);
+            http.onload = function () {
+                document.querySelector('#box').innerHTML = http.responseText;
+                console.log("xDD");
+                if(document.querySelector('#missions')){
+                    console.log("xD");
+                    setform();
+                    makeminutes();
+                }
+                if(document.querySelector('#timer')){
+                    missionactive();
+                }
+            };
+            http.send();
+        }
+
+        function setform(){
+            console.log("1");
+            const buttons = document.querySelectorAll(".click")
+            for (const button of buttons) {
+                button.addEventListener('click', function(event) {
+                    button.parentNode.submit();
+                })
+            }
+        }
+        function makeminutes(){
+            timespans = document.querySelectorAll(".mission_time");
+            for(const time of timespans){
+                time.innerHTML=Number(time.textContent)/60;
+            }
+        }
+        function missionactive(){
+            minutes = 0;
+            seconds = Number(document.getElementById("timer").innerHTML);
+            while(seconds>59){
+                minutes++;
+                seconds-=60;
+            }
+            document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
+
+            setTimeout(odejmczas, 1000);
+        }
+        function odejmczas(){
+            if(seconds<1 && minutes==0){
+                window.location.href="";
+            }
+            else{
+                if(seconds==0){
+                    minutes--;
+                    seconds=59
+                }
+                else{
+                    seconds--;
+                }
+                document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
+                setTimeout(odejmczas, 1000);
+            }
+        }
+    </script>
+</body>
+</html>

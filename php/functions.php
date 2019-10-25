@@ -13,7 +13,7 @@
             $inv->show_inventory();
             $inv->show_equipped();
 
-            echo \Template::instance()->render('profile.html');
+            echo \Template::instance()->render('mainpage.html');
         }
         function missions($f3){  
             global $db;      
