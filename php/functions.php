@@ -187,13 +187,15 @@
         function logintoserver($f3){
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
-                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
+                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp, char_class, icon, race FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
                     $_SESSION["char_id"]=$result[0]["char_id"];
                     $_SESSION["nickname"]=$result[0]["nickname"];
                     $_SESSION["server"]=$result[0]["server_id"];
                     $_SESSION["level"]=$result[0]["level"];
+                    $_SESSION["race"]=$result[0]["race"];
                     $_SESSION["currency"]=$result[0]["currency"];
                     $_SESSION["exp"]=$result[0]["exp"];
+                    $_SESSION["icon"]=$result[0]["icon"];
                     $_SESSION["char_class"]=$result[0]["char_class"];
 
                     $f3->reroute('@home');
