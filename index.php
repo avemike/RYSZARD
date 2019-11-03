@@ -12,31 +12,61 @@ include('php/functions.php');
 include('php/Items.php');
 include('php/Settings.php');
 
+include('php/fight.php');
 
 $f3->route('GET @home: /','home->gethome');
 
+$f3->route('GET /fight','fight->fight_kurwa');
+
+$f3->route('GET @outbox: /outbox','mail->getoutbox');
+
+$f3->route('GET @inbox: /inbox','mail->getinbox');
+
+$f3->route('GET @mail: /mail','mail->getmail');
+
+$f3->route('POST /mail','mail->postmail');
+
+$f3->route('GET @login: /login','login->getlogin');
+
 $f3->route('GET @missions: /missions','home->missions');
+
+$f3->route('GET @end_mission: /mission_end','home->mission_end');
 
 $f3->route('POST /choosemission','home->choosemission');
 
-$f3->route('GET @createchar: /createchar','register->createchar');
+// $f3->route('GET @createchar: /createchar','register->createchar');
 $f3->route('GET /getCharacterIcons', 'register->getCharacterIcons');
 $f3->route('POST /createchar','register->postcreatechar');
 
 $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
 
-
 $f3->route('POST /logout','login->logout');
+// $f3->route('POST /logout', function($f3) {
+// 	$title = $f3->get('POST.title');
 
-$f3->route('GET @itemShop: /itemShop', 'items->item_shop');
-$f3->route('POST /itemShop/sellItem', 'items->item_sell');
-$f3->route('POST @buyItem: /itemShop/buyItem', 'items->item_buy');
+// 	$db->exec('');
+// });
+
+$f3->route('GET @armoryShop: /armory', 'items->armoryShop');
+
+$f3->route('GET @accessoryShop: /accessories', 'items->accessoryShop');
+
+$f3->route('POST /itemShop/sellItem/@type', 'items->item_sell');
+
+$f3->route('POST /itemShop/buyItem/@type', 'items->item_buy');
+
+$f3->route('POST /itemShop/reroll/@type', 'items->reroll');
+
+$f3->route('POST /itemShop/equipitem', 'items->equip');
+
+$f3->route('POST /itemShop/unequipitem', 'items->unequip');
 
 $f3->route('GET /register',
 function($f3) {
 	echo \Template::instance()->render('register.html');
 	}
 ); 
+
 $f3->route('POST /register','register->inserting_data');
 
 $f3->route('GET @login: /login','login->getlogin');

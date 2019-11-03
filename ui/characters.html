@@ -84,12 +84,18 @@
             }
 
         })
-
+        let icon = 0
         let race = document.querySelector('button.race.selected').dataset.name
         let char_class = document.querySelector('button.class.selected').dataset.name
+        let nickname = "";
         // initial load
         $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
         // if buttons pressed then load new image
+        
+        $('input[name=nickname]').change(function () {
+            nickname = this.value
+        })
+        
         $('button.class, button.race').click( function (e) {
             e.preventDefault()
                         
@@ -106,10 +112,29 @@
             $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
         })
         
-        $('form').change( () => {
-            race = $('input[name=race]:checked').val()
+        $('form').submit( e => {
+            e.preventDefault()
+        // 
+            var data = {
+                nickname: nickname,
+                occupation: char_class,
+                race: race
+            };
+            let params = []
+            for ( i in data) {
+                params.push(i + '=' + data[i])
+            }
+            params = params.join('&')
 
-            $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
+            const http = new XMLHttpRequest()
+            http.open('POST', 'createchar', true)
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+            http.onreadystatechange = () => {
+                if(http.readyState == 4 && http.status == 200) {
+                    console.log(http.responseText)
+                }
+            }
+            http.send(params)
         })
     </script>
 </body>

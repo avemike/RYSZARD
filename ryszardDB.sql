@@ -35,6 +35,7 @@ create table characters (
     dex int,
     luck int,
     race varchar(255),
+    collect_date timestamp DEFAULT current_timestamp,
 
     PRIMARY KEY (char_id),
     FOREIGN KEY (user_id) REFERENCES accounts(user_id),
@@ -107,13 +108,26 @@ create table enemy_template (
     PRIMARY KEY (enemy_template_id)
 );
 
+create table mail (
+    mail_id int not null auto_increment,
+    mail_date timestamp DEFAULT CURRENT_TIMESTAMP,
+    mail_title varchar(255),
+    mail_sender int,
+    mail_receiver int,
+    mail_content varchar(65535),
+
+    PRIMARY KEY (mail_id),
+    FOREIGN KEY (mail_sender) REFERENCES characters(char_id),
+    FOREIGN KEY (mail_receiver) REFERENCES characters(char_id)
+);
+
 INSERT INTO accounts (login, password) values ("andrzejek", "76d80224611fc919a5d54f0ff9fba446");
 
 INSERT INTO servers (server_id) values ("1");
 INSERT INTO servers (server_id) values ("2");
 INSERT INTO servers (server_id) values ("3");
 
-INSERT INTO characters (user_id, server_id, nickname, level) values ("1", "1", "andrzejekchar", 24);
+INSERT INTO characters (user_id, server_id, nickname, level, exp, currency, char_class) values ("1", "1", "andrzejekchar", 24, 1000, 10000, 1);
 
 INSERT INTO mission_template (mission_description, mission_name) values ("Po długiej walce z gaborem na gołe pięści i dzwonki szkolne udało Ci się zwyciężyć", "Wyprawa do Gabora");
 INSERT INTO mission_template (mission_description, mission_name) values ("Pan kondesator wręczył Ci swój złoty śrubokręt na znak szacunku", "Wyprawa do Kondensatora");
@@ -122,52 +136,82 @@ INSERT INTO mission_template (mission_description, mission_name) values ("Udało
 INSERT INTO mission_template (mission_description, mission_name) values ("Po krótkiej rozgrzewce i dwóch godzinach grania w siatkówkę, wychodzisz z tego prawie cało", "Wizyta u WFistów");
 INSERT INTO mission_template (mission_description, mission_name) values ("Pan Kierownik nakrzyczał na nas za używanie makaronów", "Wizyta kierownika");
 
+
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("1", "1", "0", "informatyk bron nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("2", "1", "0", "informatyk bron nr.2");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("3", "1", "0", "informatyk bron nr.3");
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("4", "1", "1", "informatyk armor nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("5", "1", "1", "informatyk armor nr.2");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("6", "1", "1", "informatyk armor nr.3");
+
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("1", "2", "0", "mechatronik bron nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("2", "2", "0", "mechatronik bron nr.2");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("3", "2", "0", "mechatronik bron nr.3");
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("4", "2", "1", "mechatronik armor nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("5", "2", "1", "mechatronik armor nr.2");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("6", "2", "1", "mechatronik armor nr.3");
+
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("1", "3", "0", "elektronik bron nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("2", "3", "0", "elektronik bron nr.2");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("3", "3", "0", "elektronik bron nr.3");
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("4", "3", "1", "elektronik armor nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("5", "3", "1", "elektronik armor nr.2");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("6", "3", "1", "elektronik armor nr.3");
+
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("13", "0", "2", "tarcza nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("14", "0", "2", "tarcza nr.2");
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("7", "0", "3", "helm nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("8", "0", "3", "helm nr.2");
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("11", "0", "4", "buty nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("12", "0", "4", "buty nr.2");
+
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("9", "0", "5", "rekawice nr.1");
+INSERT INTO item_template (item_icon, item_class, item_type, item_name)
+values ("10", "0", "5", "rekawice nr.2");
+
 INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
-values ("1", "", "1", "1", "Szczotka sprzątaczki");
+values ("1", "", "0", "6", "Szczotka sprzątaczki");
 INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
-values ("2", "", "1", "6", "Krzesło kierownika");
+values ("2", "", "0", "6", "Krzesło kierownika");
 INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
-values ("3", "", "1", "5", "Kreda spod 102");
+values ("3", "", "0", "6", "Kreda spod 102");
 INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
-values ("4", "", "1", "4", "Rozkładane egzaminowe krzesło");
+values ("4", "", "0", "6", "Rozkładane egzaminowe krzesło");
 INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
-values ("5", "", "1", "2", "Zepsuta drukarka");
+values ("5", "", "0", "6", "Zepsuta drukarka");
 INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
-values ("6", "", "1", "3", "Płyta główna z 205");
-
-
-
-
-
-
-
-SELECT servers.server_id, char_id FROM servers left join characters on servers.server_id = characters.server_id where user_id="1" or user_id IS NULL
-
-
-
-    SELECT server_id, char_id, level, nickname 
-    FROM (
-        SELECT servers.server_id, char_id, level, nickname
-        FROM servers
-        JOIN characters
-        ON servers.server_id = characters.server_id
-        WHERE user_id=2
-
-        UNION
-
-        SELECT
-            servers.server_id,
-            NULL AS char_id,
-            NULL AS LEVEL,
-            NULL AS nickname
-        FROM
-            servers
-            LEFT JOIN characters
-            ON servers.server_id = characters.server_id
-        WHERE user_id!=2 or user_id IS NULL
-    ) t
-    GROUP BY server_id
-
-
-    INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
-values ("1", "100", "200", "10", CURRENT_TIMESTAMP(), "1")
+values ("6", "", "0", "6", "Płyta główna z 205");

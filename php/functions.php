@@ -1,4 +1,31 @@
 <?php 
+    class mail{
+        function getoutbox($f3){
+            global $db;
+            $result = $db->exec('SELECT mail_date, mail_title, mail_receiver, mail_content, nickname FROM mail LEFT JOIN characters ON mail.mail_receiver=characters.char_id WHERE mail_sender=?', array($_SESSION["char_id"]));
+            $f3->set('result', $result);
+            echo \Template::instance()->render('outbox.html');
+        }
+        function getinbox($f3){
+            global $db;
+            $result = $db->exec('SELECT mail_date, mail_title, mail_sender, mail_content, nickname FROM mail LEFT JOIN characters ON mail.mail_sender=characters.char_id WHERE mail_sender!=?', array($_SESSION["char_id"]));
+            $f3->set('result', $result);
+            echo \Template::instance()->render('inbox.html');
+        }
+        function getmail($f3){
+            echo \Template::instance()->render('mail.html');    
+        }
+        function postmail($f3){
+            global $db;
+            if($result = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=?', array($_POST["address"], $_SESSION["server"]))){
+                $db->exec('INSERT INTO mail (mail_receiver, mail_content, mail_title, mail_sender) values (?, ?, ?, ?)', array($result[0]["char_id"], htmlspecialchars($_POST["content"]), $_POST["title"], $_SESSION["char_id"])); 
+            }
+            else{
+                $f3->set('mailerror', 'Podany użytkownik nie istnieje');
+            }
+            echo \Template::instance()->render('mail.html');
+        }
+    }
     class home{
         function gethome($f3){
             if(empty($_SESSION["login"]) || empty($_SESSION["nickname"])){
@@ -9,10 +36,15 @@
             $user->load(array('char_id=?',$_SESSION["char_id"]));
             $_SESSION["currency"]=$user->currency;
             
+            $inv = new items;
+            $inv->show_inventory();
+            $inv->show_equipped();
+
             echo \Template::instance()->render('profile.html');
-        }
+        }    
+    
         function missions($f3){  
-            global $db;      
+            global $db;
             if(empty($_SESSION["nickname"])){
                 $f3->reroute('@login');
             }
@@ -21,12 +53,15 @@
                 $f3->set('missions', false);
                 //if active mission has ended
                 if($result[0]["started_ago"]>$result[0]["duration_time"]){
-                    $f3->set('missionready', $result[0]);
-                    $f3->set('mission_description', $result[0]["mission_description"]);
- 
-                    $this->addexperience($result[0]["currency_reward"], $result[0]["exp_reward"]);
+                    if ($this->fight(100)==true) {
+                        $f3->set('missionready', $result[0]);
+                        $f3->set('mission_description', $result[0]["mission_description"]);
+    
+                        $this->addexperience($result[0]["currency_reward"], $result[0]["exp_reward"]);
 
-                    $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
+                        $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
+                    };
+
                 }
                 //if mission is not ended yet
                 else{
@@ -152,13 +187,14 @@
         function logintoserver($f3){
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
-                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
+                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
                     $_SESSION["char_id"]=$result[0]["char_id"];
                     $_SESSION["nickname"]=$result[0]["nickname"];
                     $_SESSION["server"]=$result[0]["server_id"];
                     $_SESSION["level"]=$result[0]["level"];
                     $_SESSION["currency"]=$result[0]["currency"];
                     $_SESSION["exp"]=$result[0]["exp"];
+                    $_SESSION["char_class"]=$result[0]["char_class"];
 
                     $f3->reroute('@home');
                 }
@@ -246,44 +282,39 @@
             echo \Template::instance()->render('characterIcons.html');
         }
         function postcreatechar($f3) {
-            
+            global $db;
             $character_classes=array("informatyk", "mechatronik", "elektronik");
             $character_races=array("kobieta","karzel","czlowiek","zyd");
+            
+            
+            // $f3->set('object_mapper_char', new DB\SQL\Mapper($f3->get('conn'),'characters'));
 
-            $f3->set('object_mapper_char', new DB\SQL\Mapper($f3->get('conn'),'characters'));
+            if (!empty($_SESSION["login"]) && !empty($_SESSION["server"])) {
+                $occupation = $f3->get('POST.occupation');
+                $race = $f3->get('POST.race');
+                $nickname = $f3->get('POST.nickname');
+                $server = $f3->get('SESSION.server');
+                $user_id = $f3->get('SESSION.user_id');
+                
+                if ( in_array($occupation, $character_classes ) && !empty( $nickname ) && (in_array( $race, $character_races ))) {
+                    $char_already_on_server = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=? LIMIT 1', array($nickname, $server));
+                    if ($char_already_on_server == 1) {
 
-            if (!empty($_SESSION["login"])&&!empty($_SESSION["server"])) {
-                if (in_array($f3->get('POST.occupation'),$character_classes)&&(!empty($f3->get('POST.nickname'))&&(in_array($f3->get('POST.race'),$character_races)))) {
-                    if (($f3->get('object_mapper_char')->load(array('nickname=:nicknamepost AND server_id=:server_idpost',':nicknamepost'=>$f3->get('POST.nickname'),':server_idpost'=>$f3->get('POST.server'))))) {
                         $f3->set('creating_error3', "Postać o takim nicku już istnieje!");
-                    } elseif (empty($f3->get('object_mapper_char')->load(array('user_id=:user_idpost AND server_id=:server_idpost',':user_idpost'=>$f3->get('SESSION.user_id'),':server_idpost'=>$f3->get('POST.server'))))) {
-                        if($this->checkalphabet($f3->get('POST.nickname'))&&strlen($f3->get('POST.nickname'))<16) {
-                            if ($f3->get('POST.occupation')=="informatyk") {
-                                $f3->get('object_mapper_char')->strength="30";
-                                $f3->get('object_mapper_char')->hp="100";
-                                $f3->get('object_mapper_char')->dex="10";
-                                $f3->get('object_mapper_char')->luck="20";
-                            } elseif ($f3->get('POST.occupation')=="mechatronik") {
-                                $f3->get('object_mapper_char')->strength="60";
-                                $f3->get('object_mapper_char')->hp="110";
-                                $f3->get('object_mapper_char')->dex="5";
-                                $f3->get('object_mapper_char')->luck="5";
-                            } else {
-                                $f3->get('object_mapper_char')->strength="25";
-                                $f3->get('object_mapper_char')->hp="100";
-                                $f3->get('object_mapper_char')->dex="25";
-                                $f3->get('object_mapper_char')->luck="0";
-                            };
-                            $f3->get('object_mapper_char')->currency="0";    
-                            $f3->get('object_mapper_char')->level="1";
-                            $f3->get('object_mapper_char')->exp="0";
-                            $f3->get('object_mapper_char')->char_class=$f3->get('POST.occupation');
-                            $f3->get('object_mapper_char')->nickname=$f3->get('POST.nickname');
-                            $f3->get('object_mapper_char')->user_id=$f3->get('SESSION.user_id');
-                            $f3->get('object_mapper_char')->server_id=$_SESSION["server"];
-                            $f3->get('object_mapper_char')->race=$f3->get('POST.race');
-                            $f3->get('object_mapper_char')->save();
-                            $f3->reroute('@login');
+                    } elseif (empty($db->exec('SELECT char_id FROM characters WHERE server_id=? AND user_id=?', array($server, $user_id)))) {
+                        
+                        if( $this->checkalphabet($nickname) && strlen($nickname) < 16) { 
+                            
+                            // echo $user_id;
+                            // echo $server;
+                            // echo $class;
+                            // echo $nickname;
+                            // echo $occupation;
+                            
+                            $db->exec('INSERT INTO characters values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                                array(null, $user_id, $server, $occupation, $nickname, "0", "1", "0", "10", "10", "10", "10", $race ));
+                        //     $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, mission_template_id, start_date, mission_active)
+                        // values (?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), "0")', array($_SESSION["char_id"], $currency_reward, $exp_reward, $duration_time, $mission_templates[$i]["mission_template_id"]));
                         }
                         else {
                             $f3->set('creating_error1', "Proszę wpisać poprawną nazwę postaci!");
@@ -293,11 +324,13 @@
                     }
                 } else {
                     $f3->set('creating_error2', "Proszę uzupełnić wszystkie pola!");
-                    }
-                echo \Template::instance()->render('characters.html');
+                }
+
+                // echo \Template::instance()->render('characters.html');
             }
             else{
-                $f3->reroute("@login");
+                echo 'xd';
+                // $f3->reroute("@login");
             }
         }
         function createchar($f3) {
