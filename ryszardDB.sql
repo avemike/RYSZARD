@@ -35,6 +35,7 @@ create table characters (
     dex int,
     luck int,
     race varchar(255),
+    icon int DEFAULT 1,
     collect_date timestamp DEFAULT current_timestamp,
 
     PRIMARY KEY (char_id),

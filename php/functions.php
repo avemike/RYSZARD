@@ -293,29 +293,28 @@
                 $occupation = $f3->get('POST.occupation');
                 $race = $f3->get('POST.race');
                 $nickname = $f3->get('POST.nickname');
+                $icon = $f3->get('POST.icon');
                 $server = $f3->get('SESSION.server');
                 $user_id = $f3->get('SESSION.user_id');
                 
                 if ( in_array($occupation, $character_classes ) && !empty( $nickname ) && (in_array( $race, $character_races ))) {
-                    $char_already_on_server = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=? LIMIT 1', array($nickname, $server));
-                    if ($char_already_on_server == 1) {
+                    $nick_already_used = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=? LIMIT 1', array($nickname, $server));
+                    // if nickname is already used
+                    if ($nick_already_used) {
 
                         $f3->set('creating_error3', "Postać o takim nicku już istnieje!");
-                    } elseif (empty($db->exec('SELECT char_id FROM characters WHERE server_id=? AND user_id=?', array($server, $user_id)))) {
+                    }
+                    // check if user has already linked character on this server
+                    elseif (empty($db->exec('SELECT char_id FROM characters WHERE server_id=? AND user_id=?', array($server, $user_id)))) {
                         
+                        // check if nickname is valid
                         if( $this->checkalphabet($nickname) && strlen($nickname) < 16) { 
                             
-                            // echo $user_id;
-                            // echo $server;
-                            // echo $class;
-                            // echo $nickname;
-                            // echo $occupation;
-                            
-                            $db->exec('INSERT INTO characters values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                                array(null, $user_id, $server, $occupation, $nickname, "0", "1", "0", "10", "10", "10", "10", $race ));
-                        //     $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, mission_template_id, start_date, mission_active)
-                        // values (?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), "0")', array($_SESSION["char_id"], $currency_reward, $exp_reward, $duration_time, $mission_templates[$i]["mission_template_id"]));
-                        }
+                            //  
+                            $db->exec('INSERT INTO characters values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                                array(null, $user_id, $server, $occupation, $nickname, "0", "1", "0", "10", "10", "10", "10", $race, $icon, null));
+                            echo 'success';
+                            }
                         else {
                             $f3->set('creating_error1', "Proszę wpisać poprawną nazwę postaci!");
                         }
