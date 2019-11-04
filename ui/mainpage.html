@@ -6,23 +6,13 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="ui/css/bootstrap.min.css">
     <link rel="stylesheet" href="ui/css/itemShop.css">
-    <style>
-        .centered{
-            align-content: center;
-            text-align: center;
-        }
-        .profile-photo {
-            width: 100%;
-            height: auto;
-        }
-        .hidden{
-            visibility: hidden;
-        }
-    </style>
+    <link rel="stylesheet" href="ui/css/mainpage.css">
     <title>EZN</title>
 </head>
 <body>
+    
     <include href="upperPanel.html" />
+    <div class="background"></div>
     <div class="container">
         <div class="row">
             <include href="leftMenu.html"/>
@@ -30,6 +20,7 @@
             </div>
         </div>
     </div>
+
     <script>
         var t=false;
         load("profile", "GET", "#box");

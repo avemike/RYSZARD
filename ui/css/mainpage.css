@@ -1,0 +1,32 @@
+.centered{
+    align-content: center;
+    text-align: center;
+}
+.profile-photo {
+    width: 100%;
+    height: auto;
+}
+.hidden{
+    visibility: hidden;
+}
+.container {
+    background-image: url('/RYSZARD/ui/images/card.png') ;
+    background-size:  60px;
+    padding: 3rem;
+
+    position: relative;
+    z-index: 100;
+}
+.background {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    min-height: 100vh;
+    
+    z-index: 10;
+    background: url('/RYSZARD/ui/images/ezn.png');
+    background-size: cover;
+    filter: blur(8px);
+}
