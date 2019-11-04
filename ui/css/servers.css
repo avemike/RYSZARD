@@ -26,11 +26,17 @@ body {
 .inner-box {
     z-index: 15;
     background-image: url('/RYSZARD/ui/images/card.png') ;
-    background-size:  60px;    
-    margin: 0 auto;
+    background-size:  60px;        
+    /* margin: 0 auto; */
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
 }
-.inner-box * {
-    z-index: 20;
+.inner-box button {
+    margin: 1.5rem;
+    padding: 0.25rem 1rem;
+    font-size: 1.50rem;
 }
 h1 {
     border-bottom: 2px solid rgba(0,0,0, .4);
