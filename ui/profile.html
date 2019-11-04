@@ -6,16 +6,19 @@
         <div class="list-group">
             <li class="list-group-item">Nick : {{ @SESSION.nickname }}</li>
             <li class="list-group-item">Lv : {{ @SESSION.level }}</li>
-            <li class="list-group-item">Exp : {{ @SESSION.exp }}</li>
+            <li class="list-group-item">Exp : {{ @SESSION.exp }}/{{ @SESSION.exp_to_next_lv }}</li>
+            <repeat group="{{ @stats }}" value="{{ @stat }}">
+                <li class="list-group-item">{{ @stat.name }} : {{ @stat.value }}</li>
+            </repeat>
         </div>
     </div>
 </div>
 <div class="col-lg-6 border"></div>
 <repeat group="{{ @items_inventory }}" value="{{ @item }}">
-    <div action="itemShop/equipitem" method="POST">{{ @item.item_name }}<check if="@item.value!=null"><true> str:{{ @item.strenght }} hp:{{ @item.hp }} dex:{{ @item.dex }} luck:{{ @item.luck }} int:{{ @item.intelligence }} all:{{ @item.every_attrib }} <button onclick="load('itemShop/equipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">załóż</button></true></check></div>
+    <div action="itemShop/equipitem" method="POST">{{ @item.item_name }}<check if="@item.value!=null"><true> str:{{ @item.strength }} hp:{{ @item.hp }} dex:{{ @item.dex }} luck:{{ @item.luck }} int:{{ @item.intelligence }} all:{{ @item.every_attrib }} <button onclick="load('itemShop/equipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">załóż</button></true></check></div>
 </repeat>
 <br>
 <repeat group="{{ @equipped }}" value="{{ @item }}">
-    <div class="{{ @item_classes[@item.item_type] }}">{{ @item.item_name }}<check if="@item.value!=null"><true> str:{{ @item.strenght }} hp:{{ @item.hp }} dex:{{ @item.dex }} luck:{{ @item.luck }} int:{{ @item.intelligence }} all:{{ @item.every_attrib }} <button onclick="load('itemShop/unequipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">zdejm</button></true></check></div>
+    <div class="{{ @item_classes[@item.item_type] }}">{{ @item.item_name }}<check if="@item.value!=null"><true> str:{{ @item.strength }} hp:{{ @item.hp }} dex:{{ @item.dex }} luck:{{ @item.luck }} int:{{ @item.intelligence }} all:{{ @item.every_attrib }} <button onclick="load('itemShop/unequipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">zdejm</button></true></check></div>
 </repeat>
 <span class="hidden" id="newcurrency">{{ @newcurrency }}</span>

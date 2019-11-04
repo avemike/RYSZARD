@@ -257,19 +257,19 @@
             WHERE item_status = 2 AND char_id=? ORDER BY item_type',$_SESSION["char_id"]);
 
             $item_types=array(
-                '0'=>array('type'=>0, 'name'=>'bron'),
-                '1'=>array('type'=>1, 'name'=>'armor'),
-                '2'=>array('type'=>2, 'name'=>'tarcza'),
-                '3'=>array('type'=>3, 'name'=>'helm'),
-                '4'=>array('type'=>4, 'name'=>'buty'),
-                '5'=>array('type'=>5, 'name'=>'rekawice'),
-                '6'=>array('type'=>6, 'name'=>'amulet'),
+                '0'=>'bron',
+                '1'=>'armor',
+                '2'=>'tarcza',
+                '3'=>'helm',
+                '4'=>'buty',
+                '5'=>'rekawice',
+                '6'=>'amulet',
             );
             foreach($equipped as $item){
                 unset($item_types[$item["item_type"]]);
             }
-            foreach($item_types as $type){
-                $equipped[]=array('item_name'=>$type['name'], 'value'=>null, 'item_type'=>$type['type']);
+            foreach($item_types as $key => $item){
+                $equipped[]=array('item_name'=>$item, 'value'=>null, 'item_type'=>$key);
             }
             $matrix->sort($equipped,'item_type');
             
@@ -284,6 +284,27 @@
         //4 buty
         //5 rekawice
         //6 amulet
+        }
+        function get_stats($user_id){
+            global $f3;
+            global $db;
+            // $db->exec('SELECT strength, hp, dex, luck FROM characters WHERE char_id=?', $user_id)
+            $stats = $db->exec('SELECT sum(attack) as attack, sum(defence) as deffence, sum(strength) as strength, sum(hp) as hp, sum(dex) as dex, sum(luck) as luck 
+            FROM (
+                SELECT attack, defence, strength, hp, dex, luck FROM characters WHERE char_id=:id
+            
+                UNION
+            
+                SELECT sum(attack) as attack, sum(defence) as deffence, sum(strength) as strength, sum(hp) as hp, sum(dex) as dex, sum(luck) as luck FROM items WHERE char_id=:id AND item_status=2
+            ) t', array(':id'=>$user_id));
+
+            $arr=array();
+            foreach($stats[0] as $key => $value){
+                $arr[] = array('name' => $key, 'value' => $value);
+                $test = $value;
+            }
+            $f3->set('stats', $arr);
+            return $stats;
         }
     }
 ?>

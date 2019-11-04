@@ -12,6 +12,13 @@
 
             echo \Template::instance()->render('mainpage.html');
         }
+        function profile($f3){
+            $inv = new items;
+            $inv->show_inventory();
+            $inv->show_equipped();
+            $inv->get_stats($_SESSION["char_id"]);
+            echo \Template::instance()->render('profile.html');
+        }
         function missions($f3){  
             global $db;      
             if(empty($_SESSION["nickname"])){
@@ -49,7 +56,8 @@
 
 
                     for($i=0;$i<3;$i++){
-                        $duration_time=rand(1,20)*30;
+                        // $duration_time=rand(1,20)*30;
+                        $duration_time=1;
                         $currency_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
                         $exp_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
 
@@ -77,10 +85,23 @@
             $char=new DB\SQL\Mapper($db,'characters');
             $char->load(array('char_id=?',$_SESSION["char_id"]));
             $char->currency+=$currency;
-            $char->exp+=$exp;
+            if($char->exp+$exp>$char->exp_to_next_lv){
+                $char->exp=$char->exp+$exp-$char->exp_to_next_lv;
+                $char->level++;
+                $char->exp_to_next_lv+=500;
+            }
+            else{
+                $char->exp+=$exp;
+            }
             $char->save();
             $_SESSION["currency"]=$char->currency;
             $_SESSION["exp"]=$char->exp;
+            $_SESSION['level']=$char->level;
+            $_SESSION['exp_to_next_lv']=$char->exp_to_next_lv;
+
+
+
+
         }
     }
     class login{
@@ -153,14 +174,10 @@
         function logintoserver($f3){
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
-                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
-                    $_SESSION["char_id"]=$result[0]["char_id"];
-                    $_SESSION["nickname"]=$result[0]["nickname"];
-                    $_SESSION["server"]=$result[0]["server_id"];
-                    $_SESSION["level"]=$result[0]["level"];
-                    $_SESSION["currency"]=$result[0]["currency"];
-                    $_SESSION["exp"]=$result[0]["exp"];
-                    $_SESSION["char_class"]=$result[0]["char_class"];
+                if($result=$db->exec('SELECT char_id, nickname, characters.server_id as server, level, currency, exp, exp_to_next_lv, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
+                    foreach($result[0] as $key => $value){
+                        $_SESSION[$key]=$value;
+                    }
 
                     $f3->reroute('@home');
                 }
@@ -268,7 +285,8 @@
                                 $f3->get('object_mapper_char')->char_class=3;
                             };
                             $f3->get('object_mapper_char')->currency="0";    
-                            $f3->get('object_mapper_char')->level="1";
+                            $f3->get('object_mapper_char')->level="1"; 
+                            $f3->get('object_mapper_char')->exp_to_next_lv="500";
                             $f3->get('object_mapper_char')->exp="0";
                             $f3->get('object_mapper_char')->nickname=$f3->get('POST.nickname');
                             $f3->get('object_mapper_char')->user_id=$f3->get('SESSION.user_id');

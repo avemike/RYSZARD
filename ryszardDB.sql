@@ -30,6 +30,7 @@ create table characters (
     currency int,
     level int,
     exp int,
+    exp_to_next_lv int,
     strength int,
     hp int,
     dex int,
@@ -59,6 +60,8 @@ create table items (
     item_template_id int,
     char_id int,
     value int,
+    attack int,
+    defence int,
     strength int,
     hp int,
     dex int,
@@ -202,34 +205,3 @@ values ("5", "", "0", "6", "Zepsuta drukarka");
 INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
 values ("6", "", "0", "6", "Płyta główna z 205");
 
-
-SELECT servers.server_id, char_id FROM servers left join characters on servers.server_id = characters.server_id where user_id="1" or user_id IS NULL
-
-
-
-    SELECT server_id, char_id, level, nickname 
-    FROM (
-        SELECT servers.server_id, char_id, level, nickname
-        FROM servers
-        JOIN characters
-        ON servers.server_id = characters.server_id
-        WHERE user_id=2
-
-        UNION
-
-        SELECT
-            servers.server_id,
-            NULL AS char_id,
-            NULL AS LEVEL,
-            NULL AS nickname
-        FROM
-            servers
-            LEFT JOIN characters
-            ON servers.server_id = characters.server_id
-        WHERE user_id!=2 or user_id IS NULL
-    ) t
-    GROUP BY server_id
-
-
-    INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
-values ("1", "100", "200", "10", CURRENT_TIMESTAMP(), "1")
