@@ -3,6 +3,9 @@
         text-transform: uppercase;
         font-weight: bold;
     }
+    a {
+        cursor: pointer;
+    }
 </style>
 <div class="col-lg-3 border left-menu">
     <ul class="list-group">
@@ -13,7 +16,7 @@
         <li class="list-group-item">Lochy</li>
         <li class="list-group-item">Arena</li>
         <!-- <li class="list-group-item">Poczta</li> -->
-        <li class="list-group-item"><a href="settings">Ustawienia</a></li>        
+        <li class="list-group-item"><a onclick="load('settings', 'GET', '#box')">Ustawienia</a></li>        
         <li class="list-group-item"><a href="inbox">Poczta</a></li>
 
         <li class="list-group-item">
