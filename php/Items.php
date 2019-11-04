@@ -279,7 +279,7 @@
 
         //0 bron
         //1 armor
-        //2 tarcza
+        //2 tarcza`
         //3 helm
         //4 buty
         //5 rekawice
