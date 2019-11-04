@@ -1,12 +1,17 @@
 
 <check if="{{ @missions }}">
+    <div id="missionbox">
     <true>
         <h1 class="centered">Misje</h1>
         <repeat group="{{ @missionbox }}" value="{{ @mission }}">
+            <div id="missions" onclick="load('choosemission', 'POST', '#box', 'activemission={{ @mission.mission_id }}')">
+                <a><p class="click">{{ @mission.mission_name }}: <span class="mission_time">{{ @mission.duration_time}}</span>min, nagrody: {{ @mission.currency_reward }}golda i {{ @mission.exp_reward }}expa</p></a>
+            </div>
+<!-- 
             <form action="choosemission" method="POST" id="missions">
                 <p class="click">{{ @mission.mission_name }}: <span class="mission_time">{{ @mission.duration_time}}</span>min, nagrody: {{ @mission.currency_reward }}golda i {{ @mission.exp_reward }}expa</p>
                 <input type="hidden" name="activemission" value="{{ @mission.mission_id }}">
-            </form>
+            </form> -->
         </repeat>
     </true>
     <false>
@@ -14,16 +19,15 @@
             <true>
                 <h2 class="centered">{{ @mission_description }}</h2>
                 <h2 class="centered">Twoje nagrody to {{ @missionready.currency_reward }} golda i {{ @missionready.exp_reward }}expa</h2>
-                <a href="missions">Zacznij nową misję</a>
+                <div onclick="load('missions', 'GET', '#box')"><a>Zacznij nową misję</a></div>
                 <br>
             </true>
             <false>
                 <h2 class="centered">Jesteś teraz w trakcie misji i zostało ci tyle czasu do końca:</h2>
                 <h2 id="timer" class="centered">{{ @missionbox }}</h2>
             </false>
-        </check>
+        </check>            
     </false>
+    </div>
 </check>
-<script>
-    
-</script>
+<span class="hidden" id="newcurrency">{{ @newcurrency }}</span>

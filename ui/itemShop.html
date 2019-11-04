@@ -1,30 +1,30 @@
 <repeat group="{{ @items_inventory }}" value="{{ @item}}">
-    <form action="itemShop/sellItem/{{ @shop_type }}" method="POST">{{ @item.item_name }}<check if="@item.value!=null"><true>: Sell za {{ round(@item.value*8/10) }} <button type="submit">sell</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></true></check></form>
+    <div>{{ @item.item_name }}<check if="@item.value!=null"><true>: Sell za {{ round(@item.value*8/10) }} <button onclick="load('itemShop/sellItem/{{ @shop_type }}', 'POST', '#box', 'item_id={{ @item.item_id }}')">sell</button></true></check></div>
 </repeat>
 <h2>Sklep</h2>
-<form class="centered" action="itemShop/reroll/{{ @shop_type }}" method="POST"><button type="submit">Reroll</button></form>
+<div class="centered"><button onclick="load('itemshop/reroll/{{ @shop_type }}', 'POST', '#box')">Reroll</button></div>
+<!-- <form class="centered" action="itemShop/reroll/{{ @shop_type }}" method="POST"><button type="submit">Reroll</button></form> -->
 <repeat group="{{ @items_to_buy }}" value="{{ @item }}">
     <div class="col-md-4">
         <div class="item">
             <img src="ui/images/items/{{ @item_class[@item.item_class] }}/{{@item.item_icon}}.png" alt="">
             <div class="item-info">
-                <form action="itemShop/buyItem/{{ @shop_type }}" method="POST">
-                    <input name="item_id" value="{{ @item.item_id }}" style="display: none;"/>
-                    <p>Nazwa: {{ @item.item_name }}</p>
-                    <p>Wartosc: {{ @item.value }}</p>                
-                    <check if="{{ @item.item_description }}">
-                        <p>Opis: {{ @item.item_description }}</p>                
-                    </check>
-                    <div class="base-properties">
-                        <p>Siła: {{ @item.strength }}</p>            
-                        <p>Życie: {{ @item.hp }}</p>                
-                        <p>Zręczność: {{ @item.dex }}</p>                
-                        <p>Intelekt: {{ @item.intelligence }}</p>    
-                    </div>
-                    <p>Każdy atrybut: {{ @item.every_attrib }}</p>                
-                    <button type="submit">Kup</button>
-                </form>
+                <!-- <input name="item_id" value="{{ @item.item_id }}" style="display: none;"/> -->
+                <p>Nazwa: {{ @item.item_name }}</p>
+                <p>Wartosc: {{ @item.value }}</p>                
+                <check if="{{ @item.item_description }}">
+                    <p>Opis: {{ @item.item_description }}</p>                
+                </check>
+                <div class="base-properties">
+                    <p>Siła: {{ @item.strength }}</p>            
+                    <p>Życie: {{ @item.hp }}</p>                
+                    <p>Zręczność: {{ @item.dex }}</p>                
+                    <p>Intelekt: {{ @item.intelligence }}</p>    
+                </div>
+                <p>Każdy atrybut: {{ @item.every_attrib }}</p>                
+                <button onclick="load('itemShop/buyItem/{{ @shop_type }}', 'POST', '#box', 'item_id={{ @item.item_id }}')">Kup</button>
             </div>
         </div>
     </div>
 </repeat>
+<span class="hidden" id="newcurrency">{{ @newcurrency }}</span>

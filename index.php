@@ -4,9 +4,12 @@ $f3=require('lib/base.php');
 $f3->config('config.ini');
 
 // Database connection 
-$f3->set('conn',$db=new DB\SQL('mysql:host=localhost;port=3306;dbname=ryszardDB','root','',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>'SET NAMES utf8;')));
+$f3->set('conn',$db=new DB\SQL('mysql:host=localhost;port=3306;dbname=ryszardDB','root',''));
 
 session_start();
+if(!empty($_SESSION['char_id'])){
+	$f3->set('newcurrency', $db->exec('SELECT currency FROM characters WHERE char_id=?', $_SESSION['char_id'])[0]['currency']);
+}
 
 include('php/functions.php');
 include('php/Items.php');
@@ -16,7 +19,10 @@ $f3->route('GET @home: /','home->gethome');
 
 $f3->route('GET @missions: /missions','home->missions');
 
-$f3->route('GET /profile',function(){
+$f3->route('GET @profile: /profile',function(){
+	$inv = new items;
+	$inv->show_inventory();
+	$inv->show_equipped();
 	echo \Template::instance()->render('profile.html');
 });
 

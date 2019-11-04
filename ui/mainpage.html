@@ -15,6 +15,9 @@
             width: 100%;
             height: auto;
         }
+        .hidden{
+            visibility: hidden;
+        }
     </style>
     <title>EZN</title>
 </head>
@@ -28,35 +31,43 @@
         </div>
     </div>
     <script>
-        load("profile");
+        var t=false;
+        load("profile", "GET", "#box");
 
-        function load(url){
+        function load(url, method, target_id, string){
+            
             var http = new XMLHttpRequest();
-            http.open('GET', url, true);
+            http.open(method, url, true);
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             http.onload = function () {
-                document.querySelector('#box').innerHTML = http.responseText;
-                console.log("xDD");
+                document.querySelector(target_id).innerHTML = http.responseText;
+                newcurrency=document.querySelector('#newcurrency');
+                document.querySelector('#currency').innerHTML = newcurrency.innerHTML;
+                newcurrency.parentNode.removeChild(newcurrency);
+                if(t){
+                    clearInterval(t);
+                    t=false;
+                }
                 if(document.querySelector('#missions')){
-                    console.log("xD");
-                    setform();
+                    // setform();
                     makeminutes();
                 }
                 if(document.querySelector('#timer')){
                     missionactive();
                 }
             };
-            http.send();
+            http.send(string);
         }
 
-        function setform(){
-            console.log("1");
-            const buttons = document.querySelectorAll(".click")
-            for (const button of buttons) {
-                button.addEventListener('click', function(event) {
-                    button.parentNode.submit();
-                })
-            }
-        }
+        // function setform(){
+        //     console.log("1");
+        //     const buttons = document.querySelectorAll(".click")
+        //     for (const button of buttons) {
+        //         button.addEventListener('click', function(event) {
+        //             button.parentNode.submit();
+        //         })
+        //     }
+        // }
         function makeminutes(){
             timespans = document.querySelectorAll(".mission_time");
             for(const time of timespans){
@@ -72,11 +83,17 @@
             }
             document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
 
-            setTimeout(odejmczas, 1000);
+            // setTimeout(odejmczas, 1000);
+            if(!t){
+                t=setInterval(odejmczas, 1000);
+            }
         }
         function odejmczas(){
             if(seconds<1 && minutes==0){
-                window.location.href="";
+                clearInterval(t);
+                t=null;
+                load('missions', 'GET', '#box');
+                // window.location.href="";
             }
             else{
                 if(seconds==0){
@@ -87,7 +104,7 @@
                     seconds--;
                 }
                 document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
-                setTimeout(odejmczas, 1000);
+                // setTimeout(odejmczas, 1000);
             }
         }
     </script>
