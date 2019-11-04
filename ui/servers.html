@@ -18,35 +18,24 @@
     </style>
 </head>
 <body>
-    <div class="background"></div>
-    <div class="container">
-        <div class="row box">
-            <div class="col-md-6 inner-box">
-                <h1>Serwery</h1>
-                <div class="col-md-12">
-                    <repeat group="{{ @result }}" value="{{ @server }}">
-                        <div class="row server">
-                            <form action="logintoserver" method="POST">
-                                <check if="{{ @server.char_id }}">
-                                    <true>
-                                        <span class="servers green">SERWER {{ @server.server_id }} - {{ @server.nickname }} {{ @server.level }}lv</span>
-                                        <input type="hidden" name="serverno" value="{{ @server.server_id }}">
-                                    </true>
-                                    <false>
-                                        <span class="servers error">SERWER {{ @server.server_id }} - {{ @server.nickname }} 0lv</span>
-                                        <input type="hidden" name="serverno" value="{{ @server.server_id }}">
-                                    </false>
-                                </check>
-                            </form>
-                        </div>
-                    </repeat>
-                </div>
-                <form action="logout" method="POST">
-                    <button type="submit">logout</button>
-                </form>
-            </div>
-        </div>
-    </div>
+    <h1>serwery</h1>
+    <repeat group="{{ @result }}" value="{{ @server }}">
+        <form action="logintoserver" method="POST">
+            <check if="{{ @server.char_id }}">
+                <true>
+                    <a class="servers green">SERWER {{ @server.server_id }} - {{ @server.nickname }} {{ @server.level }}lv</a>
+                    <input type="hidden" name="serverno" value="{{ @server.server_id }}">
+                </true>
+                <false>
+                    <a class="servers error">SERWER {{ @server.server_id }} - {{ @server.nickname }} 0lv</a>
+                    <input type="hidden" name="serverno" value="{{ @server.server_id }}">
+                </false>
+            </check>
+        </form>
+    </repeat>
+    <form action="logout" method="POST">
+        <button type="submit">logout</button>
+    </form>
     <script>
         const buttons = document.querySelectorAll(".servers")
         for (const button of buttons) {
@@ -55,5 +44,5 @@
             })
         }
     </script>
-</body>
+    </body>
 </html>

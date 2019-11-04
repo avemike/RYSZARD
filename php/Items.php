@@ -175,7 +175,7 @@
                 }
             }
 
-            $f3->reroute('@home');
+            $f3->reroute('@profile');
         }
         function unequip($f3){
             global $db;
@@ -185,7 +185,7 @@
             }
 
 
-            $f3->reroute('@home');
+            $f3->reroute('@profile');
         }
         function generate_item($place, $from, $to) {
             global $db;

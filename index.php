@@ -4,9 +4,12 @@ $f3=require('lib/base.php');
 $f3->config('config.ini');
 
 // Database connection 
-$f3->set('conn',$db=new DB\SQL('mysql:host=localhost;port=3306;dbname=ryszardDB','root','',array(\PDO::MYSQL_ATTR_INIT_COMMAND=>'SET NAMES utf8;')));
+$f3->set('conn',$db=new DB\SQL('mysql:host=localhost;port=3306;dbname=ryszardDB','root',''));
 
 session_start();
+if(!empty($_SESSION['char_id'])){
+	$f3->set('newcurrency', $db->exec('SELECT currency FROM characters WHERE char_id=?', $_SESSION['char_id'])[0]['currency']);
+}
 
 include('php/functions.php');
 include('php/Items.php');
@@ -30,22 +33,12 @@ $f3->route('GET @login: /login','login->getlogin');
 
 $f3->route('GET @missions: /missions','home->missions');
 
-$f3->route('GET @end_mission: /mission_end','home->mission_end');
-
-$f3->route('POST /choosemission','home->choosemission');
-
-// $f3->route('GET @createchar: /createchar','register->createchar');
-$f3->route('GET /getCharacterIcons', 'register->getCharacterIcons');
-$f3->route('POST /createchar','register->postcreatechar');
-
-$f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
-
-$f3->route('POST /logout','login->logout');
-// $f3->route('POST /logout', function($f3) {
-// 	$title = $f3->get('POST.title');
-
-// 	$db->exec('');
-// });
+$f3->route('GET @profile: /profile',function(){
+	$inv = new items;
+	$inv->show_inventory();
+	$inv->show_equipped();
+	echo \Template::instance()->render('profile.html');
+});
 
 $f3->route('GET @armoryShop: /armory', 'items->armoryShop');
 
@@ -61,16 +54,29 @@ $f3->route('POST /itemShop/equipitem', 'items->equip');
 
 $f3->route('POST /itemShop/unequipitem', 'items->unequip');
 
+
+$f3->route('POST /choosemission','home->choosemission');
+
+
+$f3->route('POST /register','register->inserting_data');
+
+$f3->route('GET @login: /login','login->getlogin');
+
+$f3->route('POST /login','login->postlogin');
+
 $f3->route('GET /register',
 function($f3) {
 	echo \Template::instance()->render('register.html');
 	}
 ); 
 
-$f3->route('POST /register','register->inserting_data');
+$f3->route('GET @createchar: /createchar','register->createchar');
 
-$f3->route('GET @login: /login','login->getlogin');
-$f3->route('POST /login','login->postlogin');
+$f3->route('POST /createchar','register->postcreatechar');
+
+$f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
+
+$f3->route('POST /logout','login->logout');
 
 // Settings related
 $f3->route('GET /settings','settings->page');

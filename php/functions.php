@@ -36,13 +36,9 @@
             $user->load(array('char_id=?',$_SESSION["char_id"]));
             $_SESSION["currency"]=$user->currency;
             
-            $inv = new items;
-            $inv->show_inventory();
-            $inv->show_equipped();
 
-            echo \Template::instance()->render('profile.html');
-        }    
-    
+            echo \Template::instance()->render('mainpage.html');
+        }
         function missions($f3){  
             global $db;
             if(empty($_SESSION["nickname"])){
