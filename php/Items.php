@@ -190,21 +190,34 @@
         function generate_item($place, $from, $to) {
             global $db;
 
-            $item_templates = $db->exec('SELECT item_template_id FROM item_template WHERE (item_class=? OR item_class=0) AND item_type>=? AND item_type<=? ORDER BY rand() LIMIT 1',array($_SESSION["char_class"], $from, $to));
+            $item_templates = $db->exec('SELECT item_template_id, item_type FROM item_template WHERE (item_class=? OR item_class=0) AND item_type>=? AND item_type<=? ORDER BY rand() LIMIT 1',array($_SESSION["char_class"], $from, $to));
             
-            $hp = ($_SESSION["level"] - rand(1, $_SESSION["level"])) * rand(5,10);  //temp algorithm
+            $vit = ($_SESSION["level"] - rand(1, $_SESSION["level"])) * rand(5,10);  //temp algorithm
             $str = rand(0, $_SESSION["level"]);  //everything here is temporary
             $dex = rand(0, $_SESSION["level"]);
             $int = rand(0, $_SESSION["level"]);
             $luck = rand(0, $_SESSION["level"]);
             $every_attrib = rand(0, $_SESSION["level"]/3);
-            $value = rand(1, ($hp + $str + $dex + $int + $luck + $every_attrib)) * rand(1, 5);
+            if(in_array($item_templates[0]["item_type"], range(1,3))){
+                $attack = null;
+                $defence = rand(0, $_SESSION["level"])*3;
+            }
+            else if($item_templates[0]["item_type"]==0){
+                $attack = rand(0, $_SESSION["level"]*3);
+                $defence = null;
+            }
+            else{
+                $attack = null;
+                $defence = null;
+            }
+            $value = rand(1, ($vit + $str + $dex + $int + $luck + $every_attrib)) * rand(1, 5);
 
-            $db->exec(" INSERT INTO items (char_id, value, strength, 
-                hp, dex, intelligence, luck, every_attrib,	
+
+            $db->exec(" INSERT INTO items (char_id, value, attack, defence, strength, 
+                vit, dex, intelligence, luck, every_attrib,	
                 item_status, item_template_id, item_place)
-                values (?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)", array($_SESSION["char_id"], $value,
-                $str, $hp, $dex, $int, $luck, $every_attrib, $item_templates[0]["item_template_id"], $place));
+                values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 1, ?, ?)", array($_SESSION["char_id"], $value, $attack, $defence,
+                $str, $vit, $dex, $int, $luck, $every_attrib, $item_templates[0]["item_template_id"], $place));
         }
         function change_item_status($item_id, $item_status){
             global $db;
@@ -289,17 +302,48 @@
             global $f3;
             global $db;
             // $db->exec('SELECT strength, hp, dex, luck FROM characters WHERE char_id=?', $user_id)
-            $stats = $db->exec('SELECT sum(attack) as attack, sum(defence) as deffence, sum(strength) as strength, sum(hp) as hp, sum(dex) as dex, sum(luck) as luck 
+            $stats = $db->exec('SELECT sum(attack) as attack, sum(vit) as vitallity, sum(defence) as defence, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib 
             FROM (
-                SELECT attack, defence, strength, hp, dex, luck FROM characters WHERE char_id=:id
+                SELECT attack, defence, vit, strength, intelligence, dex, luck, "" as every_attrib FROM characters WHERE char_id=:id
             
                 UNION
             
-                SELECT sum(attack) as attack, sum(defence) as deffence, sum(strength) as strength, sum(hp) as hp, sum(dex) as dex, sum(luck) as luck FROM items WHERE char_id=:id AND item_status=2
+                SELECT sum(attack) as attack, sum(defence) as defence, sum(vit) as vit, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib FROM items WHERE char_id=:id AND item_status=2
             ) t', array(':id'=>$user_id));
+            $stats=$stats[0];
+
+            if($stats['every_attrib']){
+                foreach($stats as $key => $value){
+                    if($key!='every_attrib'){
+                        $stats[$key]+=$stats['every_attrib'];
+                    }
+                }
+            }
+            unset($stats['every_attrib']);
+            if($_SESSION['char_class']==1){
+                $stat1=$stats['intelligence'];
+                $stat2=$stats['dex'];
+                $stat3=$stats['strength'];
+            }
+            elseif($_SESSION['char_class']==2){
+                $stat1=$stats['strength'];
+                $stat2=$stats['dex'];
+                $stat3=$stats['intelligence'];
+            }
+            else{
+                $stat1=$stats['dex'];
+                $stat2=$stats['intelligence'];
+                $stat3=$stats['strength'];
+            }
+            $attack = round($_SESSION['level']*$stat1*8/10+$_SESSION['level']*$stat2*4/10+$_SESSION['level']*$stat3*1/10);
+
+            $stats['attack']+=$attack;
+
+            $f3->set('health', $stats['vitallity']*$_SESSION['level']);
+
 
             $arr=array();
-            foreach($stats[0] as $key => $value){
+            foreach($stats as $key => $value){
                 $arr[] = array('name' => $key, 'value' => $value);
                 $test = $value;
             }

@@ -60,6 +60,8 @@
                         $duration_time=1;
                         $currency_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
                         $exp_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
+                        $exp_reward=1000;
+                        $currency_reward=1000;
 
                         $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, mission_template_id, start_date, mission_active)
                         values (?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), "0")', array($_SESSION["char_id"], $currency_reward, $exp_reward, $duration_time, $mission_templates[$i]["mission_template_id"]));
@@ -85,7 +87,7 @@
             $char=new DB\SQL\Mapper($db,'characters');
             $char->load(array('char_id=?',$_SESSION["char_id"]));
             $char->currency+=$currency;
-            if($char->exp+$exp>$char->exp_to_next_lv){
+            if($char->exp+$exp>=$char->exp_to_next_lv){
                 $char->exp=$char->exp+$exp-$char->exp_to_next_lv;
                 $char->level++;
                 $char->exp_to_next_lv+=500;
@@ -267,24 +269,27 @@
                         if($this->checkalphabet($f3->get('POST.nickname'))&&strlen($f3->get('POST.nickname'))<16) {
                             if ($f3->get('POST.occupation')=="informatyk") {
                                 $f3->get('object_mapper_char')->strength="30";
-                                $f3->get('object_mapper_char')->hp="100";
+                                $f3->get('object_mapper_char')->vit="100";
                                 $f3->get('object_mapper_char')->dex="10";
                                 $f3->get('object_mapper_char')->luck="20";
                                 $f3->get('object_mapper_char')->char_class=1;
                             } elseif ($f3->get('POST.occupation')=="mechatronik") {
                                 $f3->get('object_mapper_char')->strength="60";
-                                $f3->get('object_mapper_char')->hp="110";
+                                $f3->get('object_mapper_char')->vit="110";
                                 $f3->get('object_mapper_char')->dex="5";
                                 $f3->get('object_mapper_char')->luck="5";
                                 $f3->get('object_mapper_char')->char_class=2;
                             } else {
                                 $f3->get('object_mapper_char')->strength="25";
-                                $f3->get('object_mapper_char')->hp="100";
+                                $f3->get('object_mapper_char')->vit="100";
                                 $f3->get('object_mapper_char')->dex="25";
                                 $f3->get('object_mapper_char')->luck="0";
                                 $f3->get('object_mapper_char')->char_class=3;
                             };
+                            $f3->get('object_mapper_char')->attack="20";
+                            $f3->get('object_mapper_char')->defence="20";    
                             $f3->get('object_mapper_char')->currency="0";    
+                            $f3->get('object_mapper_char')->intelligence="20";    
                             $f3->get('object_mapper_char')->level="1"; 
                             $f3->get('object_mapper_char')->exp_to_next_lv="500";
                             $f3->get('object_mapper_char')->exp="0";
