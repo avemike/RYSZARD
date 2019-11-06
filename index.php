@@ -13,6 +13,7 @@ if(!empty($_SESSION['char_id'])){
 
 include('php/functions.php');
 include('php/Items.php');
+include('php/fight.php');
 
 
 $f3->route('GET @home: /','home->gethome');

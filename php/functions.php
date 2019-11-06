@@ -29,6 +29,10 @@
                 $f3->set('missions', false);
                 //if active mission has ended
                 if($result[0]["started_ago"]>$result[0]["duration_time"]){
+                    $fight = new fight_module;
+                    $fight->fight($_SESSION['char_id']);
+
+
                     $f3->set('missionready', $result[0]);
                     $f3->set('mission_description', $result[0]["mission_description"]);
  

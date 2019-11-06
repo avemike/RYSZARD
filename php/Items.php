@@ -338,16 +338,23 @@
             $attack = round($_SESSION['level']*$stat1*8/10+$_SESSION['level']*$stat2*4/10+$_SESSION['level']*$stat3*1/10);
 
             $stats['attack']+=$attack;
-
-            $f3->set('health', $stats['vitallity']*$_SESSION['level']);
-
-
+            $health=$stats['vitallity']*$_SESSION['level'];
+            
             $arr=array();
             foreach($stats as $key => $value){
                 $arr[] = array('name' => $key, 'value' => $value);
                 $test = $value;
             }
+
+            $f3->set('health', $health);
             $f3->set('stats', $arr);
+
+
+            $additional = $db->exec('SELECT level, nickname FROM characters WHERE char_id=?', $user_id);
+            foreach($additional[0] as $key => $value){
+                $stats[$key]=$value;
+            }
+            $stats['health']=$health;
             return $stats;
         }
     }
