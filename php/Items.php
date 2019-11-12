@@ -192,7 +192,8 @@
 
             $item_templates = $db->exec('SELECT item_template_id, item_type FROM item_template WHERE (item_class=? OR item_class=0) AND item_type>=? AND item_type<=? ORDER BY rand() LIMIT 1',array($_SESSION["char_class"], $from, $to));
             
-            $vit = ($_SESSION["level"] - rand(1, $_SESSION["level"])) * rand(5,10);  //temp algorithm
+            $vit = rand(0, $_SESSION["level"]);
+            // $vit = ($_SESSION["level"] - rand(1, $_SESSION["level"])) * rand(5,10);  //temp algorithm
             $str = rand(0, $_SESSION["level"]);  //everything here is temporary
             $dex = rand(0, $_SESSION["level"]);
             $int = rand(0, $_SESSION["level"]);
@@ -200,7 +201,7 @@
             $every_attrib = rand(0, $_SESSION["level"]/3);
             if(in_array($item_templates[0]["item_type"], range(1,3))){
                 $attack = null;
-                $defence = rand(0, $_SESSION["level"])*3;
+                $defence = rand(0, $_SESSION["level"])*4;
             }
             else if($item_templates[0]["item_type"]==0){
                 $attack = rand(0, $_SESSION["level"]*3);
@@ -302,15 +303,18 @@
             global $f3;
             global $db;
             // $db->exec('SELECT strength, hp, dex, luck FROM characters WHERE char_id=?', $user_id)
-            $stats = $db->exec('SELECT sum(attack) as attack, sum(vit) as vitallity, sum(defence) as defence, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib 
+            $stats = $db->exec('SELECT level, sum(attack) as attack, sum(vit) as vitallity, sum(defence) as defence, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib 
             FROM (
-                SELECT attack, defence, vit, strength, intelligence, dex, luck, "" as every_attrib FROM characters WHERE char_id=:id
+                SELECT level, attack, defence, vit, strength, intelligence, dex, luck, "" as every_attrib FROM characters WHERE char_id=:id
             
                 UNION
             
-                SELECT sum(attack) as attack, sum(defence) as defence, sum(vit) as vit, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib FROM items WHERE char_id=:id AND item_status=2
+                SELECT "" as level, sum(attack) as attack, sum(defence) as defence, sum(vit) as vit, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib FROM items WHERE char_id=:id AND item_status=2
             ) t', array(':id'=>$user_id));
             $stats=$stats[0];
+
+            $multiplier=sqrt($stats['level'])*5;
+            unset($stats['level']);
 
             if($stats['every_attrib']){
                 foreach($stats as $key => $value){
@@ -335,10 +339,9 @@
                 $stat2=$stats['intelligence'];
                 $stat3=$stats['strength'];
             }
-            $attack = round($_SESSION['level']*$stat1*8/10+$_SESSION['level']*$stat2*4/10+$_SESSION['level']*$stat3*1/10);
-
+            $attack = round($multiplier*$stat1*6/10+$multiplier*$stat2*3/10+$multiplier*$stat3*1/10);
             $stats['attack']+=$attack;
-            $health=$stats['vitallity']*$_SESSION['level'];
+            $health=round($stats['vitallity']*$multiplier*2);
             
             $arr=array();
             foreach($stats as $key => $value){
@@ -348,7 +351,6 @@
 
             $f3->set('health', $health);
             $f3->set('stats', $arr);
-
 
             $additional = $db->exec('SELECT level, nickname FROM characters WHERE char_id=?', $user_id);
             foreach($additional[0] as $key => $value){

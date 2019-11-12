@@ -30,13 +30,12 @@
                 //if active mission has ended
                 if($result[0]["started_ago"]>$result[0]["duration_time"]){
                     $fight = new fight_module;
-                    $fight->fight($_SESSION['char_id']);
-
-
+                    if($fight->fight($_SESSION['char_id'])){
+                        $this->addexperience($result[0]["currency_reward"], $result[0]["exp_reward"]);
+                    }
                     $f3->set('missionready', $result[0]);
                     $f3->set('mission_description', $result[0]["mission_description"]);
  
-                    $this->addexperience($result[0]["currency_reward"], $result[0]["exp_reward"]);
 
                     $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
                 }
@@ -272,28 +271,26 @@
                     } elseif (empty($f3->get('object_mapper_char')->load(array('user_id=:user_idpost AND server_id=:server_idpost',':user_idpost'=>$f3->get('SESSION.user_id'),':server_idpost'=>$f3->get('POST.server'))))) {
                         if($this->checkalphabet($f3->get('POST.nickname'))&&strlen($f3->get('POST.nickname'))<16) {
                             if ($f3->get('POST.occupation')=="informatyk") {
-                                $f3->get('object_mapper_char')->strength="30";
-                                $f3->get('object_mapper_char')->vit="100";
+                                $f3->get('object_mapper_char')->strength="5";
+                                $f3->get('object_mapper_char')->intelligence="15";
                                 $f3->get('object_mapper_char')->dex="10";
-                                $f3->get('object_mapper_char')->luck="20";
                                 $f3->get('object_mapper_char')->char_class=1;
                             } elseif ($f3->get('POST.occupation')=="mechatronik") {
-                                $f3->get('object_mapper_char')->strength="60";
-                                $f3->get('object_mapper_char')->vit="110";
-                                $f3->get('object_mapper_char')->dex="5";
-                                $f3->get('object_mapper_char')->luck="5";
+                                $f3->get('object_mapper_char')->strength="15";
+                                $f3->get('object_mapper_char')->intelligence="5";
+                                $f3->get('object_mapper_char')->dex="10";
                                 $f3->get('object_mapper_char')->char_class=2;
                             } else {
-                                $f3->get('object_mapper_char')->strength="25";
-                                $f3->get('object_mapper_char')->vit="100";
-                                $f3->get('object_mapper_char')->dex="25";
-                                $f3->get('object_mapper_char')->luck="0";
+                                $f3->get('object_mapper_char')->strength="5";
+                                $f3->get('object_mapper_char')->intelligence="10";
+                                $f3->get('object_mapper_char')->dex="15";
                                 $f3->get('object_mapper_char')->char_class=3;
                             };
-                            $f3->get('object_mapper_char')->attack="20";
+                            $f3->get('object_mapper_char')->luck="10";
+                            $f3->get('object_mapper_char')->vit="30";
+                            $f3->get('object_mapper_char')->attack="30";
                             $f3->get('object_mapper_char')->defence="20";    
-                            $f3->get('object_mapper_char')->currency="0";    
-                            $f3->get('object_mapper_char')->intelligence="20";    
+                            $f3->get('object_mapper_char')->currency="0";        
                             $f3->get('object_mapper_char')->level="1"; 
                             $f3->get('object_mapper_char')->exp_to_next_lv="500";
                             $f3->get('object_mapper_char')->exp="0";

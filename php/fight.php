@@ -13,18 +13,24 @@
                 $items = new items;
                 $enemy=$items->get_stats($_SESSION['char_id']);
                 $enemy['nickname']="przeciwnik";
-                $enemy['level']-=1;
+                // $enemy['level']+=1;
             }
             $f3->set('fight_log', json_encode($you)."%".json_encode($enemy)."%<br>");
+            $counter=0;
             while($you['health']>0 && $enemy['health']>0 ){
                 $enemy['health']-=$this->hit($you, $enemy);
+                $counter++;
                 if($enemy['health']>0){
                     $you['health']-=$this->hit($enemy, $you);
+                    $counter++;
+                }
+                if($counter>=200){
+                    break;
                 }
             }
 
             echo $f3->get('fight_log');
-
+            echo "<br>".$counter;
             if($you['health']>0){
                 return true;
             }
@@ -37,23 +43,41 @@
             $crit="";
             $crit_dmg=1;
 
-            $crit_chance=$attacker['luck']/$attacker['level']*10;
+            $crit_chance=$attacker['luck']/$attacker['level']*3*2;
             if(rand(0,100)<=$crit_chance){
                 $crit="!!!";
-                $crit_dmg=rand(15,20)/10;
+                $crit_dmg=rand(150,200)/100;
             }
 
-            $hit=round(($attacker['attack']-($defender['defence']*7))*rand(10,15)/10*$crit_dmg);
+            $hit_multiplier=rand(80,120)/100;
+            $hit=round(($attacker['attack']-($defender['defence']*2))*$hit_multiplier*$crit_dmg);
 
-            $newhealth=$defender['health']-$hit;
+            $miss_chance=$defender['luck']/$defender['level']*3;
+            if($hit<0 || rand(0,100)<=$miss_chance){
+                $hit="???miss";
+                $crit="";
+                $newhealth=$defender['health'];
+            }
+            else{
+                $newhealth=$defender['health']-$hit;
+            }
+
             
-            $info=$attacker['nickname']."->".$defender['nickname']."&".$crit.$hit."&".$defender['health']."->".$newhealth."#<br>";
-            
+            // $info=$attacker['nickname']."->".$defender['nickname']."&".$crit.$hit."&".$defender['health']."->".$newhealth."#<br>";
+            $info['crit_chance']=$crit_chance;
+            // $info['miss_chance']=$miss_chance;
+            $info['hit_multiplier']=$hit_multiplier;
+            $info['desc']=$attacker['nickname']."->".$defender['nickname'];
+            $info['crit_multiplier']=$crit_dmg;
+            $info['hit']=$crit.$hit;
+            $info['health']=$defender['health']."->".$newhealth;
+
+
             $log=$f3->get('fight_log');
-            $log.=$info;
+            $log.=json_encode($info)."&<br>";
             $f3->set('fight_log', $log);
 
-            if($hit<0){
+            if($hit<0 || !is_numeric($hit)){
                 return 0;
             }
             else{
