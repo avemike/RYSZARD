@@ -1,19 +1,16 @@
 <?php
     class fight_module{
-        function fight($you, $enemy=false){
+        function fight($you_id, $enemy_id=false){
             global $f3;
             global $db;
             $items = new items;
-            $you=$items->get_stats($you);
+            $you=$items->get_stats($you_id);
             if($enemy){
-                $enemy=$items->get_stats($enemy);
+                $enemy=$items->get_stats($enemy_id);
             }
             else{
                 //generate
-                $items = new items;
-                $enemy=$items->get_stats($_SESSION['char_id']);
-                $enemy['nickname']="przeciwnik";
-                // $enemy['level']+=1;
+                $enemy=$items->get_stats($you_id, false);
             }
             $f3->set('fight_log', json_encode($you)."%".json_encode($enemy)."%<br>");
             $counter=0;
@@ -30,7 +27,6 @@
             }
 
             echo $f3->get('fight_log');
-            echo "<br>".$counter;
             if($you['health']>0){
                 return true;
             }
@@ -62,12 +58,10 @@
                 $newhealth=$defender['health']-$hit;
             }
 
-            
-            // $info=$attacker['nickname']."->".$defender['nickname']."&".$crit.$hit."&".$defender['health']."->".$newhealth."#<br>";
-            $info['crit_chance']=$crit_chance;
+            $info['desc']=$attacker['nickname']."->".$defender['nickname'];
+            // $info['crit_chance']=$crit_chance;
             // $info['miss_chance']=$miss_chance;
             $info['hit_multiplier']=$hit_multiplier;
-            $info['desc']=$attacker['nickname']."->".$defender['nickname'];
             $info['crit_multiplier']=$crit_dmg;
             $info['hit']=$crit.$hit;
             $info['health']=$defender['health']."->".$newhealth;

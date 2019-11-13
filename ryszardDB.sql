@@ -66,7 +66,7 @@ create table items (
     attack int,
     defence int,
     strength int,
-    hp int,
+    vit int,
     dex int,
     luck int,
     intelligence int,
@@ -105,7 +105,7 @@ create table missions (
 );
 
 create table enemy_template (
-    enemy_template_id int,
+    enemy_template_id int not null auto_increment,
     enemy_name varchar(255),
     enemy_icon varchar(255),
     enemy_class varchar(255),
@@ -118,8 +118,6 @@ INSERT INTO accounts (login, password) values ("andrzejek", "76d80224611fc919a5d
 INSERT INTO servers (server_id) values ("1");
 INSERT INTO servers (server_id) values ("2");
 INSERT INTO servers (server_id) values ("3");
-
-INSERT INTO characters (user_id, server_id, nickname, level, exp, currency, char_class) values ("1", "1", "andrzejekchar", 24, 1000, 10000, 1);
 
 INSERT INTO mission_template (mission_description, mission_name) values ("Po długiej walce z gaborem na gołe pięści i dzwonki szkolne udało Ci się zwyciężyć", "Wyprawa do Gabora");
 INSERT INTO mission_template (mission_description, mission_name) values ("Pan kondesator wręczył Ci swój złoty śrubokręt na znak szacunku", "Wyprawa do Kondensatora");
@@ -207,4 +205,11 @@ INSERT INTO item_template (item_icon, item_description, item_class, item_type, i
 values ("5", "", "0", "6", "Zepsuta drukarka");
 INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
 values ("6", "", "0", "6", "Płyta główna z 205");
+
+INSERT INTO enemy_template (enemy_name)
+values ("Pan Gabor");
+INSERT INTO enemy_template (enemy_name)
+values ("Elektrozbigniew");
+INSERT INTO enemy_template (enemy_name)
+values ("Ktoś jeszcze");
 

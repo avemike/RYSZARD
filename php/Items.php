@@ -299,22 +299,19 @@
         //5 rekawice
         //6 amulet
         }
-        function get_stats($user_id){
+        function get_stats($char_id, $real=true){
             global $f3;
             global $db;
-            // $db->exec('SELECT strength, hp, dex, luck FROM characters WHERE char_id=?', $user_id)
-            $stats = $db->exec('SELECT level, sum(attack) as attack, sum(vit) as vitallity, sum(defence) as defence, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib 
+            $stats = $db->exec('SELECT sum(attack) as attack, sum(vit) as vitallity, sum(defence) as defence, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib 
             FROM (
-                SELECT level, attack, defence, vit, strength, intelligence, dex, luck, "" as every_attrib FROM characters WHERE char_id=:id
+                SELECT attack, defence, vit, strength, intelligence, dex, luck, "" as every_attrib FROM characters WHERE char_id=:id
             
                 UNION
             
-                SELECT "" as level, sum(attack) as attack, sum(defence) as defence, sum(vit) as vit, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib FROM items WHERE char_id=:id AND item_status=2
-            ) t', array(':id'=>$user_id));
-            $stats=$stats[0];
+                SELECT sum(attack) as attack, sum(defence) as defence, sum(vit) as vit, sum(strength) as strength, sum(intelligence) as intelligence, sum(dex) as dex, sum(luck) as luck, sum(every_attrib) as every_attrib FROM items WHERE char_id=:id AND item_status=2
+            ) t', array(':id'=>$char_id))[0];
 
-            $multiplier=sqrt($stats['level'])*5;
-            unset($stats['level']);
+            $char_info = $db->exec('SELECT level, nickname, char_class FROM characters WHERE char_id=?', $char_id)[0];
 
             if($stats['every_attrib']){
                 foreach($stats as $key => $value){
@@ -324,12 +321,23 @@
                 }
             }
             unset($stats['every_attrib']);
-            if($_SESSION['char_class']==1){
+
+            if(!$real){
+                $char_info['level']-=rand(-3,3);
+                if($char_info['level']<1){
+                    $char_info['level']=1;
+                }
+                foreach($stats as $key => $stat){
+                    $stats[$key]=round($stat*7/10);         
+                }
+            }
+
+            if($char_info['char_class']==1){
                 $stat1=$stats['intelligence'];
                 $stat2=$stats['dex'];
                 $stat3=$stats['strength'];
             }
-            elseif($_SESSION['char_class']==2){
+            elseif($char_info['char_class']==2){
                 $stat1=$stats['strength'];
                 $stat2=$stats['dex'];
                 $stat3=$stats['intelligence'];
@@ -339,23 +347,35 @@
                 $stat2=$stats['intelligence'];
                 $stat3=$stats['strength'];
             }
+
+            $multiplier=sqrt($char_info['level'])*5;
             $attack = round($multiplier*$stat1*6/10+$multiplier*$stat2*3/10+$multiplier*$stat3*1/10);
             $stats['attack']+=$attack;
             $health=round($stats['vitallity']*$multiplier*2);
             
-            $arr=array();
-            foreach($stats as $key => $value){
-                $arr[] = array('name' => $key, 'value' => $value);
-                $test = $value;
+            if($real){
+                $arr=array();
+                foreach($stats as $key => $value){
+                    $arr[] = array('name' => $key, 'value' => $value);
+                    $test = $value;
+                }
+    
+                $f3->set('health', $health);
+                $f3->set('stats', $arr);
+    
+                
+                foreach($char_info as $key => $value){
+                    $stats[$key]=$value;
+                }
+            }
+            else{
+                $stats['level']=$char_info['level'];
+                $enemy=$db->exec('SELECT enemy_name FROM enemy_template ORDER BY rand() limit 1')[0];
+                $stats['nickname']=$enemy['enemy_name'];
+                $stats['char_class']=4;
             }
 
-            $f3->set('health', $health);
-            $f3->set('stats', $arr);
 
-            $additional = $db->exec('SELECT level, nickname FROM characters WHERE char_id=?', $user_id);
-            foreach($additional[0] as $key => $value){
-                $stats[$key]=$value;
-            }
             $stats['health']=$health;
             return $stats;
         }
