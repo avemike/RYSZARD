@@ -44,20 +44,20 @@
             if(empty($_SESSION["nickname"])){
                 $f3->reroute('@login');
             }
-            //if character have active mission
+            //if character has active mission
             if($result=$db->exec('SELECT mission_id, TIMESTAMPDIFF(SECOND,start_date,current_timestamp()) AS started_ago, duration_time, currency_reward, exp_reward, mission_description FROM missions LEFT JOIN mission_template on missions.mission_template_id = mission_template.mission_template_id WHERE char_id=? AND mission_active=1', $_SESSION["char_id"])){
                 $f3->set('missions', false);
                 //if active mission has ended
+                
                 if($result[0]["started_ago"]>$result[0]["duration_time"]){
-                    if ($this->fight(100)==true) {
+                    // if ($this->fight(100)==true) {
                         $f3->set('missionready', $result[0]);
                         $f3->set('mission_description', $result[0]["mission_description"]);
     
                         $this->addexperience($result[0]["currency_reward"], $result[0]["exp_reward"]);
 
                         $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
-                    };
-
+                    // };
                 }
                 //if mission is not ended yet
                 else{
@@ -87,7 +87,7 @@
                         values (?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), "0")', array($_SESSION["char_id"], $currency_reward, $exp_reward, $duration_time, $mission_templates[$i]["mission_template_id"]));
                     }
 
-                    $f3->set('missionbox',$db->exec('SELECT char_id, currency_reward, exp_reward, duration_time, mission_name, mission_id FROM missions LEFT JOIN mission_template on missions.mission_template_id = mission_template.mission_template_id WHERE char_id=?',$_SESSION["char_id"]));
+                    $f3->set('missionbox', $db->exec('SELECT char_id, currency_reward, exp_reward, duration_time, mission_name, mission_id FROM missions LEFT JOIN mission_template on missions.mission_template_id = mission_template.mission_template_id WHERE char_id=?',$_SESSION["char_id"]));
                 }
             }
             echo \Template::instance()->render('missions.html');
@@ -217,7 +217,7 @@
             $alphabet=array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","v","s","t","u","w","x","y","z","1","2","3","4","5","6","7","8","9","0");
             for ($i=0; $i<strlen($string); $i++) {
                 if(!in_array(strtolower($string[$i]),$alphabet)) {
-                    return false;    
+                    return false;
                 }
             };
             return true;
@@ -274,11 +274,12 @@
             // echo(json_encode(
                 // '<img src="ui/images/kobiety/informatyk" alt="">'
             // ));
-            $result = array("ui/images/".$race."/".$class.".jpg", "ui/images/".$race."/".$class."2.jpg");
+            $result = array("ui/images/karzel/mechatronik1.jpg", "ui/images/czlowiek/informatyk2.jpg");
             $f3->set('result', $result);
 
             echo \Template::instance()->render('characterIcons.html');
         }
+
         function postcreatechar($f3) {
             global $db;
             $character_classes=array("informatyk", "mechatronik", "elektronik");
@@ -336,16 +337,4 @@
             }
         }
     }
-    
-    // ***********THIS IS FOR MAIL -> DON'T DELETE THIS**************    
-    /* else if (!$f3->get('POST.email')=="") { //checking if email is no empty 
-        //checking if email is correct
-        if (filter_var($f3->get('POST.email'), FILTER_VALIDATE_EMAIL)) {
-            //insert email into database
-            $f3->get('object_mapper')->email=$f3->get('POST.email');
-        }   else {
-                $f3->set('error',"Podaj poprawny email!");
-                echo "Mail niepoprawny";
-            }   
-    } */
 ?>

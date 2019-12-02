@@ -31,13 +31,13 @@
                 <div class="row">
                     <h2>Wybierz klasę:</h2>
                     <button class="class selected" title="mechatronik" data-name="mechatronik">
-                        <img src="ui/images/karzel/mechatronik.jpg"  alt="">
+                        <img src="ui/images/karzel/mechatronik1.jpg"  alt="">
                     </button>
                     <button class="class" title="elektronik"  data-name="elektronik" >
-                        <img src="ui/images/karzel/elektronik.jpg"alt="">
+                        <img src="ui/images/karzel/elektronik1.jpg"alt="">
                     </button>
                     <button class="class" title="informatyk" data-name="informatyk">
-                        <img src="ui/images/karzel/informatyk.jpg" alt="">
+                        <img src="ui/images/karzel/informatyk1.jpg" alt="">
                     </button>                    
                     <!-- Informatyk<input type="radio" name="occupation" value="informatyk" checked></br>
                     Mechatronik<input type="radio" name="occupation" value="mechatronik"></br>
@@ -46,13 +46,13 @@
                 <div class="row">
                     <h2>Wybierz rasę:</h2>
                     <button class="race selected" title="kobieta" data-name="kobieta">
-                        <img src="ui/images/kobieta/elektronik.jpg"  alt="">
+                        <img src="ui/images/kobieta/elektronik1.jpg"  alt="">
                     </button>
                     <button class="race" title="czlowiek"  data-name="czlowiek" >
-                        <img src="ui/images/czlowiek/informatyk.jpg"alt="">
+                        <img src="ui/images/czlowiek/informatyk1.jpg"alt="">
                     </button>
                     <button class="race" title="karzel" data-name="karzel">
-                        <img src="ui/images/karzel/mechatronik.jpg" alt="">
+                        <img src="ui/images/karzel/mechatronik1.jpg" alt="">
                     </button>
                 </div>
                 <div class="row">
@@ -109,6 +109,7 @@
             }
 
             $(this).addClass('selected')
+            console.log('kutas')
             $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
         })
         

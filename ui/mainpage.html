@@ -52,18 +52,10 @@
             http.send(string);
         }
 
-        // function setform(){
-        //     console.log("1");
-        //     const buttons = document.querySelectorAll(".click")
-        //     for (const button of buttons) {
-        //         button.addEventListener('click', function(event) {
-        //             button.parentNode.submit();
-        //         })
-        //     }
-        // }
         function makeminutes(){
             timespans = document.querySelectorAll(".mission_time");
             for(const time of timespans){
+                console.log(time)
                 time.innerHTML=Number(time.textContent)/60;
             }
         }
