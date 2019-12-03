@@ -217,7 +217,7 @@
                 }
                 else{
                     $_SESSION["server"]=$_POST["serverno"];
-                    echo \Template::instance()->render('characters.html');
+                    echo \Template::instance()->render('characterCreation.html');
                 }
             }
             else{
@@ -287,13 +287,13 @@
             
         }
         function getCharacterIcons($f3) {
+            // Return array of all possible (2 per class-race) paths of icons correlated with specific race and class 
+            // Works with characterIcons.html template
+
             $class = $_GET['class'];
             $race = $_GET['race'];
 
-            // echo(json_encode(
-                // '<img src="ui/images/kobiety/informatyk" alt="">'
-            // ));
-            $result = array("ui/images/karzel/mechatronik1.jpg", "ui/images/czlowiek/informatyk2.jpg");
+            $result = array("ui/images/".$race."/".$class."1.jpg", "ui/images/".$race."/".$class."2.jpg");
             $f3->set('result', $result);
 
             echo \Template::instance()->render('characterIcons.html');
