@@ -208,7 +208,7 @@
         function logintoserver($f3){
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
-                if($result=$db->exec('SELECT char_id, nickname, characters.server_id as server, level, currency, exp, exp_to_next_lv, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
+                if($result=$db->exec('SELECT char_id, nickname, race, icon, characters.server_id as server, level, currency, exp, exp_to_next_lv, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
                     foreach($result[0] as $key => $value){
                         $_SESSION[$key]=$value;
                     }
