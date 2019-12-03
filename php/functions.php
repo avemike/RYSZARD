@@ -39,6 +39,13 @@
 
             echo \Template::instance()->render('mainpage.html');
         }
+        function profile($f3){
+            $inv = new items;
+            $inv->show_inventory();
+            $inv->show_equipped();
+            $inv->get_stats($_SESSION["char_id"]);
+            echo \Template::instance()->render('profile.html');
+        }
         function missions($f3){  
             global $db;
             if(empty($_SESSION["nickname"])){
@@ -50,11 +57,13 @@
                 //if active mission has ended
                 
                 if($result[0]["started_ago"]>$result[0]["duration_time"]){
-                    // if ($this->fight(100)==true) {
-                        $f3->set('missionready', $result[0]);
-                        $f3->set('mission_description', $result[0]["mission_description"]);
-    
+                    $fight = new fight_module;
+                    if($fight->fight($_SESSION['char_id'])){
                         $this->addexperience($result[0]["currency_reward"], $result[0]["exp_reward"]);
+                    }
+                    $f3->set('missionready', $result[0]);
+                    $f3->set('mission_description', $result[0]["mission_description"]);
+ 
 
                         $db->exec('DELETE FROM missions WHERE char_id=?', $_SESSION["char_id"]);
                     // };
@@ -79,9 +88,12 @@
 
 
                     for($i=0;$i<3;$i++){
-                        $duration_time=rand(1,20)*30;
+                        // $duration_time=rand(1,20)*30;
+                        $duration_time=1;
                         $currency_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
                         $exp_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
+                        $exp_reward=1000;
+                        $currency_reward=1000;
 
                         $db->exec('INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, mission_template_id, start_date, mission_active)
                         values (?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), "0")', array($_SESSION["char_id"], $currency_reward, $exp_reward, $duration_time, $mission_templates[$i]["mission_template_id"]));
@@ -107,10 +119,23 @@
             $char=new DB\SQL\Mapper($db,'characters');
             $char->load(array('char_id=?',$_SESSION["char_id"]));
             $char->currency+=$currency;
-            $char->exp+=$exp;
+            if($char->exp+$exp>=$char->exp_to_next_lv){
+                $char->exp=$char->exp+$exp-$char->exp_to_next_lv;
+                $char->level++;
+                $char->exp_to_next_lv+=500;
+            }
+            else{
+                $char->exp+=$exp;
+            }
             $char->save();
             $_SESSION["currency"]=$char->currency;
             $_SESSION["exp"]=$char->exp;
+            $_SESSION['level']=$char->level;
+            $_SESSION['exp_to_next_lv']=$char->exp_to_next_lv;
+
+
+
+
         }
     }
     class login{
@@ -183,16 +208,10 @@
         function logintoserver($f3){
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
-                if($result=$db->exec('SELECT char_id, nickname, characters.server_id, level, currency, exp, char_class, icon, race FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
-                    $_SESSION["char_id"]=$result[0]["char_id"];
-                    $_SESSION["nickname"]=$result[0]["nickname"];
-                    $_SESSION["server"]=$result[0]["server_id"];
-                    $_SESSION["level"]=$result[0]["level"];
-                    $_SESSION["race"]=$result[0]["race"];
-                    $_SESSION["currency"]=$result[0]["currency"];
-                    $_SESSION["exp"]=$result[0]["exp"];
-                    $_SESSION["icon"]=$result[0]["icon"];
-                    $_SESSION["char_class"]=$result[0]["char_class"];
+                if($result=$db->exec('SELECT char_id, nickname, characters.server_id as server, level, currency, exp, exp_to_next_lv, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
+                    foreach($result[0] as $key => $value){
+                        $_SESSION[$key]=$value;
+                    }
 
                     $f3->reroute('@home');
                 }
@@ -309,9 +328,16 @@
                         // check if nickname is valid
                         if( $this->checkalphabet($nickname) && strlen($nickname) < 16) { 
                             
-                            //  
-                            $db->exec('INSERT INTO characters values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                                array(null, $user_id, $server, $occupation, $nickname, "0", "1", "0", "10", "10", "10", "10", $race, $icon, null));
+                            // for future use
+                            $exp_to_next_level = 200;
+                            $attack = 10;
+                            $defence = 10;
+                            $vit = 100;
+                            // 
+
+                            $db->exec('INSERT INTO characters values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
+                                array(null, $user_id, $server, $occupation, $nickname, "0", "1", "0", $exp_to_next_level,
+                                $attack, $defence, "10", "10", $vit, "10", "10", $race, $icon, null));
                             echo 'success';
                             }
                         else {

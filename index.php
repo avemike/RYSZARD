@@ -14,7 +14,6 @@ if(!empty($_SESSION['char_id'])){
 include('php/functions.php');
 include('php/Items.php');
 include('php/Settings.php');
-
 include('php/fight.php');
 
 $f3->route('GET @home: /','home->gethome');
@@ -33,12 +32,7 @@ $f3->route('GET @login: /login','login->getlogin');
 
 $f3->route('GET @missions: /missions','home->missions');
 
-$f3->route('GET @profile: /profile',function(){
-	$inv = new items;
-	$inv->show_inventory();
-	$inv->show_equipped();
-	echo \Template::instance()->render('profile.html');
-});
+$f3->route('GET @profile: /profile', 'home->profile');
 
 $f3->route('GET @armoryShop: /armory', 'items->armoryShop');
 
