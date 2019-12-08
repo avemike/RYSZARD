@@ -37,12 +37,128 @@
 
     <h2>Wyposażone: </h2>
     <repeat group="{{ @equipped }}" value="{{ @item }}">
-        <div class="item-equipped {{ @item_classes[@item.item_type] }}">{{ @item.item_name }}<check if="@item.value!=null"><true> <check if="{{ @item.attack }}!=null"><true>att: {{ @item.attack }}</true></check> vitallity:{{ @item.vit }} <check if="{{ @item.defence }}!=null"><true>def: {{ @item.defence }}</true></check> str:{{ @item.strength }} int:{{ @item.intelligence }} dex:{{ @item.dex }} luck:{{ @item.luck }} all:{{ @item.every_attrib }} <button onclick="load('itemShop/unequipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">zdejm</button></true></check></div>
+        <div class="item-equipped {{ @item_classes[@item.item_type] }}">
+
+            <h4>
+                {{ @item.item_name }}
+            </h4>
+            <check if="@item.value!=null">
+                <true>
+                    <check if="{{ @item.attack }}!=null">
+                        <true>Moc ataku: {{ @item.attack }}</true>
+                    </check> 
+                    <li>
+                        Żywotność: {{ @item.vit }}
+                    </li>
+                    <check if="{{ @item.defence }}!=null">
+                        <true>
+                            <li>
+                                Obrona: {{ @item.defence }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.strength }} != 0">
+                        <true>
+                            <li>
+                                Siła: {{ @item.strength }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.intelligence }} != 0">
+                        <true>
+                            <li>
+                                Inteligencja: {{ @item.intelligence }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.dex }} != 0">
+                        <true>
+                            <li>
+                                Zręczność: {{ @item.dex }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.luck }} != 0">
+                        <true>
+                            <li>
+                                Szczęście: {{ @item.luck }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.every_attrib }} != 0">
+                        <true>
+                            <li>
+                                Wszystko: {{ @item.every_attrib }}
+                            </li>
+                        </true>
+                    </check>
+                    <button onclick="load('itemShop/unequipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">zdejm</button>
+                </true>
+            </check>
+
+        </div>
     </repeat>
     
     <h2>Ekwipunek</h2>
     <repeat group="{{ @items_inventory }}" value="{{ @item }}">
-        <div class="item-unequipped">{{ @item.item_name }}<check if="@item.value!=null"><true> <check if="{{ @item.attack }}!=null"><true>att: {{ @item.attack }}</true></check> vitallity:{{ @item.vit }} <check if="{{ @item.defence }}!=null"><true>def: {{ @item.defence }}</true></check> str:{{ @item.strength }} int:{{ @item.intelligence }} dex:{{ @item.dex }} luck:{{ @item.luck }} all:{{ @item.every_attrib }} <button onclick="load('itemShop/equipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">załóż</button></true></check></div>
+        <div class="item-unequipped">
+            <h4>
+                {{ @item.item_name }}
+            </h4>
+            <check if="@item.value!=null">
+                <true>
+                    <check if="{{ @item.attack }}!=null">
+                        <true>Moc ataku: {{ @item.attack }}</true>
+                    </check> 
+                    <li>
+                        Żywotność: {{ @item.vit }}
+                    </li>
+                    <check if="{{ @item.defence }}!=null">
+                        <true>
+                            <li>
+                                Obrona: {{ @item.defence }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.strength }} != 0">
+                        <true>
+                            <li>
+                                Siła: {{ @item.strength }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.intelligence }} != 0">
+                        <true>
+                            <li>
+                                Inteligencja: {{ @item.intelligence }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.dex }} != 0">
+                        <true>
+                            <li>
+                                Zręczność: {{ @item.dex }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.luck }} != 0">
+                        <true>
+                            <li>
+                                Szczęście: {{ @item.luck }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.every_attrib }} != 0">
+                        <true>
+                            <li>
+                                Wszystko: {{ @item.every_attrib }}
+                            </li>
+                        </true>
+                    </check>
+                    <button onclick="load('itemShop/equipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">załóż</button>
+                </true>
+            </check>
+        </div>
     </repeat>
 
     <span class="hidden" id="newcurrency">{{ @newcurrency }}</span>
