@@ -1,11 +1,11 @@
-
 <div class="col-lg-9 border">
     <form action="mail" method="POST">
         <input name="address" placeholder="adresat"><br>
         <input name="title" placeholder="tytuł"><br>
         <input name="content" placeholder="treść" autocomplete="off"><br>
-        <button type="submit">wyślij</button><br>
+        <button type="submit">Wyślij</button><br>
     </form>
     <h1>{{ @mailerror }}</h1>
-    <a href="inbox">cofnij</a>
+    
+    <a onclick="load('inbox', 'GET', '#box')">Cofnij</a>
 </div>

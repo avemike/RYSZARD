@@ -1,0 +1,6 @@
+<div class="col-lg-9 border">
+    <repeat group="{{ @result }}" value="{{ @msg }}">
+        nadawca: ty, odbiorca: {{ @msg.nickname }}, data: {{ @msg.mail_date }}, tytuł: {{ @msg.mail_title }}<br>treść: {{ @msg.mail_content }}<br>
+    </repeat>
+    <a onclick="load('inbox', 'GET', '#box')">Cofnij</a>
+</div>
