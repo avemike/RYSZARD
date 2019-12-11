@@ -8,6 +8,7 @@
     <link rel="stylesheet" href="ui/css/itemShop.css">
     <link rel="stylesheet" href="ui/css/mainpage.css">
     <link rel="stylesheet" href="ui/css/missions.css">
+    <link rel="stylesheet" href="ui/css/mail.css">
     
     <title>EZN</title>
 </head>
@@ -22,7 +23,7 @@
             </div>
         </div>
     </div>
-
+    <script src="ui/mail/mailModule.js"></script>
     <script>
         var t=false;
         load("profile", "GET", "#box");
@@ -34,19 +35,33 @@
             http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
             http.onload = function () {
                 document.querySelector(target_id).innerHTML = http.responseText;
-                newcurrency=document.querySelector('#newcurrency');
-                document.querySelector('#currency').innerHTML = newcurrency.innerHTML;
-                newcurrency.parentNode.removeChild(newcurrency);
+
+                // switch new currency with old currency if both exists
+                const newcurrency = document.querySelector('#newcurrency');
+                const currency = document.querySelector('#currency');
+                if ( currency && newcurrency ) {
+                    currency.innerHTML = newcurrency.innerHTML;
+                    newcurrency.parentNode.removeChild(newcurrency);
+                }
+
                 if(t){
                     clearInterval(t);
                     t=false;
                 }
-                if(document.querySelector('#missions')){
-                    // setform();
-                    makeminutes();
-                }
-                if(document.querySelector('#timer')){
-                    missionactive();
+
+                // call specific loadingModule function after loading url
+                switch (url) {
+                    case 'missions':
+                        makeminutes();
+                        break;
+                    case 'choosemission':
+                        missionactive();
+                        break;
+                    case 'outbox':
+                    case 'mail':
+                    case 'inbox':
+                        loadMailModule() 
+                        break;
                 }
             };
             http.send(string);
@@ -55,7 +70,6 @@
         function makeminutes(){
             timespans = document.querySelectorAll(".mission_time");
             for(const time of timespans){
-                console.log(time)
                 time.innerHTML=Number(time.textContent)/60;
             }
         }
@@ -93,5 +107,6 @@
             }
         }
     </script>
+
 </body>
 </html>

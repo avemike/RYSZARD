@@ -1,6 +1,43 @@
-<div class="col-lg-9 border">
-    <repeat group="{{ @result }}" value="{{ @msg }}">
-        nadawca: ty, odbiorca: {{ @msg.nickname }}, data: {{ @msg.mail_date }}, tytuł: {{ @msg.mail_title }}<br>treść: {{ @msg.mail_content }}<br>
-    </repeat>
-    <a onclick="load('inbox', 'GET', '#box')">Cofnij</a>
+<h2>Wysłane</h2>
+<div class="row">
+    <div class="col-lg-3">
+        <h3>
+            Odbiorca:
+        </h3>
+    </div>
+    <div class="col-lg-6">
+        <h3>
+            Tytuł:
+        </h3>
+    </div>
+    <div class="col-lg-3">
+        <h3>
+            Data:
+        </h3>
+    </div>
+</div>    
+<repeat group="{{ @result }}" value="{{ @msg }}">
+    <div class="row mail-row">
+            <div class="col-lg-3">
+                {{ @msg.nickname }}
+            </div>
+            <div class="col-lg-6">
+                {{ @msg.mail_title }}
+            </div>
+            <div class="col-lg-3">
+                {{ @msg.mail_date }}
+            </div>
+            <div class="col-lg-12">
+                <div class="mail-content hidden">
+                    <p>
+                        {{ @msg.mail_content }}
+                    </p>
+                </div>
+            </div>
+        </div>
+</repeat>
+<div class="row">
+    <div class="col-lg-3">
+        <button onclick="load('inbox', 'GET', '#box')">Cofnij</button>
+    </div>
 </div>
