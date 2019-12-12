@@ -1,8 +1,4 @@
-mysql -u root
-
-create database ryszardDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
-use ryszardDB
+-- create database ryszardDB CHARACTER SET utf8 COLLATE utf8_unicode_ci
 
 create table accounts (
     user_id int not null auto_increment,
@@ -119,7 +115,7 @@ INSERT INTO servers (server_id) values ("1");
 INSERT INTO servers (server_id) values ("2");
 INSERT INTO servers (server_id) values ("3");
 
-INSERT INTO mission_template (mission_description, mission_name) values ("Po długiej walce z gaborem na gołe pięści i dzwonki szkolne udało Ci się zwyciężyć", "Wyprawa do Gabora");
+INSERT INTO mission_template (mission_description, mission_name) values ("Po wyrecytowaniu, na baczność, wszystkich wzorów skróconego mnożenia siadasz w ławce i patrzysz na masakre \"kolegów\" z klasy", "Lekcja matematyki");
 INSERT INTO mission_template (mission_description, mission_name) values ("Pan kondesator wręczył Ci swój złoty śrubokręt na znak szacunku", "Wyprawa do Kondensatora");
 INSERT INTO mission_template (mission_description, mission_name) values ("Dostałeś obietnicę, że dostaniesz nowy identyfikator, przyjdź go odebrać za dwa lata", "Sekretariat");
 INSERT INTO mission_template (mission_description, mission_name) values ("Udało Ci się jakoś stamtąd uciec recytując fragmenty \"Pana Tadeusza\" z pamięci", "Sala 102/Legowisko diabła");
@@ -212,4 +208,8 @@ INSERT INTO enemy_template (enemy_name)
 values ("Elektrozbigniew");
 INSERT INTO enemy_template (enemy_name)
 values ("Ktoś jeszcze");
+INSERT INTO enemy_template (enemy_name)
+values ("Więcej przeciwników");
+INSERT INTO enemy_template (enemy_name)
+values ("Trzeba dodać");
 
