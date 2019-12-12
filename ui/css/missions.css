@@ -1,0 +1,21 @@
+.outer-missionbox {
+    background: no-repeat url('/RYSZARD/ui/images/portier_2.png');
+    background-size: cover;
+    min-height: 400px;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+}
+#missionbox {
+    /* text-align: center; */
+    display: flex;
+    flex-flow: column wrap;
+    align-items: center;
+    /* background: rgba(255,255,255, 1); */
+    background: url('/RYSZARD/ui/images/card.png');
+    padding: 0.5em 2em;
+    margin-bottom: 60px;
+}
+/* img.mission-heading {
+    width: 100%;
+} */

@@ -1,0 +1,53 @@
+body {
+    width: 100vw;
+    min-height: 100vh;
+}
+.background {
+    position: absolute;
+    left: 0;
+    top: 0;
+    z-index: 10;
+    width: 100%;
+    height: 100%;
+
+    background: url('/RYSZARD/ui/images/ezn.png');
+    background-size: cover;
+    filter: blur(8px);
+}
+
+.box {
+    width: 100%;
+    height: 100%;
+    margin: 25vh 0;
+
+    display: flex;
+    justify-content: center;
+}
+.inner-box {
+    z-index: 15;
+    background-image: url('/RYSZARD/ui/images/card.png') ;
+    background-size:  60px;        
+    /* margin: 0 auto; */
+
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: center;
+}
+.inner-box button {
+    margin: 1.5rem;
+    padding: 0.25rem 1rem;
+    font-size: 1.50rem;
+}
+h1 {
+    border-bottom: 2px solid rgba(0,0,0, .4);
+    margin-bottom: 2.5rem;
+}
+.server {
+    border-radius: 0.25rem;
+    background: rgba(210,210,210, 1);
+    
+    padding: 0.25rem 0.5rem;
+    margin-bottom: 1rem;
+
+    cursor: pointer;
+}

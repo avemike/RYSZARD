@@ -1,39 +1,23 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <link rel="stylesheet" href="ui/css/bootstrap.min.css">
-    <title>Document</title>
-</head>
-<body>
-    <include href="./upperPanel.html" />
-    <div class="container">
-        <div class="row">
-            <include href="./leftMenu.html"/>
-            <div class="col-lg-9 border">
-                <div class="col-md-6 border">
-                    <div class="col-lg-12">
-                        <img class="profile-photo" src="ui/images/profile.jpg" alt="">
-                    </div>
-                    <div class="col-lg-12">
-                        <div class="list-group">
-                            <li class="list-group-item">Nick : {{ @SESSION.nickname }}</li>
-                            <li class="list-group-item">Lv : {{ @SESSION.level }}</li>
-                            <li class="list-group-item">Exp : {{ @SESSION.exp }}</li>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-6 border"></div>
-                <repeat group="{{ @items_inventory }}" value="{{ @item }}">
-                    <form action="itemShop/equipitem" method="POST">{{ @item.item_name }}<check if="@item.value!=null"><true> str:{{ @item.strenght }} hp:{{ @item.hp }} dex:{{ @item.dex }} luck:{{ @item.luck }} int:{{ @item.intelligence }} all:{{ @item.every_attrib }} <button type="submit">załóż</button><input type="hidden" name="item_id" value="{{ @item.item_id }}"></true></check></form>
-                </repeat>
-            </div>
-
-            <repeat group="{{ @equipped }}" value="{{ @item }}">
-                <div class="{{ @item_classes[@item.item_type] }}"><form method="POST" action="itemShop/unequipitem">{{ @item.item_name }}<check if="@item.value!=null"><true> str:{{ @item.strenght }} hp:{{ @item.hp }} dex:{{ @item.dex }} luck:{{ @item.luck }} int:{{ @item.intelligence }} all:{{ @item.every_attrib }} <input type="hidden" name="item_id" value="{{ @item.item_id }}"><button type="submit">zdejm</button></true></check>  </form></div>
-            </repeat>
+<div class="col-md-6 border">
+    <div class="col-lg-12">
+        <div class="profile-photo">
+            <img src="ui/images/{{ @SESSION.race }}/{{ @SESSION.char_class }}{{ @SESSION.icon }}.jpg" alt="">
+        </div>
+    </div>
+    <div class="col-lg-12">
+        <div class="list-group">
+            <li class="list-group-item">Nazwa bohatera : {{ @SESSION.nickname }}</li>
+            <li class="list-group-item">Poziom : {{ @SESSION.level }}</li>
+            <li class="list-group-item">Doświadczenie : {{ @SESSION.exp }}/{{ @SESSION.exp_to_next_lv }}</li>
+            <!--  -->
+            <li class="list-group-item">Moc ataku : {{ @stats[0].value }}</li>
+            <li class="list-group-item">Żywotność : {{ @stats[1].value }}</li>
+            <li class="list-group-item">Obrona : {{ @stats[2].value }}</li>
+            <li class="list-group-item">Siła : {{ @stats[3].value }}</li>
+            <li class="list-group-item">Inteligencja : {{ @stats[4].value }}</li>
+            <li class="list-group-item">Zręczność : {{ @stats[5].value }}</li>
+            <li class="list-group-item">Szczęście : {{ @stats[6].value }}</li>
+            <!--  -->
         </div>
         <div id="prize"></div>
         <check if="{{ @random_number }}">
@@ -48,14 +32,134 @@
             <false></false>
         </check>
     </div>
-</body>
-<style>
-    /* .border {
-        border: 1px solid black;
-    } */
-    .profile-photo {
-        width: 100%;
-        height: auto;
-    }
-</style>
-</html>
+</div>
+<div class="col-lg-6 border">
+
+    <h2>Wyposażone: </h2>
+    <repeat group="{{ @equipped }}" value="{{ @item }}">
+        <div class="item-equipped {{ @item_classes[@item.item_type] }}">
+
+            <h4>
+                {{ @item.item_name }}
+            </h4>
+            <check if="@item.value!=null">
+                <true>
+                    <check if="{{ @item.attack }}!=null">
+                        <true>Moc ataku: {{ @item.attack }}</true>
+                    </check> 
+                    <li>
+                        Żywotność: {{ @item.vit }}
+                    </li>
+                    <check if="{{ @item.defence }}!=null">
+                        <true>
+                            <li>
+                                Obrona: {{ @item.defence }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.strength }} != 0">
+                        <true>
+                            <li>
+                                Siła: {{ @item.strength }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.intelligence }} != 0">
+                        <true>
+                            <li>
+                                Inteligencja: {{ @item.intelligence }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.dex }} != 0">
+                        <true>
+                            <li>
+                                Zręczność: {{ @item.dex }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.luck }} != 0">
+                        <true>
+                            <li>
+                                Szczęście: {{ @item.luck }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.every_attrib }} != 0">
+                        <true>
+                            <li>
+                                Wszystko: {{ @item.every_attrib }}
+                            </li>
+                        </true>
+                    </check>
+                    <button onclick="load('itemShop/unequipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">zdejm</button>
+                </true>
+            </check>
+
+        </div>
+    </repeat>
+    
+    <h2>Ekwipunek</h2>
+    <repeat group="{{ @items_inventory }}" value="{{ @item }}">
+        <div class="item-unequipped">
+            <h4>
+                {{ @item.item_name }}
+            </h4>
+            <check if="@item.value!=null">
+                <true>
+                    <check if="{{ @item.attack }}!=null">
+                        <true>Moc ataku: {{ @item.attack }}</true>
+                    </check> 
+                    <li>
+                        Żywotność: {{ @item.vit }}
+                    </li>
+                    <check if="{{ @item.defence }}!=null">
+                        <true>
+                            <li>
+                                Obrona: {{ @item.defence }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.strength }} != 0">
+                        <true>
+                            <li>
+                                Siła: {{ @item.strength }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.intelligence }} != 0">
+                        <true>
+                            <li>
+                                Inteligencja: {{ @item.intelligence }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.dex }} != 0">
+                        <true>
+                            <li>
+                                Zręczność: {{ @item.dex }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.luck }} != 0">
+                        <true>
+                            <li>
+                                Szczęście: {{ @item.luck }}
+                            </li>
+                        </true>
+                    </check>
+                    <check if="{{ @item.every_attrib }} != 0">
+                        <true>
+                            <li>
+                                Wszystko: {{ @item.every_attrib }}
+                            </li>
+                        </true>
+                    </check>
+                    <button onclick="load('itemShop/equipitem', 'POST', '#box', 'item_id={{ @item.item_id }}')">załóż</button>
+                </true>
+            </check>
+        </div>
+    </repeat>
+
+    <span class="hidden" id="newcurrency">{{ @newcurrency }}</span>
+</div>

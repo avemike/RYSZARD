@@ -1,0 +1,17 @@
+.mail-row {
+    padding: 0.25em 0;
+    margin: 0 0.5em;
+    font-size: 1.2em;
+    border-top: 1px solid rgba(0,0,0, .4);
+}
+.mail-row:hover {
+    background-color: rgba(255, 249, 69, 0.493);
+    cursor: pointer;
+}
+.mail-content {
+    padding: 2em 5em;
+    background-color: rgba(0,0,0, .1);
+}
+.mail-content p {
+    margin: 0;
+}

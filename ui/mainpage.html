@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="ui/css/bootstrap.min.css">
+    <link rel="stylesheet" href="ui/css/itemShop.css">
+    <link rel="stylesheet" href="ui/css/mainpage.css">
+    <link rel="stylesheet" href="ui/css/missions.css">
+    <link rel="stylesheet" href="ui/css/mail.css">
+    
+    <title>EZN</title>
+</head>
+<body>
+    
+    <include href="upperPanel.html" />
+    <div class="background"></div>
+    <div class="container">
+        <div class="row">
+            <include href="leftMenu.html"/>
+            <div id="box" class="col-lg-9">
+            </div>
+        </div>
+    </div>
+    <script src="ui/mail/mailModule.js"></script>
+    <script>
+        var t=false;
+        load("profile", "GET", "#box");
+
+        function load(url, method, target_id, string){
+            
+            var http = new XMLHttpRequest();
+            http.open(method, url, true);
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
+            http.onload = function () {
+                document.querySelector(target_id).innerHTML = http.responseText;
+
+                // switch new currency with old currency if both exists
+                const newcurrency = document.querySelector('#newcurrency');
+                const currency = document.querySelector('#currency');
+                if ( currency && newcurrency ) {
+                    currency.innerHTML = newcurrency.innerHTML;
+                    newcurrency.parentNode.removeChild(newcurrency);
+                }
+
+                if(t){
+                    clearInterval(t);
+                    t=false;
+                }
+
+                // call specific loadingModule function after loading url
+                switch (url) {
+                    case 'missions':
+                        makeminutes();
+                        break;
+                    case 'choosemission':
+                        missionactive();
+                        break;
+                    case 'outbox':
+                    case 'mail':
+                    case 'inbox':
+                        loadMailModule() 
+                        break;
+                }
+            };
+            http.send(string);
+        }
+
+        function makeminutes(){
+            timespans = document.querySelectorAll(".mission_time");
+            for(const time of timespans){
+                console.log(time.innerHTML)
+                time.innerHTML=Number(time.textContent)/60 + ' min';
+            }
+        }
+        function missionactive(){
+            minutes = 0;
+            seconds = Number(document.getElementById("timer").innerHTML);
+            while(seconds>59){
+                minutes++;
+                seconds-=60;
+            }
+            document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
+
+            // setTimeout(odejmczas, 1000);
+            if(!t){
+                t=setInterval(odejmczas, 1000);
+            }
+        }
+        function odejmczas(){
+            if(seconds<1 && minutes==0){
+                clearInterval(t);
+                t=null;
+                load('missions', 'GET', '#box');
+                // window.location.href="";
+            }
+            else{
+                if(seconds==0){
+                    minutes--;
+                    seconds=59
+                }
+                else{
+                    seconds--;
+                }
+                document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
+                // setTimeout(odejmczas, 1000);
+            }
+        }
+    </script>
+
+</body>
+</html>

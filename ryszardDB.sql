@@ -1,8 +1,4 @@
-mysql -u root
-
-create database ryszardDB CHARACTER SET utf8 COLLATE utf8_unicode_ci;
-
-use ryszardDB
+-- create database ryszardDB CHARACTER SET utf8 COLLATE utf8_unicode_ci
 
 create table accounts (
     user_id int not null auto_increment,
@@ -30,12 +26,17 @@ create table characters (
     currency int,
     level int,
     exp int,
+    exp_to_next_lv int,
+    attack int,
+    defence int,
     strength int,
-    hp int,
+    intelligence int,
+    vit int,
     dex int,
     luck int,
     race varchar(255),
-    collect_date timestamp DEFAULT null,
+    icon int DEFAULT 1,
+    collect_date timestamp DEFAULT current_timestamp,
 
     PRIMARY KEY (char_id),
     FOREIGN KEY (user_id) REFERENCES accounts(user_id),
@@ -60,8 +61,10 @@ create table items (
     item_template_id int,
     char_id int,
     value int,
+    attack int,
+    defence int,
     strength int,
-    hp int,
+    vit int,
     dex int,
     luck int,
     intelligence int,
@@ -100,7 +103,7 @@ create table missions (
 );
 
 create table enemy_template (
-    enemy_template_id int,
+    enemy_template_id int not null auto_increment,
     enemy_name varchar(255),
     enemy_icon varchar(255),
     enemy_class varchar(255),
@@ -127,9 +130,7 @@ INSERT INTO servers (server_id) values ("1");
 INSERT INTO servers (server_id) values ("2");
 INSERT INTO servers (server_id) values ("3");
 
-INSERT INTO characters (user_id, server_id, nickname, level, exp, currency, char_class) values ("1", "1", "andrzejekchar", 24, 1000, 10000, 1);
-
-INSERT INTO mission_template (mission_description, mission_name) values ("Po długiej walce z gaborem na gołe pięści i dzwonki szkolne udało Ci się zwyciężyć", "Wyprawa do Gabora");
+INSERT INTO mission_template (mission_description, mission_name) values ("Po wyrecytowaniu, na baczność, wszystkich wzorów skróconego mnożenia siadasz w ławce i patrzysz na masakre \"kolegów\" z klasy", "Lekcja matematyki");
 INSERT INTO mission_template (mission_description, mission_name) values ("Pan kondesator wręczył Ci swój złoty śrubokręt na znak szacunku", "Wyprawa do Kondensatora");
 INSERT INTO mission_template (mission_description, mission_name) values ("Dostałeś obietnicę, że dostaniesz nowy identyfikator, przyjdź go odebrać za dwa lata", "Sekretariat");
 INSERT INTO mission_template (mission_description, mission_name) values ("Udało Ci się jakoś stamtąd uciec recytując fragmenty \"Pana Tadeusza\" z pamięci", "Sala 102/Legowisko diabła");
@@ -216,34 +217,14 @@ values ("5", "", "0", "6", "Zepsuta drukarka");
 INSERT INTO item_template (item_icon, item_description, item_class, item_type, item_name)
 values ("6", "", "0", "6", "Płyta główna z 205");
 
+INSERT INTO enemy_template (enemy_name)
+values ("Pan Gabor");
+INSERT INTO enemy_template (enemy_name)
+values ("Elektrozbigniew");
+INSERT INTO enemy_template (enemy_name)
+values ("Ktoś jeszcze");
+INSERT INTO enemy_template (enemy_name)
+values ("Więcej przeciwników");
+INSERT INTO enemy_template (enemy_name)
+values ("Trzeba dodać");
 
-SELECT servers.server_id, char_id FROM servers left join characters on servers.server_id = characters.server_id where user_id="1" or user_id IS NULL
-
-
-
-    SELECT server_id, char_id, level, nickname 
-    FROM (
-        SELECT servers.server_id, char_id, level, nickname
-        FROM servers
-        JOIN characters
-        ON servers.server_id = characters.server_id
-        WHERE user_id=2
-
-        UNION
-
-        SELECT
-            servers.server_id,
-            NULL AS char_id,
-            NULL AS LEVEL,
-            NULL AS nickname
-        FROM
-            servers
-            LEFT JOIN characters
-            ON servers.server_id = characters.server_id
-        WHERE user_id!=2 or user_id IS NULL
-    ) t
-    GROUP BY server_id
-
-
-    INSERT INTO missions (char_id, currency_reward, exp_reward, duration_time, start_date, mission_active)
-values ("1", "100", "200", "10", CURRENT_TIMESTAMP(), "1")

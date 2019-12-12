@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="ui/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="ui/css/characters.css">
+    <title>Tworzenie postaci</title>
+</head>
+<body>
+    <div class="container">
+        <form class="col-md-10 box" method="POST" action="createchar">
+            <div class="col-md-6">
+                <h2>Wybierz ikonę postaci:</h2>
+                <div class="icons-slider">
+                    <button class="left"> < </button>
+                        <div class="icons-wrapper">
+                            <div class="icons">
+
+                            </div>
+                        </div>
+                    <button class="right"> > </button>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="row">
+                    <h2>Nazwa postaci:</h2>
+                    <input type="text" name="nickname"></br>
+                </div>
+                <div class="row">
+                    <h2>Wybierz klasę:</h2>
+                    <button class="class selected" title="mechatronik" data-name="mechatronik">
+                        <img src="ui/images/karzel/mechatronik1.jpg"  alt="">
+                    </button>
+                    <button class="class" title="elektronik"  data-name="elektronik" >
+                        <img src="ui/images/karzel/elektronik1.jpg"alt="">
+                    </button>
+                    <button class="class" title="informatyk" data-name="informatyk">
+                        <img src="ui/images/karzel/informatyk1.jpg" alt="">
+                    </button>                    
+                    <!-- Informatyk<input type="radio" name="occupation" value="informatyk" checked></br>
+                    Mechatronik<input type="radio" name="occupation" value="mechatronik"></br>
+                    Elektronik<input type="radio" name="occupation" value="elektronik"></br> -->
+                </div>
+                <div class="row">
+                    <h2>Wybierz rasę:</h2>
+                    <button class="race selected" title="kobieta" data-name="kobieta">
+                        <img src="ui/images/kobieta/elektronik1.jpg"  alt="">
+                    </button>
+                    <button class="race" title="czlowiek"  data-name="czlowiek" >
+                        <img src="ui/images/czlowiek/informatyk1.jpg"alt="">
+                    </button>
+                    <button class="race" title="karzel" data-name="karzel">
+                        <img src="ui/images/karzel/mechatronik1.jpg" alt="">
+                    </button>
+                </div>
+                <div class="row">
+                    <button class="btn btn-submit btn-primary"type="submit">Stwórz postać</button><br>
+                </div>
+                <div class="row">
+                    {{ @creating_error1 }}
+                    {{ @creating_error2 }}
+                    {{ @creating_error3 }}
+                    {{ @creating_error4 }}                
+                </div>
+                <div class="row">
+                    <a href="login">Wybór serwerów</a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script>
+
+        $('button.left, button.right').click( (e) => {
+            e.preventDefault()
+            // $icons = $('.icons')
+            if($('.icons').hasClass('right')) {
+                $('.icons').removeClass('right')
+            }
+            else {
+                $('.icons').addClass('right')
+            }
+
+        })
+        let icon = 0
+        let race = document.querySelector('button.race.selected').dataset.name
+        let char_class = document.querySelector('button.class.selected').dataset.name
+        let nickname = "";
+        // initial load
+        $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
+        // if buttons pressed then load new image
+        
+        $('input[name=nickname]').change(function () {
+            nickname = this.value
+        })
+        
+        $('button.class, button.race').click( function (e) {
+            e.preventDefault()
+                        
+            if( $(this).hasClass('class')) {
+                $('button.class.selected').removeClass('selected')                
+                char_class = this.dataset.name
+            }
+            else {
+                $('button.race.selected').removeClass('selected')
+                race = this.dataset.name
+            }
+
+            $(this).addClass('selected')
+            $('.icons').load(`getCharacterIcons?class=${char_class}&race=${race}`)
+            console.log('kutas')
+        })
+        
+        $('form').submit( e => {
+            e.preventDefault()
+            let params = []
+
+            const data = {
+                nickname: nickname,
+                occupation: char_class,
+                race: race,
+                icon: $('.icons').hasClass('right') ? '2' : '1'
+            };
+ 
+            for ( i in data) {
+                params.push(i + '=' + data[i])
+            }
+            params = params.join('&')
+
+            const http = new XMLHttpRequest()
+            http.open('POST', 'createchar', true)
+            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
+            http.onreadystatechange = () => {
+                if(http.readyState == 4 && http.status == 200) {
+                    // console.log(http.responseText)
+                    if(http.responseText === 'success') {
+                        window.location.href = '/RYSZARD';
+                    }
+                }
+            }
+            http.send(params)
+        })
+    </script>
+</body>
+</html>

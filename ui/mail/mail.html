@@ -1,0 +1,10 @@
+<form action="mail" method="POST">
+    <input name="address" placeholder="adresat"><br>
+    <input name="title" placeholder="tytuł"><br>
+    <textarea name="content" placeholder="treść" autocomplete="off"></textarea>
+    <br>
+    <button type="submit">Wyślij</button><br>
+</form>
+<h1>{{ @mailerror }}</h1>
+
+<button onclick="load('inbox', 'GET', '#box')">Cofnij</button>
