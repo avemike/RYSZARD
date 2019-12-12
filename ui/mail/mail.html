@@ -1,7 +1,8 @@
 <form action="mail" method="POST">
     <input name="address" placeholder="adresat"><br>
     <input name="title" placeholder="tytuł"><br>
-    <input name="content" placeholder="treść" autocomplete="off"><br>
+    <textarea name="content" placeholder="treść" autocomplete="off"></textarea>
+    <br>
     <button type="submit">Wyślij</button><br>
 </form>
 <h1>{{ @mailerror }}</h1>
