@@ -370,8 +370,9 @@
             }
             else{
                 $stats['level']=$char_info['level'];
-                $enemy=$db->exec('SELECT enemy_name FROM enemy_template ORDER BY rand() limit 1')[0];
+                $enemy=$db->exec('SELECT enemy_name, enemy_icon FROM enemy_template ORDER BY rand() limit 1')[0];
                 $stats['nickname']=$enemy['enemy_name'];
+                $stats['icon']="ui/images/icons/".$enemy['enemy_icon'];
                 $stats['char_class']=4;
             }
 

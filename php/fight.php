@@ -5,14 +5,14 @@
             global $db;
             $items = new items;
             $you=$items->get_stats($you_id);
-            if($enemy){
+            if($enemy_id){
                 $enemy=$items->get_stats($enemy_id);
             }
             else{
                 //generate
                 $enemy=$items->get_stats($you_id, false);
             }
-            $f3->set('fight_log', json_encode($you)."%".json_encode($enemy)."%<br>");
+            $f3->set('fight_log', json_encode($you, JSON_UNESCAPED_UNICODE)."%".json_encode($enemy, JSON_UNESCAPED_UNICODE)."%<br>");
             $counter=0;
             while($you['health']>0 && $enemy['health']>0 ){
                 $enemy['health']-=$this->hit($you, $enemy);
@@ -27,6 +27,7 @@
             }
 
             echo $f3->get('fight_log');
+            echo "<img src=\"".$enemy['icon']."\">";
             if($you['health']>0){
                 return true;
             }
@@ -68,7 +69,7 @@
 
 
             $log=$f3->get('fight_log');
-            $log.=json_encode($info)."&<br>";
+            $log.=json_encode($info, JSON_UNESCAPED_UNICODE)."&<br>";
             $f3->set('fight_log', $log);
 
             if($hit<0 || !is_numeric($hit)){
