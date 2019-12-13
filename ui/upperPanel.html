@@ -36,7 +36,7 @@
             Login : {{ @SESSION.login }}
         </li>
         <li>
-            Klasa : <check if="{{ @SESSION.char_class }}==1"><true>informatyk</true><false><check if="{{ @SESSION.char_class }}==2"><true>mechatronik</true><false>elektronik</false></check></false></check>
+            Klasa : {{ @SESSION.class_name }}
         </li>
         <li class="currency">
             Gold : <span id="currency">{{ @SESSION.currency }}</span>

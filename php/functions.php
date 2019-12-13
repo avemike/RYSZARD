@@ -46,6 +46,7 @@
             $inv->show_inventory();
             $inv->show_equipped();
             $inv->get_stats($_SESSION["char_id"]);
+            
             echo \Template::instance()->render('profile.html');
         }
         function missions($f3){  
@@ -210,7 +211,7 @@
         function logintoserver($f3){
             global $db;
             if (empty($_SESSION["nickname"]) && !empty($_SESSION["login"]) && $db->exec('SELECT * FROM servers WHERE server_id=?', $_POST["serverno"])){
-                if($result=$db->exec('SELECT char_id, nickname, race, icon, characters.server_id as server, level, currency, exp, exp_to_next_lv, char_class FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
+                if($result=$db->exec('SELECT char_id, nickname, race, icon, characters.server_id as server, level, currency, exp, exp_to_next_lv, char_class, class_name FROM servers LEFT JOIN characters ON servers.server_id = characters.server_id LEFT JOIN classes ON classes.class_id = characters.char_class WHERE servers.server_id = ? AND user_id = ?', array($_POST["serverno"],$_SESSION['user_id']))){
                     foreach($result[0] as $key => $value){
                         $_SESSION[$key]=$value;
                     }
@@ -303,9 +304,8 @@
 
         function postcreatechar($f3) {
             global $db;
-            $character_classes=array("informatyk", "mechatronik", "elektronik");
+            // $character_classes=array("informatyk", "mechatronik", "elektronik");
             $character_races=array("kobieta","karzel","czlowiek","zyd");
-            
             
             // $f3->set('object_mapper_char', new DB\SQL\Mapper($f3->get('conn'),'characters'));
 
@@ -317,7 +317,7 @@
                 $server = $f3->get('SESSION.server');
                 $user_id = $f3->get('SESSION.user_id');
                 
-                if ( in_array($occupation, $character_classes ) && !empty( $nickname ) && (in_array( $race, $character_races ))) {
+                if ($class_id = $db->exec('SELECT class_id FROM classes WHERE class_name=?', $occupation)[0] && !empty( $nickname ) && (in_array( $race, $character_races ))) {
                     $nick_already_used = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=? LIMIT 1', array($nickname, $server));
                     // if nickname is already used
                     if ($nick_already_used) {
@@ -338,7 +338,7 @@
                             // 
 
                             $db->exec('INSERT INTO characters values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                                array(null, $user_id, $server, $occupation, $nickname, "0", "1", "0", $exp_to_next_level,
+                                array(null, $user_id, $server, $class_id , $nickname, "0", "1", "0", $exp_to_next_level,
                                 $attack, $defence, "10", "10", $vit, "10", "10", $race, $icon, null));
                             echo 'success';
                             }
