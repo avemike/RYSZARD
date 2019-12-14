@@ -27,6 +27,14 @@ class home{
         $missions = new missions;
         $missions->missionPage();
     }
+    function armoryShop($f3){
+        $shop=new items;
+        $shop->item_shop("armory");
+    }
+    function accessoryShop($f3){
+        $shop=new items;
+        $shop->item_shop("accessory");
+    }
 }
 class mail{
     function getinbox($f3){

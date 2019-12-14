@@ -59,6 +59,10 @@
                     case 'choosemission':
                         missionactive();
                         break;
+                    case 'changePassword':
+                    case 'settings':
+                        settingsPassListener();
+                        break;
                     case 'outbox':
                     case 'mail':
                     case 'inbox':
@@ -108,6 +112,16 @@
                 document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
                 // setTimeout(odejmczas, 1000);
             }
+        }
+        function settingsPassListener(){
+            document.getElementById('change_password_button').addEventListener("click", function(){
+                new_password=document.getElementById("new_password").value;
+                old_password=document.getElementById("old_password").value;
+                console.log(new_password)
+                params="new_password="+new_password+"&old_password="+old_password;
+                console.log(params);
+                load('changePassword','POST','#box', params);
+            })
         }
     </script>
 

@@ -19,12 +19,6 @@
         //4 buty
         //5 rekawice
         //6 amulet
-        function armoryShop($f3){
-            $this->item_shop("armory");
-        }
-        function accessoryShop($f3){
-            $this->item_shop("accessory");
-        }
         function item_shop($shop_type) {
             global $f3;
             global $db;
@@ -362,7 +356,6 @@
     
                 $f3->set('health', $health);
                 $f3->set('stats', $arr);
-    
                 
                 foreach($char_info as $key => $value){
                     $stats[$key]=$value;

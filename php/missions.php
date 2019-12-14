@@ -2,6 +2,7 @@
 class missions{
     function missionPage(){
         global $db;
+        global $f3;
         //if character has active mission
         if($result=$db->exec('SELECT mission_id, TIMESTAMPDIFF(SECOND,start_date,current_timestamp()) AS started_ago, duration_time, currency_reward, exp_reward, mission_description FROM missions LEFT JOIN mission_template on missions.mission_template_id = mission_template.mission_template_id WHERE char_id=? AND mission_active=1', $_SESSION["char_id"])[0]){
             $f3->set('activemission', true);

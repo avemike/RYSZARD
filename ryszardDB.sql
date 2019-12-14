@@ -130,7 +130,6 @@ create table mail (
     FOREIGN KEY (mail_receiver) REFERENCES characters(char_id)
 );
 
-INSERT INTO accounts (login, password) values ("andrzejek", "76d80224611fc919a5d54f0ff9fba446");
 
 INSERT INTO servers (server_id) values ("1");
 INSERT INTO servers (server_id) values ("2");
@@ -238,4 +237,9 @@ INSERT INTO enemy_template (enemy_name)
 values ("Więcej przeciwników");
 INSERT INTO enemy_template (enemy_name)
 values ("Trzeba dodać");
+
+
+INSERT INTO accounts (login, password) values ("andrzejek", "76d80224611fc919a5d54f0ff9fba446");
+INSERT INTO `characters` (`user_id`, `server_id`, `char_class`, `nickname`, `currency`, `level`, `exp`, `exp_to_next_lv`, `attack`, `defence`, `strength`, `intelligence`, `vit`, `dex`, `luck`, `race`, `icon`, `collect_date`) VALUES
+(1, 1, 1, 'Hejka', 4000, 5, 200, 2200, 10, 10, 10, 10, 100, 10, 10, 'czlowiek', 2, '2019-12-14 12:44:18');
 
