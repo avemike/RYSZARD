@@ -1,8 +1,30 @@
 <!-- <img class="mission-heading" src="ui/images/portier_2.png" alt=""> -->
 <div class="outer-missionbox">
-    <check if="{{ @missions }}">
+    <check if="{{ @activemission }}">
         <div id="missionbox">
         <true>
+            <check if="{{ @missionready }}">
+                <true>
+                    <check if="{{ @missionwon}}">
+                        <true>
+                            <h2 class="centered">{{ @mission_description }}</h2>
+                            <h2 class="centered">Twoje nagrody to {{ @missionready.currency_reward }} golda i {{ @missionready.exp_reward }}expa</h2>        
+                        </true>
+                        <false>
+                            <h2 class="centered">Niestety nie udało Ci się wygrać tej walki</h2>
+                            <h2 class="centered">Wracasz do domu z pustymi rękami</h2>
+                        </false>
+                    </check>
+                    <div onclick="load('missions', 'GET', '#box')"><a>Zacznij nową misję</a></div>
+                    <br>
+                </true>
+                <false>
+                    <h2 class="centered">Jesteś teraz w trakcie misji i zostało ci tyle czasu do końca:</h2>
+                    <h2 id="timer" class="centered">{{ @missionbox }}</h2>
+                </false>
+            </check>            
+        </true>
+        <false>
             <h1 class="centered">Misje</h1>
             <repeat group="{{ @missionbox }}" value="{{ @mission }}">
                 <div id="missions" onclick="load('choosemission', 'POST', '#box', 'activemission={{ @mission.mission_id }}')">
@@ -22,20 +44,6 @@
                     <input type="hidden" name="activemission" value="{{ @mission.mission_id }}">
                 </form> -->
             </repeat>
-        </true>
-        <false>
-            <check if="{{ @missionready }}">
-                <true>
-                    <h2 class="centered">{{ @mission_description }}</h2>
-                    <h2 class="centered">Twoje nagrody to {{ @missionready.currency_reward }} golda i {{ @missionready.exp_reward }}expa</h2>
-                    <div onclick="load('missions', 'GET', '#box')"><a>Zacznij nową misję</a></div>
-                    <br>
-                </true>
-                <false>
-                    <h2 class="centered">Jesteś teraz w trakcie misji i zostało ci tyle czasu do końca:</h2>
-                    <h2 id="timer" class="centered">{{ @missionbox }}</h2>
-                </false>
-            </check>            
         </false>
         </div>
     </check>

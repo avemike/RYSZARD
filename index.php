@@ -11,12 +11,15 @@ if(!empty($_SESSION['char_id'])){
 	$f3->set('newcurrency', $db->exec('SELECT currency FROM characters WHERE char_id=?', $_SESSION['char_id'])[0]['currency']);
 }
 
-include('php/functions.php');
-include('php/Items.php');
-include('php/Settings.php');
 include('php/fight.php');
+include('php/functions.php');
+include('php/home.php')
+include('php/items.php');
+include('php/log_reg.php');
+include('php/missions.php');
+include('php/settings.php');
 
-$f3->route('GET @home: /','home->gethome');
+$f3->route('GET @home: /','home->mainPage');
 
 $f3->route('GET /fight','fight->fight_kurwa');
 
