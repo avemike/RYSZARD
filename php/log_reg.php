@@ -175,8 +175,10 @@ class register {
             $icon = $f3->get('POST.icon');
             $server = $f3->get('SESSION.server');
             $user_id = $f3->get('SESSION.user_id');
-            
-            if ($class_id = $db->exec('SELECT class_id FROM classes WHERE class_name=?', $occupation)[0] && !empty( $nickname ) && (in_array( $race, $character_races ))) {
+
+            $class_id = $db->exec('SELECT class_id FROM classes WHERE class_name=?', $occupation)[0]['class_id'];
+
+            if ($class_id = $db->exec('SELECT class_id FROM classes WHERE class_name=?', $occupation)[0]['class_id'] && !empty( $nickname ) && (in_array( $race, $character_races ))) {
                 $nick_already_used = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=? LIMIT 1', array($nickname, $server));
                 // if nickname is already used
                 if ($nick_already_used) {
@@ -195,7 +197,7 @@ class register {
                         $vit = 100;
                         //
                         $db->exec('INSERT INTO characters values (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)',
-                            array(null, $user_id, $server, $class_id , $nickname, "0", "1", "0", $exp_to_next_level,
+                            array(null, $user_id, $server, $class_id, $nickname, "0", "1", "0", $exp_to_next_level,
                             $attack, $defence, "10", "10", $vit, "10", "10", $race, $icon, null));
                         echo 'success';
                         }

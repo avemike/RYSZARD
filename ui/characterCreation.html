@@ -122,7 +122,6 @@
                 race: race,
                 icon: $('.icons').hasClass('right') ? '2' : '1'
             };
- 
             for ( i in data) {
                 params.push(i + '=' + data[i])
             }
@@ -133,9 +132,12 @@
             http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded')
             http.onreadystatechange = () => {
                 if(http.readyState == 4 && http.status == 200) {
-                    // console.log(http.responseText)
                     if(http.responseText === 'success') {
-                        window.location.href = '../';
+                        // redirect to new path
+                        const splitedPath = window.location.href.split('/')
+                        const newPath = splitedPath.slice(0, splitedPath.length - 1).join('/')
+                        
+                        window.location.href = newPath
                     }
                 }
             }

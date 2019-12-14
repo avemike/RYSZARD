@@ -15,7 +15,7 @@ if(!empty($_SESSION['char_id'])){
 }
 
 //include files from file_list array
-$file_list=array('fight','functions','home','items','log_reg','missions','settings');
+$file_list=array('fight','home','items','log_reg','missions','settings');
 $path='php/';
 $ext='.php';
 foreach($file_list as $file){
