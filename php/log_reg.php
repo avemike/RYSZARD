@@ -181,7 +181,7 @@ class register {
 
             $class_id = $db->exec('SELECT class_id FROM classes WHERE class_name=?', $occupation)[0]['class_id'];
 
-            if ($class_id = $db->exec('SELECT class_id FROM classes WHERE class_name=?', $occupation)[0]['class_id'] && !empty( $nickname ) && (in_array( $race, $character_races ))) {
+            if ($class_id && !empty( $nickname ) && (in_array( $race, $character_races ))) {
                 $nick_already_used = $db->exec('SELECT char_id FROM characters WHERE nickname=? AND server_id=? LIMIT 1', array($nickname, $server));
                 // if nickname is already used
                 if ($nick_already_used) {
