@@ -1,39 +1,36 @@
-
-
-                <div class="col-md-9">
-                    <div class="row">
-                        <div class="form-group">
-                            <label for="new_password">Zmiana hasła</label>
-                            <div class="col-md-12">
-                                <div class="row">
-                                    <div class="col-md-9">
-                                        <div class="col-md-6">
-                                            <input type="password" id="new_password" name="new_password" class="form-control" aria-describedby="new_password" placeholder="Wpisz nowe hasło">
-                                            <small class="form-text text-muted">NOWE, będziesz go używać</small>
-                                        </div>
-                                        <div class="col-md-6">
-                                            <input type="password" id="old_password" name="old_password" class="form-control" aria-describedby="old_password" placeholder="Wpisz stare hasło">
-                                            <small class="form-text text-muted">STARE, przestaniesz go używać</small>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <button id="change_password_button" class="btn btn-warning">Zmień hasło</button>
-                                    </div>
-                                </div>
-                                <script>
-                                </script>
-                                <check if="{{ @changed_password_wrong || @changed_password_success }}">
-                                    <div class="col-md-9">
-                                        <check if="{{ @changed_password_wrong }}">
-                                            Niepoprawne podane hasło
-                                        </check>
-                                        <check if="{{ @changed_password_success }}">
-                                            Poprawnie zmienione hasło
-                                        </check>
-                                    </div>
-                                </check>
-                            </div>
-                        </div>   
+<div class="col-md-9">
+    <div class="row">
+        <div class="form-group">
+            <label for="new_password">Zmiana hasła</label>
+            <div class="col-md-12">
+                <div class="row">
+                    <div class="col-md-9">
+                        <div class="col-md-6">
+                            <input type="password" id="new_password" name="new_password" class="form-control" aria-describedby="new_password" placeholder="Wpisz nowe hasło">
+                            <small class="form-text text-muted">NOWE, będziesz go używać</small>
+                        </div>
+                        <div class="col-md-6">
+                            <input type="password" id="old_password" name="old_password" class="form-control" aria-describedby="old_password" placeholder="Wpisz stare hasło">
+                            <small class="form-text text-muted">STARE, przestaniesz go używać</small>
+                        </div>
+                    </div>
+                    <div class="col-md-3">
+                        <button id="change_password_button" class="btn btn-warning">Zmień hasło</button>
                     </div>
                 </div>
-        
+                <script>
+                </script>
+                <check if="{{ @changed_password_wrong || @changed_password_success }}">
+                    <div class="col-md-9">
+                        <check if="{{ @changed_password_wrong }}">
+                            Niepoprawne podane hasło
+                        </check>
+                        <check if="{{ @changed_password_success }}">
+                            Poprawnie zmienione hasło
+                        </check>
+                    </div>
+                </check>
+            </div>
+        </div>   
+    </div>
+</div>
