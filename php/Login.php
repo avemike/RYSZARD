@@ -82,7 +82,7 @@ class login{
             }
             else{
                 $_SESSION["server"]=$_POST["serverno"];
-                echo \Template::instance()->render('characterCreation.html');
+                echo \Template::instance()->render('characterCreation/characterCreation.html');
             }
         }
         else{
