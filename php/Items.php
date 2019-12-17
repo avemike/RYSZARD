@@ -56,7 +56,7 @@
             $f3->set('item_class', array('everyone','informatyk','mechatronik','elektronik'));
             $f3->set('shop_type', $shop_type);
 
-            echo \Template::instance()->render('itemShop.html');
+            echo \Template::instance()->render('itemShop/itemShop.html');
         }
         function item_buy($f3) {
             global $db;
@@ -365,7 +365,7 @@
                 $stats['level']=$char_info['level'];
                 $enemy=$db->exec('SELECT enemy_name, enemy_icon FROM enemy_template ORDER BY rand() limit 1')[0];
                 $stats['nickname']=$enemy['enemy_name'];
-                $stats['icon']="ui/images/icons/".$enemy['enemy_icon'];
+                $stats['icon']="public/images/icons/".$enemy['enemy_icon'];
                 $stats['char_class']=4;
             }
 

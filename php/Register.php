@@ -27,7 +27,7 @@ class register {
         return true;
     }
     function displayregister($f3) {
-        echo \Template::instance()->render('register.html');
+        echo \Template::instance()->render('account/register.html');
     }
     function inserting_data($f3) {
         //create mapper
@@ -68,7 +68,7 @@ class register {
         } else {
             $f3->set('error4',"Proszę wypełnić wszystkie pola!");
         };  
-        echo \Template::instance()->render('register.html');
+        echo \Template::instance()->render('account/register.html');
         
     }
     function getCharacterIcons($f3) {
@@ -78,10 +78,10 @@ class register {
         $class = $_GET['class'];
         $race = $_GET['race'];
 
-        $result = array("ui/images/".$race."/".$class."1.jpg", "ui/images/".$race."/".$class."2.jpg");
+        $result = array("public/images/".$race."/".$class."1.jpg", "public/images/".$race."/".$class."2.jpg");
         $f3->set('result', $result);
 
-        echo \Template::instance()->render('characterIcons.html');
+        echo \Template::instance()->render('characterCreation/characterIcons.html');
     }
 
     function postcreatechar($f3) {
@@ -134,11 +134,9 @@ class register {
                 $f3->set('creating_error2', "Proszę uzupełnić wszystkie pola!");
             }
 
-            // echo \Template::instance()->render('characters.html');
         }
         else{
             echo 'xd';
-            // $f3->reroute("@login");
         }
     }
 }

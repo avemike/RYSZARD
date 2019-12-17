@@ -1,0 +1,7 @@
+.left-menu {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+.left-menu a {
+    cursor: pointer;
+}

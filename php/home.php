@@ -10,7 +10,7 @@ class home{
         $_SESSION["currency"]=$user->currency;
         
 
-        echo \Template::instance()->render('mainpage.html');
+        echo \Template::instance()->render('mainpage/mainpage.html');
     }
     function profile($f3){
         $inv = new items;
@@ -18,7 +18,7 @@ class home{
         $inv->show_equipped();
         $inv->get_stats($_SESSION["char_id"]);
         
-        echo \Template::instance()->render('profile.html');
+        echo \Template::instance()->render('profile/profile.html');
     }
     function missions($f3){  
         if(empty($_SESSION["nickname"])){

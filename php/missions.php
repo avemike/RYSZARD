@@ -59,7 +59,7 @@ class missions{
                 $f3->set('missionbox', $db->exec('SELECT char_id, currency_reward, exp_reward, duration_time, mission_name, mission_id FROM missions LEFT JOIN mission_template on missions.mission_template_id = mission_template.mission_template_id WHERE char_id=?',$_SESSION["char_id"]));
             }
         }
-        echo \Template::instance()->render('missions.html');
+        echo \Template::instance()->render('missions/missions.html');
     }
     function choosemission($f3){
         global $db;

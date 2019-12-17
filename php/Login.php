@@ -6,14 +6,14 @@ class login{
             //if didnt choose character yet
             if(empty($_SESSION["nickname"])){
                 $this->getservers($f3);
-                echo \Template::instance()->render('servers.html');
+                echo \Template::instance()->render('servers/servers.html');
             }
             else{
                 $f3->reroute('@home');
             }
         }
         else{
-            echo \Template::instance()->render('login.html');
+            echo \Template::instance()->render('account/login.html');
         }
     }
     function postlogin($f3){
@@ -21,7 +21,7 @@ class login{
             $f3->reroute('@login');
         }
         global $db;
-        $login_template='login.html';
+        $login_template='account/login.html';
         $user=new DB\SQL\Mapper($db,'accounts');
 
         if(!empty($_POST["login"])){
@@ -46,7 +46,7 @@ class login{
             $_SESSION["user_id"]=$user->load(array('login=?',$login))->user_id;
             
             $f3->set('servers', 'servers.html');
-            $login_template='servers.html';
+            $login_template='servers/servers.html';
             $this->getservers($f3);
         }
         echo \Template::instance()->render($login_template);

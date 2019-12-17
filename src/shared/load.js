@@ -29,10 +29,10 @@ function load(url, method, target_id, string){
                 break;
             case 'changePassword':
             case 'settings':
-                settingsPassListener('change_password_button');
+                initSettings();
                 break;
             case 'mail':
-                settingsPassListener('send_mail');
+                initMailSending();
                 break;
             case 'outbox':
             case 'mail':

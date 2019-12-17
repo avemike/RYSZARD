@@ -4,7 +4,7 @@
             if(empty($_SESSION["nickname"])){
                 $f3->reroute('@login');
             }
-        	echo \Template::instance()->render('settings.html');
+        	echo \Template::instance()->render('settings/settings.html');
         }
         function change_password($f3) {
             if(empty($_SESSION["nickname"])){
@@ -38,7 +38,7 @@
             else{
                 $f3->set("changed_password_wrong", true);
             }
-            echo \Template::instance()->render('settings.html');
+            echo \Template::instance()->render('settings/settings.html');
         }
     }
 ?>

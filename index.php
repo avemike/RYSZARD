@@ -57,7 +57,7 @@ $f3->route('POST @logintoserver: /logintoserver','login->logintoserver');
 //register
 $f3->route('GET /register',
 function($f3) {
-	echo \Template::instance()->render('register.html');
+	echo \Template::instance()->render('account/register.html');
 	}
 ); 
 $f3->route('POST /register','register->inserting_data');
