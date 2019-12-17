@@ -1,12 +1,29 @@
 <?php
 class register {
     function checkalphabet($string) {
-        $alphabet=array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","v","s","t","u","w","x","y","z","1","2","3","4","5","6","7","8","9","0");
-        for ($i=0; $i<strlen($string); $i++) {
-            if(!in_array(strtolower($string[$i]),$alphabet)) {
+        $polish=array("ą","Ą","ż","Ż","ś","Ś","ź","Ź","ć","Ć","ę","Ę","ń","Ń","ó","Ó","ł","Ł");
+        $alphabet=array("a","b","c","d","e","f","g","h","i","j","k","l","m","n","o","p","q","r","v","s","t","u","w","x","y","z");
+        $numbers=range(0,9);
+        $special_chars=array("-","_","+","=",";","/","!","@","#","$","%","^","&","*","(",")",",",".","[","]","{","}", " ");
+        $allowed=array_merge($polish,array_merge($alphabet,array_merge($numbers,$special_chars)));
+        // for ($i=0; $i<strlen($string); $i++) {
+        //     if(!in_array(strtolower($string[$i]),$allowed)) {
+        //         return false;
+        //     }
+        // };
+        $space_counter=0;
+        $array_given=str_split($string);
+        foreach($array_given as $char){
+            if(!in_array(strtolower($char),$allowed)) {
                 return false;
             }
-        };
+            if($char==" "){
+                $space_counter++;
+            }
+        }
+        if($space_counter==mb_strlen($string)){
+            return false;
+        }
         return true;
     }
     function displayregister($f3) {
@@ -28,9 +45,9 @@ class register {
                 $f3->set('error1',"Proszę podać poprawną nazwę użytkownika!"); 
             } 
             //checking if username is not too long
-            if ((($utf->strlen($f3->get('POST.username')))<($f3->get('max_login_len')))&&($f3->get('error1')=="")) {
+            if (((mb_strlen($f3->get('POST.username')))<=($f3->get('max_login_len')))&&($f3->get('error1')=="")) {
                 //checking if password is not too long
-                if ((($utf->strlen($f3->get('POST.password'))))>($f3->get('max_password_len'))) {
+                if (((mb_strlen($f3->get('POST.password'))))>($f3->get('max_password_len'))) {
                     $f3->set('error2',"Hasło jest zbyt długie!");
                 }   else {
                         //insert password and username into database
@@ -95,7 +112,7 @@ class register {
                 elseif (empty($db->exec('SELECT char_id FROM characters WHERE server_id=? AND user_id=?', array($server, $user_id)))) {
                     
                     // check if nickname is valid
-                    if( $this->checkalphabet($nickname) && strlen($nickname) < 16) { 
+                    if( $this->checkalphabet($nickname) && mb_strlen($nickname) <= $f3->get('max_nickname_len')) { 
                         // for future use
                         $exp_to_next_level = 200;
                         $attack = 10;

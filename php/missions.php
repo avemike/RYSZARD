@@ -49,7 +49,7 @@ class missions{
                     $exp_reward=round((($_SESSION["level"]*$_SESSION["level"]/10)+100)*$duration_time/100*(1+rand(0,1)));
                     
                     //TESTING OPTIONS
-                    $duration_time=1;
+                    $duration_time=3;
                     $exp_reward=1000;
                     $currency_reward=1000;
 

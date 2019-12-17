@@ -28,23 +28,23 @@ class login{
             $login=$_POST["login"];
             $password=md5($_POST["password"]);
 
-            if(strlen($login)>$f3->get('max_login_len')){
+            if(mb_strlen($login)>$f3->get('max_login_len')){
                 $f3->set('loginErr', 'Za długi login');
                 echo \Template::instance()->render($login_template);
                 return;
             }
-
+            
             // check if user is not in database
             if( !($user->load(array('login=?',$login))->login == $login && $user->load(array('login=?',$login))->password==$password)) {
                 $f3->set('loginErr', 'Nieprawidłowe dane logowania');
                 echo \Template::instance()->render($login_template);
                 return;
             }
-
+            
             // SESSION: include login and userid
             $_SESSION["login"]=$login;
             $_SESSION["user_id"]=$user->load(array('login=?',$login))->user_id;
-
+            
             $f3->set('servers', 'servers.html');
             $login_template='servers.html';
             $this->getservers($f3);
