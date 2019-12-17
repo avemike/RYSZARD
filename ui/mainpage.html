@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="ui/css/mainpage.css">
     <link rel="stylesheet" href="ui/css/missions.css">
     <link rel="stylesheet" href="ui/css/mail.css">
-    
+    <link rel="stylesheet" href="ui/css/upperPanel.css">    
     <title>EZN</title>
 </head>
 <body>
@@ -23,126 +23,13 @@
             </div>
         </div>
     </div>
-    <script src="ui/mail/mailModule.js"></script>
-    <script>
-        var t=false;
-        load("profile", "GET", "#box");
-
-        console.log(window.location.href)
-
-        function load(url, method, target_id, string){
-            
-            var http = new XMLHttpRequest();
-            http.open(method, url, true);
-            http.setRequestHeader('Content-type', 'application/x-www-form-urlencoded');
-            http.onload = function () {
-                document.querySelector(target_id).innerHTML = http.responseText;
-
-                // switch new currency with old currency if both exists
-                const newcurrency = document.querySelector('#newcurrency');
-                const currency = document.querySelector('#currency');
-                if ( currency && newcurrency ) {
-                    currency.innerHTML = newcurrency.innerHTML;
-                    newcurrency.parentNode.removeChild(newcurrency);
-                }
-
-                if(t){
-                    clearInterval(t);
-                    t=false;
-                }
-
-                // call specific loadingModule function after loading url
-                switch (url) {
-                    case 'missions':
-                        makeminutes();
-                        break;
-                    case 'choosemission':
-                        missionactive();
-                        break;
-                    case 'changePassword':
-                    case 'settings':
-                        settingsPassListener('change_password_button');
-                        break;
-                    case 'mail':
-                        settingsPassListener('send_mail');
-                        break;
-                    case 'outbox':
-                    case 'mail':
-                    case 'inbox':
-                        loadMailModule() 
-                        break;
-                }
-            };
-            http.send(string);
-        }
-
-        function makeminutes(){
-            timespans = document.querySelectorAll(".mission_time");
-            for(const time of timespans){
-                console.log(time.innerHTML)
-                time.innerHTML=Number(time.textContent)/60 + ' min';
-            }
-        }
-        function missionactive(){
-            minutes = 0;
-            seconds = Number(document.getElementById("timer").innerHTML);
-            while(seconds>59){
-                minutes++;
-                seconds-=60;
-            }
-            document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
-
-            // setTimeout(odejmczas, 1000);
-            if(!t){
-                t=setInterval(odejmczas, 1000);
-            }
-        }
-        function odejmczas(){
-            if(seconds<1 && minutes==0){
-                clearInterval(t);
-                t=null;
-                load('missions', 'GET', '#box');
-                // window.location.href="";
-            }
-            else{
-                if(seconds==0){
-                    minutes--;
-                    seconds=59
-                }
-                else{
-                    seconds--;
-                }
-                document.getElementById("timer").innerHTML=minutes+" minut "+seconds+" sekund";
-                // setTimeout(odejmczas, 1000);
-            }
-        }
-        function settingsPassListener(button_id){
-            document.getElementById(button_id).addEventListener("click", function(){
-                if(button_id=='change_password_button'){
-                    new_password=document.getElementById("new_password").value;
-                    old_password=document.getElementById("old_password").value;
-                    params="new_password="+new_password+"&old_password="+old_password;
-                    load_url='changePassword';
-                    type='POST';
-                }
-                else if(button_id=='send_mail'){
-                    address=document.getElementById("address").value;
-                    title=document.getElementById("title").value;
-                    content=document.getElementById("content").value;
-                    params='address='+address+"&title="+title+"&content="+content;
-                    load_url='mail';
-                    type='POST';
-                }
-                load(load_url, type, '#box', params);
-            })
-            // document.getElementById('change_password_button').addEventListener("click", function(){
-            //     new_password=document.getElementById("new_password").value;
-            //     old_password=document.getElementById("old_password").value;
-            //     params="new_password="+new_password+"&old_password="+old_password;
-            //     load('changePassword','POST','#box', params);
-            // })
-        }
-    </script>
+    <script src="ui/js/mailModule.js"></script>
+    <script src="ui/js/load.js"></script>
+    <script src="ui/js/makeminutes.js"></script>
+    <script src="ui/js/missionactive.js"></script>
+    <script src="ui/js/odejmczas.js"></script>
+    <script src="ui/js/settingsPassListener.js"></script>
+    <script src="ui/js/mainpageInit.js"></script>
 
 </body>
 </html>

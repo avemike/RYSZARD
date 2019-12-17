@@ -7,15 +7,7 @@
     <link rel="stylesheet" type="text/css" href="ui/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="ui/css/servers.css">
 
-    <title>Document</title>
-    <style>
-        .error{ 
-            color: red;
-        }
-        .green{
-            color: green;
-        }
-    </style>
+    <title>Wybierz serwer</title>
 </head>
 <body>
         <div class="background"></div>
@@ -47,13 +39,6 @@
             </div>
         </div>
     </div>
-    <script>
-        const buttons = document.querySelectorAll(".server")
-        for (const button of buttons) {
-            button.addEventListener('click', function(event) {
-                button.parentNode.submit();
-            })
-        }
-    </script>
+    <script src="ui/js/serversInit.js"></script>
     </body>
 </html>

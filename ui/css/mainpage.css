@@ -1,3 +1,6 @@
+body {
+    overflow-x: hidden;
+}
 .centered{
     align-content: center;
     text-align: center;
