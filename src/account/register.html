@@ -15,21 +15,20 @@
                         <form method="POST" action="register" >
                             <div class="form-group text-left">
                                 <label for="username">Login</label>
-                                <input name="username" class="form-control" placeholder="login" maxlength="{{ @max_login_len }}" autocomplete="off"><br>
+                                <input name="username" class="form-control" placeholder="login" maxlength="{{ @max_login_len }}" autocomplete="off" required><br>
                             </div>
                             <div class="form-group text-left">
                                 <label for="password">Hasło</label>
-                                <input type="password" class="form-control" name="password" placeholder="password" maxlength="{{ @max_passw_len }}"><br>                        
+                                <input type="password" class="form-control" name="password1" placeholder="password" maxlength="{{ @max_password_len }}" required><br>   
+                                <input type="password" class="form-control" name="password2" placeholder="re-enter password" maxlength="{{ @max_password_len }}" required><br>                        
                             </div>
                             <button type="submit" class="btn btn-primary">Zarejestruj się!</button>
                         </form>
                         <a href="login">Powrót do logowania</a>
                         <div class="error">
-                            {{ @error1 }}
-                            {{ @error2 }}
-                            {{ @error3 }}
-                            {{ @error4 }}
-                            {{ @error5 }}
+                            <repeat group="{{ @error }}" value="{{ @each_err }}">
+                                {{ @each_err }}<br>
+                            </repeat>
                         </div>
                     </div>
                 </div>

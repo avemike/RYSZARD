@@ -43,7 +43,7 @@ $('form').submit( e => {
 
     const data = {
         nickname: nickname,
-        occupation: char_class,
+        class: char_class,
         race: race,
         icon: $('.icons').hasClass('right') ? '2' : '1'
     };
